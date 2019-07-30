@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, { useState, useContext } from 'react';
 import './App.css';
 
 import { Route, Switch, Link } from 'react-router-dom';
@@ -9,6 +9,8 @@ import ProtectedRoute from './ProtectedRoute';
 import { Icon, Layout, Menu, Spin, Popover, Avatar } from 'antd';
 import { Row, Col } from 'antd';
 import UserContext from './UserContext';
+import CreateUser from './CreateUser';
+import ManageTenants from './Tenants/ManageTenants';
 
 function Home(props) {
   const { Header, Content, Sider } = Layout;
@@ -16,6 +18,8 @@ function Home(props) {
 
   const userContext = useContext(UserContext);
   const [collapsed, setCollapsed] = useState(false);
+
+
 
   let userProfileButton;
   const profileContent = (
@@ -28,7 +32,7 @@ function Home(props) {
       <br />
       <Link to="/login"
         onClick={() => {
-            userContext.clearCurrentUser();
+          userContext.clearCurrentUser();
         }}>
         <span style={{ fontWeight: 'bold' }}>Sign Out</span>
       </Link>
@@ -62,7 +66,7 @@ function Home(props) {
           {userProfileButton}
         </Menu>
       </Header>
-      <Layout style={{height: 'calc(100vh - 48px)'}}>
+      <Layout style={{ height: 'calc(100vh - 48px)' }}>
         <Sider
           width={250}
           collapsible
@@ -78,124 +82,16 @@ function Home(props) {
                 <span style={{ fontWeight: 'bold' }}>Dashboard</span>
               </Link>
             </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
+            <Menu.Item key="create-user">
+              <Link to="/profile/create-user">
+                <Icon type="user" />
+                <span style={{ fontWeight: 'bold' }}>Create User</span>
               </Link>
             </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
-                <Icon type="home" />
-                <span style={{ fontWeight: 'bold' }}>Dashboard</span>
+            <Menu.Item key="manage-tenants">
+              <Link to="/profile/manage-tenants">
+                <Icon type="user" />
+                <span style={{ fontWeight: 'bold' }}>Manage Tenants</span>
               </Link>
             </Menu.Item>
             <SubMenu
@@ -212,11 +108,13 @@ function Home(props) {
         </Sider>
 
 
-        <Layout style={{ borderLeft: '1px solid #e9e9e9', 
-                         height: 'calc(100vh- 48px)', 
-                         backgroundColor: '#fff', 
-                         paddingLeft: '5px, 5px, 0px,0px',
-                         overflow: 'auto' }}>
+        <Layout style={{
+          borderLeft: '1px solid #e9e9e9',
+          height: 'calc(100vh- 48px)',
+          backgroundColor: '#fff',
+          paddingLeft: '5px, 5px, 0px,0px',
+          overflow: 'auto'
+        }}>
           <Content style={{ backgroundColor: '#fff' }}>
             <Row>
               <Col span={24}>
@@ -225,6 +123,8 @@ function Home(props) {
                   <Route path="/profile" exact component={Dashboard} />
                   <Route path="/profile/dashboard" component={Dashboard} />
                   <ProtectedRoute path="/profile/dashboard1" component={Dashboard1} />
+                  <ProtectedRoute path="/profile/create-user" component={CreateUser} />
+                  <ProtectedRoute path="/profile/manage-tenants" component={ManageTenants} />
                   <Route component={Nomatch} />
                 </Switch>
               </Col>

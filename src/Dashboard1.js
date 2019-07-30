@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 function Dashboard1() {
   const user = useContext(UserContext);
   console.log(user);
+  
   return (
     <div>
       Dashboard1:  { user.currentUser? user.currentUser.firstName : "" }

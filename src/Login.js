@@ -44,7 +44,7 @@ function Login(props) {
     if (loginStatus) {
       history.push(from);
     }
-  });
+  }, []);
 
   function submitRequest() {
     //  this.setState({loadingIcon: true});
@@ -78,9 +78,7 @@ function Login(props) {
       history.push(from);
     })
       .catch((error) => {
-        message.error(error.response.data.error_description);
-        console.log(error);
-        //  this.setState({loadingIcon: false});
+        console.log("Error in login request: ", error);
       });
 
   }
