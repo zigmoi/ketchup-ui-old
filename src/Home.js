@@ -9,10 +9,11 @@ import ProtectedRoute from './ProtectedRoute';
 import { Icon, Layout, Menu, Spin, Popover, Avatar } from 'antd';
 import { Row, Col } from 'antd';
 import UserContext from './UserContext';
-import CreateUser from './CreateUser';
+
 import ManageTenants from './Tenants/ManageTenants';
 import ManageUsers from './Users/ManageUsers';
 import CreateTenant from './Tenants/CreateTenant';
+import CreateUser from './Users/CreateUser';
 import CreateGitProvider from './Resources/CreateGitProvider';
 import ManageGitProvider from './Resources/ManageGitProvider';
 
