@@ -11,6 +11,8 @@ import { Row, Col } from 'antd';
 import UserContext from './UserContext';
 import CreateUser from './CreateUser';
 import ManageTenants from './Tenants/ManageTenants';
+import ManageUsers from './Users/ManageUsers';
+import CreateTenant from './Tenants/CreateTenant';
 
 function Home(props) {
   const { Header, Content, Sider } = Layout;
@@ -82,16 +84,28 @@ function Home(props) {
                 <span style={{ fontWeight: 'bold' }}>Dashboard</span>
               </Link>
             </Menu.Item>
-            <Menu.Item key="create-user">
-              <Link to="/profile/create-user">
-                <Icon type="user" />
-                <span style={{ fontWeight: 'bold' }}>Create User</span>
+            <Menu.Item key="create-tenant">
+              <Link to="/profile/create-tenant">
+                <Icon type="usergroup-add" />
+                <span style={{ fontWeight: 'bold' }}>Create Tenant</span>
               </Link>
             </Menu.Item>
             <Menu.Item key="manage-tenants">
               <Link to="/profile/manage-tenants">
-                <Icon type="user" />
+                <Icon type="team" />
                 <span style={{ fontWeight: 'bold' }}>Manage Tenants</span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="create-user">
+              <Link to="/profile/create-user">
+                <Icon type="user-add" />
+                <span style={{ fontWeight: 'bold' }}>Create User</span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="manage-users">
+              <Link to="/profile/manage-users">
+                <Icon type="user" />
+                <span style={{ fontWeight: 'bold' }}>Manage Users</span>
               </Link>
             </Menu.Item>
             <SubMenu
@@ -123,8 +137,10 @@ function Home(props) {
                   <Route path="/profile" exact component={Dashboard} />
                   <Route path="/profile/dashboard" component={Dashboard} />
                   <ProtectedRoute path="/profile/dashboard1" component={Dashboard1} />
-                  <ProtectedRoute path="/profile/create-user" component={CreateUser} />
+                  <ProtectedRoute path="/profile/create-tenant" component={CreateTenant} />
                   <ProtectedRoute path="/profile/manage-tenants" component={ManageTenants} />
+                  <ProtectedRoute path="/profile/create-user" component={CreateUser} />
+                  <ProtectedRoute path="/profile/manage-users" component={ManageUsers} />
                   <Route component={Nomatch} />
                 </Switch>
               </Col>

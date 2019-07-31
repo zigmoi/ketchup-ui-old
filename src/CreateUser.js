@@ -138,7 +138,6 @@ class CreateUser extends Component {
                                     onChange={this.changeRole}>
                                     <Option value="ROLE_ADMIN">ROLE_ADMIN</Option>
                                     <Option value="ROLE_USER">ROLE_USER</Option>
-                                    <Option value="ROLE_MODERATOR">ROLE_MODERATOR</Option>
                                 </Select>
                             </FormItem>
 

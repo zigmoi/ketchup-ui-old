@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 
-class ManageTenants extends Component {
+class ManageUsers extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,7 +16,7 @@ class ManageTenants extends Component {
     }
 
     componentDidMount() {
-        document.title = "Manage Tenants";
+        document.title = "Manage Users";
         this.setColumns();
         this.loadAll();
     }
@@ -29,9 +29,9 @@ class ManageTenants extends Component {
                 <span>{index + 1}</span>
             )
         }, {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'id',
+            title: 'User Name',
+            dataIndex: 'userName',
+            key: 'userName',
         }, {
             title: 'Display Name',
             dataIndex: 'displayName',
@@ -84,7 +84,7 @@ class ManageTenants extends Component {
 
     loadAll = () => {
         this.setState({ "iconLoading": true });
-        axios.get('http://localhost:8097/v1/tenants')
+        axios.get('http://localhost:8097/v1/users')
             .then((response) => {
                 this.setState({ "iconLoading": false });
                 this.setState({ "dataSource": response.data });
@@ -94,11 +94,25 @@ class ManageTenants extends Component {
             });
     }
 
+    delete = () => {
+        this.setState({ "iconLoading": true });
+        let userName = this.state.selectedRecord.userName;
+        axios.delete('http://localhost:8097/v1/user/' + userName)
+            .then((response) => {
+                this.setState({ "iconLoading": false });
+                this.loadAll();
+                message.success('User deleted successfully.');
+            })
+            .catch((error) => {
+                this.setState({ "iconLoading": false });
+            });
+    }
+
     toggleStatus = () => {
         this.setState({ "iconLoading": true });
-        let tenantId = this.state.selectedRecord.id;
-        let tenantStatus = !this.state.selectedRecord.enabled;
-        let url = 'http://localhost:8097/v1/tenant/' + tenantId + '/enable/' + tenantStatus
+        let userName = this.state.selectedRecord.userName;
+        let userStatus = !this.state.selectedRecord.enabled;
+        let url = 'http://localhost:8097/v1/user/' + userName + '/enable/' + userStatus
         axios.put(url)
             .then((response) => {
                 this.setState({ "iconLoading": false });
@@ -110,27 +124,12 @@ class ManageTenants extends Component {
             });
     }
 
-    delete = () => {
-        this.setState({ "iconLoading": true });
-
-        let tenantId = this.state.selectedRecord.id;
-        axios.delete('http://localhost:8097/v1/tenant/' + tenantId)
-            .then((response) => {
-                this.setState({ "iconLoading": false });
-                this.loadAll();
-                message.success('Tenant deleted successfully.');
-            })
-            .catch((error) => {
-                this.setState({ "iconLoading": false });
-            });
-    }
-
     render() {
         return (
             <div style={{ minHeight: 'calc(100vh - 64px)' }}>
                 <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                     <Col span={24}>
-                        <label style={{ fontWeight: 'bold' }} >Manage Tenants</label>
+                        <label style={{ fontWeight: 'bold' }} >Manage Users</label>
                         <span>&nbsp;&nbsp;</span>
                         <Spin spinning={this.state.iconLoading} />
                     </Col>
@@ -150,4 +149,4 @@ class ManageTenants extends Component {
 }
 
 
-export default ManageTenants;
+export default ManageUsers;
