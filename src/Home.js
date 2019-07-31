@@ -13,6 +13,9 @@ import CreateUser from './CreateUser';
 import ManageTenants from './Tenants/ManageTenants';
 import ManageUsers from './Users/ManageUsers';
 import CreateTenant from './Tenants/CreateTenant';
+import CreateGitProvider from './Resources/CreateGitProvider';
+import ManageGitProvider from './Resources/ManageGitProvider';
+
 
 function Home(props) {
   const { Header, Content, Sider } = Layout;
@@ -118,6 +121,27 @@ function Home(props) {
               <Menu.Item key="user-account"><span style={{ fontWeight: 'bold' }}>User Account Settings</span></Menu.Item>
               <Menu.Item key="app"><span style={{ fontWeight: 'bold' }}>Application Settings</span></Menu.Item>
             </SubMenu>
+
+            <SubMenu
+              key="resources"
+              title={<span>
+                <Icon type="team" />
+                <span style={{ fontWeight: 'bold' }}>Resources</span>
+              </span>}
+            >
+              <Menu.Item key="add-git-provider">
+              <Link to="/profile/add-git-provider">
+                <Icon type="team" />
+                <span style={{ fontWeight: 'bold' }}>Add Git Provider</span>
+              </Link>
+              </Menu.Item>
+              <Menu.Item key="manage-git-provider">
+              <Link to="/profile/manage-git-provider">
+                <Icon type="team" />
+                <span style={{ fontWeight: 'bold' }}>Manage Git Provider</span>
+              </Link>
+              </Menu.Item>
+            </SubMenu>
           </Menu>
         </Sider>
 
@@ -141,6 +165,8 @@ function Home(props) {
                   <ProtectedRoute path="/profile/manage-tenants" component={ManageTenants} />
                   <ProtectedRoute path="/profile/create-user" component={CreateUser} />
                   <ProtectedRoute path="/profile/manage-users" component={ManageUsers} />
+                  <ProtectedRoute path="/profile/add-git-provider" component={CreateGitProvider} />
+                  <ProtectedRoute path="/profile/manage-git-provider" component={ManageGitProvider} />
                   <Route component={Nomatch} />
                 </Switch>
               </Col>
