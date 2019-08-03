@@ -29,4 +29,13 @@ export function getApiRequestDefaults() {
     // return accessToken;
 }
 
-export default { handleApiResponseErrors, getApiRequestDefaults };
+export function validatePermissions(requiredPermissions, currentPermissions) {
+    for (let rp of requiredPermissions) {
+        if (currentPermissions.indexOf(rp) == -1) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export default { handleApiResponseErrors, getApiRequestDefaults, validatePermissions };

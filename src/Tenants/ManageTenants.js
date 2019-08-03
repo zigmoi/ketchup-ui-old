@@ -13,7 +13,6 @@ class ManageTenants extends Component {
             visible: false,
             dataSource: [],
             columns: [],
-            selectedRecord: null,
         }
     }
 
@@ -59,12 +58,12 @@ class ManageTenants extends Component {
             render: (text, record) => (
                 <span>
                     <Popconfirm title="Confirm operation?"
-                        okText="Go Ahead" cancelText="Cancel" onConfirm={this.toggleStatus}>
+                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => this.toggleStatus(record)}>
                         <Button type="danger">{record.enabled ? 'Disable' : 'Enable'}</Button>
                     </Popconfirm>
                     <Divider type="vertical" />
                     <Popconfirm title="Confirm operation?"
-                        okText="Go Ahead" cancelText="Cancel" onConfirm={this.delete}>
+                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => this.deleteTenant(record)}>
                         <Button type="danger">Delete</Button>
                     </Popconfirm>
                 </span>
@@ -74,10 +73,6 @@ class ManageTenants extends Component {
         this.setState({ "columns": columns });
     }
 
-    setSelectedRow = (record) => {
-        console.log(record);
-        this.setState({ selectedRecord: record });
-    }
 
     reloadTabularData = () => {
         this.loadAll();
@@ -90,8 +85,8 @@ class ManageTenants extends Component {
             .then((response) => {
                 this.setState({ "iconLoading": false });
                 this.setState({ "dataSource": response.data });
-                util.handleApiResponseErrors();
-               // message.info(util.getApiRequestDefaults());
+                // util.handleApiResponseErrors();
+                // message.info(util.getApiRequestDefaults());
             })
             .catch((error) => {
                 console.log(error.response);
@@ -99,10 +94,10 @@ class ManageTenants extends Component {
             });
     }
 
-    toggleStatus = () => {
+    toggleStatus = (selectedRecord) => {
         this.setState({ "iconLoading": true });
-        let tenantId = this.state.selectedRecord.id;
-        let tenantStatus = !this.state.selectedRecord.enabled;
+        let tenantId = selectedRecord.id;
+        let tenantStatus = !selectedRecord.enabled;
         let url = 'http://localhost:8097/v1/tenant/' + tenantId + '/enable/' + tenantStatus
         axios.put(url)
             .then((response) => {
@@ -115,10 +110,9 @@ class ManageTenants extends Component {
             });
     }
 
-    delete = () => {
+    deleteTenant = (selectedRecord) => {
         this.setState({ "iconLoading": true });
-
-        let tenantId = this.state.selectedRecord.id;
+        let tenantId = selectedRecord.id;
         axios.delete('http://localhost:8097/v1/tenant/' + tenantId)
             .then((response) => {
                 this.setState({ "iconLoading": false });
@@ -145,7 +139,6 @@ class ManageTenants extends Component {
                         <Table dataSource={this.state.dataSource}
                             pagination={{ defaultPageSize: 8 }}
                             columns={this.state.columns}
-                            onRowClick={this.setSelectedRow}
                             size="middle" rowKey={record => record.id} />
                     </Col>
                 </Row>

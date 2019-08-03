@@ -11,7 +11,6 @@ class ManageUsers extends Component {
             visible: false,
             dataSource: [],
             columns: [],
-            selectedRecord: null,
         }
     }
 
@@ -57,12 +56,12 @@ class ManageUsers extends Component {
             render: (text, record) => (
                 <span>
                     <Popconfirm title="Confirm operation?"
-                        okText="Go Ahead" cancelText="Cancel" onConfirm={this.toggleStatus}>
+                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => this.toggleStatus(record)}>
                         <Button type="danger">{record.enabled ? 'Disable' : 'Enable'}</Button>
                     </Popconfirm>
                     <Divider type="vertical" />
                     <Popconfirm title="Confirm operation?"
-                        okText="Go Ahead" cancelText="Cancel" onConfirm={this.delete}>
+                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => this.deleteUser(record)}>
                         <Button type="danger">Delete</Button>
                     </Popconfirm>
                 </span>
@@ -70,11 +69,6 @@ class ManageUsers extends Component {
         }];
 
         this.setState({ "columns": columns });
-    }
-
-    setSelectedRow = (record) => {
-        console.log(record);
-        this.setState({ selectedRecord: record });
     }
 
     reloadTabularData = () => {
@@ -94,9 +88,9 @@ class ManageUsers extends Component {
             });
     }
 
-    delete = () => {
+    deleteUser = (selectedRecord) => {
         this.setState({ "iconLoading": true });
-        let userName = this.state.selectedRecord.userName;
+        let userName = selectedRecord.userName;
         axios.delete('http://localhost:8097/v1/user/' + userName)
             .then((response) => {
                 this.setState({ "iconLoading": false });
@@ -108,10 +102,10 @@ class ManageUsers extends Component {
             });
     }
 
-    toggleStatus = () => {
+    toggleStatus = (selectedRecord) => {
         this.setState({ "iconLoading": true });
-        let userName = this.state.selectedRecord.userName;
-        let userStatus = !this.state.selectedRecord.enabled;
+        let userName = selectedRecord.userName;
+        let userStatus = !selectedRecord.enabled;
         let url = 'http://localhost:8097/v1/user/' + userName + '/enable/' + userStatus
         axios.put(url)
             .then((response) => {
@@ -139,8 +133,7 @@ class ManageUsers extends Component {
                         <Table dataSource={this.state.dataSource}
                             pagination={{ defaultPageSize: 8 }}
                             columns={this.state.columns}
-                            onRowClick={this.setSelectedRow}
-                            size="middle" rowKey={record => record.id} />
+                            size="middle" rowKey={record => record.userName} />
                     </Col>
                 </Row>
             </div>

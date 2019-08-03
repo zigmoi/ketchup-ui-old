@@ -152,13 +152,13 @@ function Home() {
               </span>}
             >
               <Menu.Item key="add-git-provider">
-                <Link to="/profile/add-git-provider">
+                <Link to="/app/add-git-provider">
                   <Icon type="team" />
                   <span style={{ fontWeight: 'bold' }}>Add Git Provider</span>
                 </Link>
               </Menu.Item>
               <Menu.Item key="manage-git-provider">
-                <Link to="/profile/manage-git-provider">
+                <Link to="/app/manage-git-provider">
                   <Icon type="team" />
                   <span style={{ fontWeight: 'bold' }}>Manage Git Provider</span>
                 </Link>
@@ -181,7 +181,7 @@ function Home() {
                 <Switch>
                   <ProtectedRoute path="/" exact component={Dashboard} />
                   <ProtectedRoute path="/app" exact component={Dashboard} />
-                  <ProtectedRoute path="/app/dashboard" component={Dashboard} />
+                  <ProtectedRoute path="/app/dashboard" component={Dashboard} permissions={['open-dashboard', 'test']} />
                   <ProtectedRoute path="/app/dashboard1" component={Dashboard1} />
                   <ProtectedRoute path="/app/create-tenant" component={CreateTenant} />
                   <ProtectedRoute path="/app/manage-tenants" component={ManageTenants} />
@@ -189,8 +189,8 @@ function Home() {
                   <ProtectedRoute path="/app/manage-users1" component={ManageUsers1} />
                   <ProtectedRoute path="/app/create-user" component={CreateUser} />
                   <ProtectedRoute path="/app/manage-users" component={ManageUsers} />
-                  <ProtectedRoute path="/profile/add-git-provider" component={CreateGitProvider} />
-                  <ProtectedRoute path="/profile/manage-git-provider" component={ManageGitProvider} />
+                  <ProtectedRoute path="/app/add-git-provider" component={CreateGitProvider} />
+                  <ProtectedRoute path="/app/manage-git-provider" component={ManageGitProvider} />
                   <ProtectedRoute component={Nomatch} />
                 </Switch>
               </Col>

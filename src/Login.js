@@ -96,7 +96,8 @@ function Login(props) {
           displayName: response.data.displayName,
           roles: response.data.roles,
           tenantId: response.data.tenantId,
-          email: response.data.email
+          email: response.data.email,
+          permissions: ['open-dashboard', 'test']
         };
 
         userContext.setCurrentUser(user);
