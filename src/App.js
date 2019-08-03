@@ -7,6 +7,7 @@ import Login from './Login';
 import Nomatch from './Nomatch';
 import UserProvider from './UserProvider';
 import useAxiosInterceptor from './useAxiosInterceptor';
+import { withRouter } from 'react-router';
 
 function App() {
   const setupAxiosInterceptor = useAxiosInterceptor();
@@ -19,13 +20,13 @@ function App() {
   // useEffect(() => {
   //   setupAxiosInterceptor();
   // });
-  
+
   return (
     <UserProvider>
       <div className="App">
         <Switch>
-          <Route path="/" exact component={() => <Home user={{ "id": "ashim", "roles": "ROLE_ADMIN" }} />} />
-          <Route path="/profile" component={() => <Home user={{ "id": "ashim", "roles": "ROLE_ADMIN" }} />} />
+          <Route path="/" exact component={() => <Home />} />
+          <Route path="/app" component={() => <Home />} />
           <Route path="/login" component={Login} />
           <Route component={Nomatch} />
         </Switch>

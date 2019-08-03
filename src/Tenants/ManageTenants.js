@@ -3,6 +3,8 @@ import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm, Tag, PageH
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+//import { handleApiResponseErrors } from '../Util';
+import util from '../Util';
 
 class ManageTenants extends Component {
     constructor(props) {
@@ -88,8 +90,11 @@ class ManageTenants extends Component {
             .then((response) => {
                 this.setState({ "iconLoading": false });
                 this.setState({ "dataSource": response.data });
+                util.handleApiResponseErrors();
+               // message.info(util.getApiRequestDefaults());
             })
             .catch((error) => {
+                console.log(error.response);
                 this.setState({ "iconLoading": false });
             });
     }

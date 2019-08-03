@@ -44,7 +44,7 @@ class CreateTenant extends Component {
                 console.log(response);
                 this.setState({ "iconLoading": false });
                 message.success('Tenant created successfully.', 5);
-                this.props.history.push('/profile/manage-tenants');
+                this.props.history.push('/app/manage-tenants');
             })
             .catch((error) => {
                 this.setState({ iconLoading: false });

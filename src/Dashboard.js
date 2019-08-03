@@ -4,7 +4,8 @@ import './App.css';
 
 import { Route } from 'react-router-dom';
 
-function Dashboard() {
+function Dashboard(props) {
+  console.log("dashboard", props);
   return (
     <div>
         Dashboard

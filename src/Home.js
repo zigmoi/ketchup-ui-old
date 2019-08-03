@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import './App.css';
 
-import { Route, Switch, Link } from 'react-router-dom';
+import { Switch, Link } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import Dashboard1 from './Dashboard1';
 import Nomatch from './Nomatch';
@@ -14,24 +14,31 @@ import ManageTenants from './Tenants/ManageTenants';
 import ManageUsers from './Users/ManageUsers';
 import CreateTenant from './Tenants/CreateTenant';
 import CreateUser from './Users/CreateUser';
+import CreateUser1 from './Users/CreateUser1';
+import ManageUsers1 from './Users/ManageUsers1';
 
-function Home(props) {
+
+function Home() {
   const { Header, Content, Sider } = Layout;
   const SubMenu = Menu.SubMenu;
 
   const userContext = useContext(UserContext);
   const [collapsed, setCollapsed] = useState(false);
 
-
-
   let userProfileButton;
   const profileContent = (
     <div>
       <span>User: </span>
-      <span style={{ fontWeight: 'bold' }}>{props.user.id}</span>
+      <span style={{ fontWeight: 'bold' }}>{userContext.currentUser ? userContext.currentUser.id : ""}</span>
+      <br />
+      <span>Alias: </span>
+      <span style={{ fontWeight: 'bold' }}>{userContext.currentUser ? userContext.currentUser.displayName : ""}</span>
       <br />
       <span>Role: </span>
-      <span style={{ fontWeight: 'bold' }}>{props.user.roles.replace("ROLE_", "")}</span>
+      <span style={{ fontWeight: 'bold' }}>{userContext.currentUser ? userContext.currentUser.roles[0].replace("ROLE_", "") : ""}</span>
+      <br />
+      <span>Email: </span>
+      <span style={{ fontWeight: 'bold' }}>{userContext.currentUser ? userContext.currentUser.email : ""}</span>
       <br />
       <Link to="/login"
         onClick={() => {
@@ -42,15 +49,17 @@ function Home(props) {
     </div>
   );
 
+
   userProfileButton = (
     <Menu.Item key="username" style={{ float: "right" }}>
       <Popover placement="bottomLeft" content={profileContent} trigger={"click"}>
         <Avatar style={{ backgroundColor: '#f56a00', verticalAlign: 'middle' }} size="large">
-          {props.user.id}
+          {userContext.currentUser ? userContext.currentUser.displayName.charAt(0).toUpperCase() : ""}
         </Avatar>
       </Popover>
     </Menu.Item >
   )
+
 
   return (
     <Layout style={{ height: '100vh', backgroundColor: '#efefef', padding: '0px' }}>
@@ -61,8 +70,8 @@ function Home(props) {
           style={{ backgroundColor: '#fff' }}
         >
           {/* <Menu.Item key="Spinner" style={{ fontWeight: 'bold', float: 'left' }}>
-            <Spin spinning />
-          </Menu.Item> */}
+          <Spin spinning />
+        </Menu.Item> */}
           <Menu.Item key="Heading" style={{ fontWeight: 'bold', color: 'black', float: 'left' }}>
             <span style={{ fontSize: 14 }}> Ketchup Management Console</span>
           </Menu.Item>
@@ -80,31 +89,43 @@ function Home(props) {
           <Menu mode="inline" theme="light" style={{ background: '#fff', borderRight: 0, textAlign: 'left' }}>
 
             <Menu.Item key="dashboard">
-              <Link to="/profile/dashboard">
+              <Link to="/app/dashboard">
                 <Icon type="home" />
                 <span style={{ fontWeight: 'bold' }}>Dashboard</span>
               </Link>
             </Menu.Item>
             <Menu.Item key="create-tenant">
-              <Link to="/profile/create-tenant">
+              <Link to="/app/create-tenant">
                 <Icon type="usergroup-add" />
                 <span style={{ fontWeight: 'bold' }}>Create Tenant</span>
               </Link>
             </Menu.Item>
             <Menu.Item key="manage-tenants">
-              <Link to="/profile/manage-tenants">
+              <Link to="/app/manage-tenants">
                 <Icon type="team" />
                 <span style={{ fontWeight: 'bold' }}>Manage Tenants</span>
               </Link>
             </Menu.Item>
+            <Menu.Item key="create-user1">
+              <Link to="/app/create-user1">
+                <Icon type="user-add" />
+                <span style={{ fontWeight: 'bold' }}>Create User1</span>
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="manage-users1">
+              <Link to="/app/manage-users1">
+                <Icon type="user" />
+                <span style={{ fontWeight: 'bold' }}>Manage Users1</span>
+              </Link>
+            </Menu.Item>
             <Menu.Item key="create-user">
-              <Link to="/profile/create-user">
+              <Link to="/app/create-user">
                 <Icon type="user-add" />
                 <span style={{ fontWeight: 'bold' }}>Create User</span>
               </Link>
             </Menu.Item>
             <Menu.Item key="manage-users">
-              <Link to="/profile/manage-users">
+              <Link to="/app/manage-users">
                 <Icon type="user" />
                 <span style={{ fontWeight: 'bold' }}>Manage Users</span>
               </Link>
@@ -134,15 +155,17 @@ function Home(props) {
             <Row>
               <Col span={24}>
                 <Switch>
-                  <Route path="/" exact component={Dashboard} />
-                  <Route path="/profile" exact component={Dashboard} />
-                  <Route path="/profile/dashboard" component={Dashboard} />
-                  <ProtectedRoute path="/profile/dashboard1" component={Dashboard1} />
-                  <ProtectedRoute path="/profile/create-tenant" component={CreateTenant} />
-                  <ProtectedRoute path="/profile/manage-tenants" component={ManageTenants} />
-                  <ProtectedRoute path="/profile/create-user" component={CreateUser} />
-                  <ProtectedRoute path="/profile/manage-users" component={ManageUsers} />
-                  <Route component={Nomatch} />
+                  <ProtectedRoute path="/" exact component={Dashboard} />
+                  <ProtectedRoute path="/app" exact component={Dashboard} />
+                  <ProtectedRoute path="/app/dashboard" component={Dashboard} />
+                  <ProtectedRoute path="/app/dashboard1" component={Dashboard1} />
+                  <ProtectedRoute path="/app/create-tenant" component={CreateTenant} />
+                  <ProtectedRoute path="/app/manage-tenants" component={ManageTenants} />
+                  <ProtectedRoute path="/app/create-user1" component={CreateUser1} />
+                  <ProtectedRoute path="/app/manage-users1" component={ManageUsers1} />
+                  <ProtectedRoute path="/app/create-user" component={CreateUser} />
+                  <ProtectedRoute path="/app/manage-users" component={ManageUsers} />
+                  <ProtectedRoute component={Nomatch} />
                 </Switch>
               </Col>
             </Row>

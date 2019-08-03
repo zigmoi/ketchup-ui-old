@@ -36,7 +36,7 @@ class CreateUser extends Component {
 
     componentDidMount() {
         document.title = "Create User";
-        console.log("user context: ", this.context);
+        console.log("user context: ", this.context); //not working on page refresh.
     }
 
     changeRole = (selectedRole) => {
@@ -60,7 +60,7 @@ class CreateUser extends Component {
                 console.log(response);
                 this.setState({ "iconLoading": false });
                 message.success('User created successfully.', 5);
-                this.props.history.push('/profile/manage-users');
+                this.props.history.push('/app/manage-users');
             })
             .catch((error) => {
                 this.setState({ iconLoading: false });
@@ -149,3 +149,5 @@ class CreateUser extends Component {
 
 
 export default CreateUser;
+
+

@@ -27,7 +27,7 @@ function Login(props) {
   };
 
 
-  let homePageUrl = "/profile/dashboard";
+  let homePageUrl = "/app/dashboard";
 
   let { from } = props.location.state || { from: { pathname: homePageUrl } };
   const { history } = props;
@@ -71,16 +71,40 @@ function Login(props) {
     }).then((response) => {
       console.log(response);
       // this.setState({loadingIcon: false});
-      var decoded_token = jwt_decode(response.data.access_token);
-      console.log(decoded_token);
-      let user = { id: username, accessToken: response.data.access_token, firstName: username };
-      userContext.setCurrentUser(user);
-      history.push(from);
+      // var decoded_token = jwt_decode(response.data.access_token);
+      // console.log(decoded_token);
+      getUserInfo(username, response.data.access_token);
     })
       .catch((error) => {
         console.log("Error in login request: ", error);
       });
 
+  }
+
+  function getUserInfo(loggedInUserName, accessToken) {
+    let config = {
+      headers: {
+        "Authorization": "Bearer " + accessToken
+      }
+    }
+    axios.get('http://localhost:8097/v1/user/' + loggedInUserName, config)
+      .then((response) => {
+        console.log("getUserInfo", response);
+        let user = {
+          id: loggedInUserName,
+          accessToken: accessToken,
+          displayName: response.data.displayName,
+          roles: response.data.roles,
+          tenantId: response.data.tenantId,
+          email: response.data.email
+        };
+
+        userContext.setCurrentUser(user);
+        history.push(from);
+      })
+      .catch((error) => {
+        message.error("Unable to fetch profile information.")
+      });
   }
 
 

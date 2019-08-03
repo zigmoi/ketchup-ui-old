@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import UserContext from './UserContext';
 import axios from 'axios';
-import { message } from 'antd';
+import { message, Modal, Col, Row } from 'antd';
+
 
 function useAxiosInterceptor() {
     const userContext = useContext(UserContext);
-
     function setup() {
         // Add a request interceptor
         axios.defaults.timeout = 30000;
@@ -17,14 +17,14 @@ function useAxiosInterceptor() {
                 config.headers.common['Authorization'] = 'Bearer ' + accessToken;
             } else {
                 let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                if(currentUser && currentUser.accessToken){
+                if (currentUser && currentUser.accessToken) {
                     accessToken = currentUser.accessToken;
                     config.headers.common['Authorization'] = 'Bearer ' + accessToken;
                 }
             }
             return config;
         }, (error) => {
-            console.log("Error in Request Interceptor: ",error);
+            console.log("Error in Request Interceptor: ", error);
             return Promise.reject(error);
         });
 
@@ -38,7 +38,6 @@ function useAxiosInterceptor() {
                     // The request was made and the server responded with a status code
                     // that falls out of the range of 2xx
                     let responseStatus = error.response.status;
-                    //let errorMessage = error.response.data.apierror.message || error.response.data.error_description;
                     let errorMessage = "";
                     if (error.response.data.apierror && error.response.data.apierror.message) {
                         errorMessage = error.response.data.apierror.message;
@@ -49,10 +48,11 @@ function useAxiosInterceptor() {
                     }
                     if (responseStatus === 401) {
                         message.error('Authentication required, Please login to continue.', 5);
-                        // localStorage.removeItem("AuthToken");
-                        // localStorage.removeItem("LoggedInUser");
-                        // this.props.logoutSuccess();
-                        // this.props.history.replace("/login");
+                        //UserProvider has not wrapped this so userContext.clearCurrentUser is not available here.
+                        //withRouter around interceptors parent component and passing history props is making is render multiple times.
+                        //Thus using localStorage and window.location directly.
+                        localStorage.removeItem("currentUser");
+                        window.location.href = "/login";
                     } else if (responseStatus === 403) {
                         message.error('Access denied, If you think you should have access to this resource, please contact support.', 5);
                     } else if (responseStatus === 404) {
@@ -61,8 +61,24 @@ function useAxiosInterceptor() {
                         let subErrors = "";
                         if (error.response.data.apierror && error.response.data.apierror.subErrors) {
                             subErrors = error.response.data.apierror.subErrors;
-                            // this.setState({ subErrors: subErrors });
-                            // this.setState({ showValidationErrorsView: true });
+                            let errorView = (
+                                <ul>
+                                    {subErrors.map((value, index) => {
+                                        return <li key={index}>{value.field} : {value.message}</li>
+                                    })}
+                                </ul>);
+                            Modal.error({
+                                width: 850,
+                                title: 'Validation Errors:',
+                                content: (
+                                    <Row type="flex" justify="center" align="middle">
+                                        <Col span={24}>
+                                            {errorView}
+                                        </Col>
+                                    </Row>
+                                ),
+                                onOk() { },
+                            });
                         } else {
                             message.error('Invalid request, ' + errorMessage, 5);
                         }

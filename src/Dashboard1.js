@@ -2,10 +2,10 @@ import React, { useContext } from 'react';
 import UserContext from './UserContext';
 import { Link } from 'react-router-dom';
 
-function Dashboard1() {
+function Dashboard1(props) {
   const user = useContext(UserContext);
   console.log(user);
-  
+  console.log("dashboard1", props);
   return (
     <div>
       Dashboard1:  { user.currentUser? user.currentUser.firstName : "" }
