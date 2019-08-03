@@ -14,8 +14,11 @@ import ManageTenants from './Tenants/ManageTenants';
 import ManageUsers from './Users/ManageUsers';
 import CreateTenant from './Tenants/CreateTenant';
 import CreateUser from './Users/CreateUser';
+
 import CreateUser1 from './Users/CreateUser1';
 import ManageUsers1 from './Users/ManageUsers1';
+import CreateGitProvider from './Resources/CreateGitProvider';
+import ManageGitProvider from './Resources/ManageGitProvider';
 
 
 function Home() {
@@ -140,6 +143,27 @@ function Home() {
               <Menu.Item key="user-account"><span style={{ fontWeight: 'bold' }}>User Account Settings</span></Menu.Item>
               <Menu.Item key="app"><span style={{ fontWeight: 'bold' }}>Application Settings</span></Menu.Item>
             </SubMenu>
+
+            <SubMenu
+              key="resources"
+              title={<span>
+                <Icon type="team" />
+                <span style={{ fontWeight: 'bold' }}>Resources</span>
+              </span>}
+            >
+              <Menu.Item key="add-git-provider">
+                <Link to="/profile/add-git-provider">
+                  <Icon type="team" />
+                  <span style={{ fontWeight: 'bold' }}>Add Git Provider</span>
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="manage-git-provider">
+                <Link to="/profile/manage-git-provider">
+                  <Icon type="team" />
+                  <span style={{ fontWeight: 'bold' }}>Manage Git Provider</span>
+                </Link>
+              </Menu.Item>
+            </SubMenu>
           </Menu>
         </Sider>
 
@@ -165,6 +189,8 @@ function Home() {
                   <ProtectedRoute path="/app/manage-users1" component={ManageUsers1} />
                   <ProtectedRoute path="/app/create-user" component={CreateUser} />
                   <ProtectedRoute path="/app/manage-users" component={ManageUsers} />
+                  <ProtectedRoute path="/profile/add-git-provider" component={CreateGitProvider} />
+                  <ProtectedRoute path="/profile/manage-git-provider" component={ManageGitProvider} />
                   <ProtectedRoute component={Nomatch} />
                 </Switch>
               </Col>
