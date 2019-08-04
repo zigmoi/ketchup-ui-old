@@ -7,6 +7,7 @@ import axios from 'axios';
 import useLoginStatus from './useLoginStatus';
 import { Form, Icon, Input, Button, Spin, Modal, message, Layout, Menu } from 'antd';
 import { Row, Col } from 'antd';
+import { mapRolesToPermissions } from './Util';
 
 function Login(props) {
   console.log("login");
@@ -90,6 +91,7 @@ function Login(props) {
     axios.get('http://localhost:8097/v1/user/' + loggedInUserName, config)
       .then((response) => {
         console.log("getUserInfo", response);
+        let permissions = mapRolesToPermissions(response.data.roles);
         let user = {
           id: loggedInUserName,
           accessToken: accessToken,
@@ -97,7 +99,7 @@ function Login(props) {
           roles: response.data.roles,
           tenantId: response.data.tenantId,
           email: response.data.email,
-          permissions: ['open-dashboard', 'test']
+          permissions: permissions
         };
 
         userContext.setCurrentUser(user);

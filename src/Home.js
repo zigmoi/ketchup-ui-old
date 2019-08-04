@@ -1,15 +1,19 @@
 import React, { useState, useContext } from 'react';
 import './App.css';
-
 import { Switch, Link } from 'react-router-dom';
-import Dashboard from './Dashboard';
-import Dashboard1 from './Dashboard1';
-import Nomatch from './Nomatch';
-import ProtectedRoute from './ProtectedRoute';
 import { Icon, Layout, Menu, Spin, Popover, Avatar } from 'antd';
 import { Row, Col } from 'antd';
-import UserContext from './UserContext';
 
+import useValidateUserHasAnyPermission from './useValidateUserHasAnyPermission';
+import useValidateUserHasAllPermissions from './useValidateUserPermissions';
+
+import UserContext from './UserContext';
+import ProtectedRoute from './ProtectedRoute';
+
+
+import Nomatch from './Nomatch';
+import Dashboard from './Dashboard';
+import Dashboard1 from './Dashboard1';
 import ManageTenants from './Tenants/ManageTenants';
 import ManageUsers from './Users/ManageUsers';
 import CreateTenant from './Tenants/CreateTenant';
@@ -19,6 +23,8 @@ import CreateUser1 from './Users/CreateUser1';
 import ManageUsers1 from './Users/ManageUsers1';
 import CreateGitProvider from './Resources/CreateGitProvider';
 import ManageGitProvider from './Resources/ManageGitProvider';
+
+
 
 
 function Home() {
@@ -63,6 +69,130 @@ function Home() {
     </Menu.Item >
   )
 
+  let createTenantMenu;
+  if (useValidateUserHasAllPermissions(['create-tenant'])) {
+    createTenantMenu = (
+      <Menu.Item key="create-tenant">
+        <Link to="/app/create-tenant">
+          <Icon type="plus-circle" />
+          <span style={{ fontWeight: 'bold' }}>Create</span>
+        </Link>
+      </Menu.Item>
+    );
+  } else {
+    createTenantMenu = null;
+  }
+
+  let manageTenantsMenu;
+  if (useValidateUserHasAllPermissions(['manage-tenants'])) {
+    manageTenantsMenu = (
+      <Menu.Item key="manage-tenants">
+        <Link to="/app/manage-tenants">
+          <Icon type="container" />
+          <span style={{ fontWeight: 'bold' }}>Manage</span>
+        </Link>
+      </Menu.Item>
+    );
+  } else {
+    manageTenantsMenu = null;
+  }
+
+  let tenantsSubMenu;
+  if (useValidateUserHasAnyPermission(['create-tenant', 'manage-tenants'])) {
+    tenantsSubMenu = (
+      <SubMenu
+        key="tenants"
+        title={<span>
+          <Icon type="team" />
+          <span style={{ fontWeight: 'bold' }}>Tenants</span>
+        </span>}
+      >
+        {createTenantMenu}
+        {manageTenantsMenu}
+      </SubMenu>
+    )
+  } else {
+    tenantsSubMenu = null;
+  }
+
+
+
+  let createUserMenu;
+  if (useValidateUserHasAllPermissions(['create-user'])) {
+    createUserMenu = (
+      <Menu.Item key="create-user">
+        <Link to="/app/create-user">
+          <Icon type="plus-circle" />
+          <span style={{ fontWeight: 'bold' }}>Create</span>
+        </Link>
+      </Menu.Item>
+    );
+  } else {
+    createUserMenu = null;
+  }
+
+  let manageUsersMenu;
+  if (useValidateUserHasAllPermissions(['manage-users'])) {
+    manageUsersMenu = (
+      <Menu.Item key="manage-users">
+        <Link to="/app/manage-users">
+          <Icon type="container" />
+          <span style={{ fontWeight: 'bold' }}>Manage</span>
+        </Link>
+      </Menu.Item>
+    );
+  } else {
+    manageUsersMenu = null;
+  }
+
+  let createUserMenu1;
+  if (useValidateUserHasAllPermissions(['create-user'])) {
+    createUserMenu1 = (
+      <Menu.Item key="create-user1">
+        <Link to="/app/create-user1">
+          <Icon type="plus-circle" />
+          <span style={{ fontWeight: 'bold' }}>Create User1</span>
+        </Link>
+      </Menu.Item>
+    );
+  } else {
+    createUserMenu1 = null;
+  }
+
+  let manageUsersMenu1;
+  if (useValidateUserHasAllPermissions(['manage-users'])) {
+    manageUsersMenu1 = (
+      <Menu.Item key="manage-users1">
+        <Link to="/app/manage-users1">
+          <Icon type="container" />
+          <span style={{ fontWeight: 'bold' }}>Manage Users1</span>
+        </Link>
+      </Menu.Item>
+    );
+  } else {
+    manageUsersMenu1 = null;
+  }
+
+  let usersSubMenu;
+  if (useValidateUserHasAnyPermission(['create-user', 'manage-users'])) {
+    usersSubMenu = (
+      <SubMenu
+        key="users"
+        title={<span>
+          <Icon type="user" />
+          <span style={{ fontWeight: 'bold' }}>Users</span>
+        </span>}
+      >
+        {createUserMenu}
+        {manageUsersMenu}
+        {createUserMenu1}
+        {manageUsersMenu1}
+      </SubMenu>
+    )
+  } else {
+    usersSubMenu = null;
+  }
+
 
   return (
     <Layout style={{ height: '100vh', backgroundColor: '#efefef', padding: '0px' }}>
@@ -97,52 +227,8 @@ function Home() {
                 <span style={{ fontWeight: 'bold' }}>Dashboard</span>
               </Link>
             </Menu.Item>
-            <Menu.Item key="create-tenant">
-              <Link to="/app/create-tenant">
-                <Icon type="usergroup-add" />
-                <span style={{ fontWeight: 'bold' }}>Create Tenant</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="manage-tenants">
-              <Link to="/app/manage-tenants">
-                <Icon type="team" />
-                <span style={{ fontWeight: 'bold' }}>Manage Tenants</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="create-user1">
-              <Link to="/app/create-user1">
-                <Icon type="user-add" />
-                <span style={{ fontWeight: 'bold' }}>Create User1</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="manage-users1">
-              <Link to="/app/manage-users1">
-                <Icon type="user" />
-                <span style={{ fontWeight: 'bold' }}>Manage Users1</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="create-user">
-              <Link to="/app/create-user">
-                <Icon type="user-add" />
-                <span style={{ fontWeight: 'bold' }}>Create User</span>
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="manage-users">
-              <Link to="/app/manage-users">
-                <Icon type="user" />
-                <span style={{ fontWeight: 'bold' }}>Manage Users</span>
-              </Link>
-            </Menu.Item>
-            <SubMenu
-              key="settings"
-              title={<span>
-                <Icon type="setting" />
-                <span style={{ fontWeight: 'bold' }}>Settings</span>
-              </span>}
-            >
-              <Menu.Item key="user-account"><span style={{ fontWeight: 'bold' }}>User Account Settings</span></Menu.Item>
-              <Menu.Item key="app"><span style={{ fontWeight: 'bold' }}>Application Settings</span></Menu.Item>
-            </SubMenu>
+            {tenantsSubMenu}
+            {usersSubMenu}
 
             <SubMenu
               key="resources"
@@ -179,16 +265,16 @@ function Home() {
             <Row>
               <Col span={24}>
                 <Switch>
-                  <ProtectedRoute path="/" exact component={Dashboard} />
-                  <ProtectedRoute path="/app" exact component={Dashboard} />
-                  <ProtectedRoute path="/app/dashboard" component={Dashboard} permissions={['open-dashboard', 'test']} />
-                  <ProtectedRoute path="/app/dashboard1" component={Dashboard1} />
-                  <ProtectedRoute path="/app/create-tenant" component={CreateTenant} />
-                  <ProtectedRoute path="/app/manage-tenants" component={ManageTenants} />
-                  <ProtectedRoute path="/app/create-user1" component={CreateUser1} />
-                  <ProtectedRoute path="/app/manage-users1" component={ManageUsers1} />
-                  <ProtectedRoute path="/app/create-user" component={CreateUser} />
-                  <ProtectedRoute path="/app/manage-users" component={ManageUsers} />
+                  <ProtectedRoute path="/" exact component={Dashboard} permissions={['dashboard', 'test']} />
+                  <ProtectedRoute path="/app" exact component={Dashboard} permissions={['dashboard', 'test']} />
+                  <ProtectedRoute path="/app/dashboard" component={Dashboard} permissions={['dashboard', 'test']} />
+                  <ProtectedRoute path="/app/dashboard1" component={Dashboard1} permissions={['dashboard1']} />
+                  <ProtectedRoute path="/app/create-tenant" component={CreateTenant} permissions={['create-tenant']} />
+                  <ProtectedRoute path="/app/manage-tenants" component={ManageTenants} permissions={['manage-tenants']} />
+                  <ProtectedRoute path="/app/create-user1" component={CreateUser1} permissions={['create-user']} />
+                  <ProtectedRoute path="/app/manage-users1" component={ManageUsers1} permissions={['manage-users']} />
+                  <ProtectedRoute path="/app/create-user" component={CreateUser} permissions={['create-user']} />
+                  <ProtectedRoute path="/app/manage-users" component={ManageUsers} permissions={['manage-users']} />
                   <ProtectedRoute path="/app/add-git-provider" component={CreateGitProvider} />
                   <ProtectedRoute path="/app/manage-git-provider" component={ManageGitProvider} />
                   <ProtectedRoute component={Nomatch} />

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import useLoginStatus from './useLoginStatus';
-import useValidateUserPermissions from './useValidateUserPermissions';
+import useValidateUserHasAllPermissions from './useValidateUserPermissions';
 import AccessDenied from './AccessDenied';
 
 function ProtectedRoute({ component: Component, permissions: permissions, ...rest }) {
@@ -9,7 +9,7 @@ function ProtectedRoute({ component: Component, permissions: permissions, ...res
     const loginStatus = useLoginStatus();
     console.log(permissions);
     let requiredPermissions = permissions || [];
-    let hasPermissions = useValidateUserPermissions(requiredPermissions);
+    let hasPermissions = useValidateUserHasAllPermissions(requiredPermissions);
     console.log("hasPermissions", hasPermissions);
 
 

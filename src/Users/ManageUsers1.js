@@ -10,7 +10,7 @@ function ManageUsers1() {
 
     useEffect(() => {
         console.log("in effect ManageUsers1");
-        document.title = "Manage Users";
+        document.title = "Manage Users 1";
         initColumns();
         loadAll();
     }, []);
@@ -117,7 +117,7 @@ function ManageUsers1() {
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold' }} >Manage Users</label>
+                    <label style={{ fontWeight: 'bold' }} >Manage Users 1</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
