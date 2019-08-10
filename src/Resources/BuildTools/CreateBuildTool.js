@@ -3,9 +3,9 @@ import { Form, Icon, Input, Button } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import { Tabs } from 'antd';
 import axios from 'axios';
-import BitBucket from './GitProviders/BitBucket'
+import Maven from './Maven'
 
-class CreateGitProvider extends Component {
+class CreateBuildTool extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -18,21 +18,18 @@ class CreateGitProvider extends Component {
     }
 
     componentDidMount() {
-        document.title = "Create Tenant";
+        document.title = "Create Build Tools";
     }
 
     render() {
         const { TabPane } = Tabs;
         return (
             <div style={{ minHeight: 'calc(100vh - 64px)' }}>
-                <Tabs defaultActiveKey="bitbucket">
-                    <TabPane tab="Bitbucket" key="bitbucket">
-                      <BitBucket />
+                <Tabs defaultActiveKey="maven">
+                    <TabPane tab="Maven" key="maven">
+                      <Maven />
                     </TabPane>
-                    <TabPane tab="GitHub" key="github">
-                      Coming Soon ...
-                    </TabPane>
-                    <TabPane tab="GitLab" key="gitlab">
+                    <TabPane tab="Gradle" key="gradle">
                       Coming Soon ...
                     </TabPane>
                 </Tabs>
@@ -41,4 +38,4 @@ class CreateGitProvider extends Component {
     }
 }
 
-export default CreateGitProvider;
+export default CreateBuildTool;

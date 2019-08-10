@@ -21,8 +21,10 @@ import CreateUser from './Users/CreateUser';
 
 import CreateUser1 from './Users/CreateUser1';
 import ManageUsers1 from './Users/ManageUsers1';
-import CreateGitProvider from './Resources/CreateGitProvider';
-import ManageGitProvider from './Resources/ManageGitProvider';
+import CreateGitProvider from './Resources/GitProviders/CreateGitProvider';
+import ManageGitProvider from './Resources/GitProviders/ManageGitProvider';
+import CreateBuildTool from './Resources/BuildTools/CreateBuildTool';
+import ManageBuildTool from './Resources/BuildTools/ManageBuildTool';
 
 
 
@@ -233,23 +235,48 @@ function Home() {
             <SubMenu
               key="resources"
               title={<span>
-                <Icon type="team" />
+                <Icon type="appstore" />
                 <span style={{ fontWeight: 'bold' }}>Resources</span>
               </span>}
             >
+              <SubMenu
+              key="git-provider"
+              title={<span>
+                <Icon type="github" />
+                <span style={{ fontWeight: 'bold' }}>Git Providers</span>
+              </span>}>
               <Menu.Item key="add-git-provider">
                 <Link to="/app/add-git-provider">
-                  <Icon type="team" />
+                  <Icon type="plus-circle" />
                   <span style={{ fontWeight: 'bold' }}>Add Git Provider</span>
                 </Link>
               </Menu.Item>
               <Menu.Item key="manage-git-provider">
                 <Link to="/app/manage-git-provider">
-                  <Icon type="team" />
+                  <Icon type="container" />
                   <span style={{ fontWeight: 'bold' }}>Manage Git Provider</span>
                 </Link>
               </Menu.Item>
-            </SubMenu>
+              </SubMenu>
+            
+              <SubMenu key="build-tools"
+              title={<span> <Icon type="tool" />
+                <span style={{ fontWeight: 'bold' }}>Build Tools</span>
+              </span>}>
+                <Menu.Item key="add-build-tool">
+                  <Link to="/app/add-build-tool">
+                    <Icon type="plus-circle" />
+                    <span style={{ fontWeight: 'bold' }}>Add Build Tool</span>
+                  </Link>
+                </Menu.Item>
+                <Menu.Item key="manage-build-tool">
+                  <Link to="/app/manage-build-tool">
+                    <Icon type="container" />
+                    <span style={{ fontWeight: 'bold' }}>Mange Build Tool</span>
+                  </Link>
+                </Menu.Item>
+              </SubMenu>
+              </SubMenu>
           </Menu>
         </Sider>
 
@@ -277,6 +304,8 @@ function Home() {
                   <ProtectedRoute path="/app/manage-users" component={ManageUsers} permissions={['manage-users']} />
                   <ProtectedRoute path="/app/add-git-provider" component={CreateGitProvider} />
                   <ProtectedRoute path="/app/manage-git-provider" component={ManageGitProvider} />
+                  <ProtectedRoute path="/app/add-build-tool" component={CreateBuildTool} />
+                  <ProtectedRoute path="/app/manage-build-tool" component={ManageBuildTool} />
                   <ProtectedRoute component={Nomatch} />
                 </Switch>
               </Col>

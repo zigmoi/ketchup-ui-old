@@ -64,26 +64,26 @@ class BitBucket extends Component {
                 <Row type="flex" justify="center" align="middle">
                     <Col span={20}  >
                         <Form style={{ backgroundColor: 'white' }}>
-                            <FormItem {...formItemLayout} label=" Repo List URL ">
+                            <FormItem {...formItemLayout} label="Repo List URL " colon={false}>
                                 <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
                                     placeholder=" Repo List URL "
                                     value={this.state.repoListUrl}
                                     disabled="true"
                                     onChange={(e) => { this.setState({ repoListUrl: e.target.value }) }} />
                             </FormItem>
-                            <FormItem {...formItemLayout} label="Display Name ">
+                            <FormItem {...formItemLayout} label="Display Name " colon={false}>
                                 <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
                                     placeholder=" Display Name "
                                     value={this.state.displayName}
                                     onChange={(e) => { this.setState({ displayName: e.target.value }) }} />
                             </FormItem>
-                            <FormItem {...formItemLayout} label="Bitbucket Username ">
+                            <FormItem {...formItemLayout} label="Bitbucket Username " colon={false}>
                                 <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
                                     placeholder=" Bitbucket Username"
                                     value={this.state.username}
                                     onChange={(e) => { this.setState({ username: e.target.value }) }} />
                             </FormItem>
-                            <FormItem {...formItemLayout} label="Bitbucket Password ">
+                            <FormItem {...formItemLayout} label="Bitbucket Password " colon={false}>
                                 <Input.Password style={{ fontSize: 20 }} prefix={<Icon type="lock" style={{ fontSize: 20 }} />}
                                     type="password" placeholder=" Bitbucket Password "
                                     value={this.state.password}
