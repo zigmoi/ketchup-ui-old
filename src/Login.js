@@ -8,6 +8,7 @@ import useLoginStatus from './useLoginStatus';
 import { Form, Icon, Input, Button, Spin, Modal, message, Layout, Menu } from 'antd';
 import { Row, Col } from 'antd';
 import { mapRolesToPermissions } from './Util';
+import ProjectContext from './ProjectContext';
 
 function Login(props) {
   console.log("login");
@@ -35,6 +36,8 @@ function Login(props) {
 
   const userContext = useContext(UserContext);
   const loginStatus = useLoginStatus();
+  const projectContext = useContext(ProjectContext);
+
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -103,6 +106,7 @@ function Login(props) {
         };
 
         userContext.setCurrentUser(user);
+        projectContext.setCurrentProject({projectId: "p1"});
         history.push(from);
       })
       .catch((error) => {

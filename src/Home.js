@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import './App.css';
 import { Switch, Link } from 'react-router-dom';
-import { Icon, Layout, Menu, Spin, Popover, Avatar } from 'antd';
+import { Icon, Layout, Menu, Spin, Popover, Avatar, Select, message } from 'antd';
 import { Row, Col } from 'antd';
 
 import useValidateUserHasAnyPermission from './useValidateUserHasAnyPermission';
@@ -23,6 +23,8 @@ import CreateUser1 from './Users/CreateUser1';
 import ManageUsers1 from './Users/ManageUsers1';
 import CreateGitProvider from './Resources/CreateGitProvider';
 import ManageGitProvider from './Resources/ManageGitProvider';
+import ProjectContext from './ProjectContext';
+import useCurrentProject from './useCurrentProject';
 
 
 
@@ -30,9 +32,29 @@ import ManageGitProvider from './Resources/ManageGitProvider';
 function Home() {
   const { Header, Content, Sider } = Layout;
   const SubMenu = Menu.SubMenu;
+  const { Option } = Select;
 
   const userContext = useContext(UserContext);
+  const projectContext = useContext(ProjectContext);
+  const currentProject = useCurrentProject();
+
   const [collapsed, setCollapsed] = useState(false);
+  const [projectId, setProjectId] = useState("");
+
+
+  useEffect(() => {
+    console.log("in effect home, project: ", currentProject);
+    setProjectId(currentProject ? currentProject.projectId : "");
+  }, []);
+
+
+  function onProjectChange(value) {
+    console.log(`selected ${value}`);
+    projectContext.setCurrentProject({ projectId: value });
+    setProjectId(value);
+    message.info(`Activated project ${value}`);
+  }
+
 
   let userProfileButton;
   const profileContent = (
@@ -51,6 +73,7 @@ function Home() {
       <br />
       <Link to="/login"
         onClick={() => {
+          projectContext.clearCurrentProject();
           userContext.clearCurrentUser();
         }}>
         <span style={{ fontWeight: 'bold' }}>Sign Out</span>
@@ -200,6 +223,7 @@ function Home() {
         <Menu
           theme="light"
           mode="horizontal"
+          activeKey= "Heading"
           style={{ backgroundColor: '#fff' }}
         >
           {/* <Menu.Item key="Spinner" style={{ fontWeight: 'bold', float: 'left' }}>
@@ -208,7 +232,20 @@ function Home() {
           <Menu.Item key="Heading" style={{ fontWeight: 'bold', color: 'black', float: 'left' }}>
             <span style={{ fontSize: 14 }}> Ketchup Management Console</span>
           </Menu.Item>
+
           {userProfileButton}
+          <Menu.Item key="Project" style={{ fontWeight: 'bold', color: 'black', float: 'left', float: "right" }}>
+            <span style={{ fontSize: 14 }}> Active Project: </span>
+            <Select defaultValue={projectId} 
+                value={projectId} 
+                size={"small"}
+                style={{ width: 120 }} 
+                onChange={onProjectChange}>
+              <Option value="p1">P1</Option>
+              <Option value="p2">P2</Option>
+              <Option value="p3">P3</Option>
+            </Select>
+          </Menu.Item>
         </Menu>
       </Header>
       <Layout style={{ height: 'calc(100vh - 48px)' }}>

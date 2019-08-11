@@ -6,8 +6,10 @@ import Home from './Home';
 import Login from './Login';
 import Nomatch from './Nomatch';
 import UserProvider from './UserProvider';
+import ProjectProvider from './ProjectProvider';
 import useAxiosInterceptor from './useAxiosInterceptor';
 import { withRouter } from 'react-router';
+
 
 function App() {
   const setupAxiosInterceptor = useAxiosInterceptor();
@@ -23,14 +25,16 @@ function App() {
 
   return (
     <UserProvider>
-      <div className="App">
-        <Switch>
-          <Route path="/" exact component={() => <Home />} />
-          <Route path="/app" component={() => <Home />} />
-          <Route path="/login" component={Login} />
-          <Route component={Nomatch} />
-        </Switch>
-      </div>
+      <ProjectProvider>
+        <div className="App">
+          <Switch>
+            <Route path="/" exact component={() => <Home />} />
+            <Route path="/app" component={() => <Home />} />
+            <Route path="/login" component={Login} />
+            <Route component={Nomatch} />
+          </Switch>
+        </div>
+      </ProjectProvider>
     </UserProvider>
   );
 }
