@@ -203,6 +203,83 @@ function Home() {
     usersSubMenu = null;
   }
 
+  let createGitProviderMenu = null;
+  if (useValidateUserHasAllPermissions(['create-git-provider'])) {
+    createGitProviderMenu = (
+      <Menu.Item key="add-git-provider">
+        <Link to="/app/add-git-provider">
+          <Icon type="plus-circle" />
+          <span style={{ fontWeight: 'bold' }}>Add Git Provider</span>
+        </Link>
+      </Menu.Item>
+    );
+  }
+
+  let manageGitProviderMenu = null;
+  if (useValidateUserHasAllPermissions(['manage-git-provider'])) {
+    manageGitProviderMenu = (
+      <Menu.Item key="manage-git-provider">
+        <Link to="/app/manage-git-provider">
+          <Icon type="container" />
+          <span style={{ fontWeight: 'bold' }}>Manage Git Provider</span>
+        </Link>
+      </Menu.Item>
+    );
+  }
+
+  let gitProviderSubMenu = null;
+  if (useValidateUserHasAnyPermission(["create-git-provider", "manage-git-provider"])) {
+    gitProviderSubMenu = (
+      <SubMenu key="git-provider" title={<span> <Icon type="github" /> <span style={{ fontWeight: 'bold' }}>Git Providers</span></span>}>
+        {createGitProviderMenu}
+        {manageGitProviderMenu}
+      </SubMenu>
+    )
+  }
+
+  let createBuildToolMenu = null;
+  if (useValidateUserHasAllPermissions(['create-git-provider'])) {
+    createBuildToolMenu = (
+      <Menu.Item key="add-build-tool">
+        <Link to="/app/add-build-tool">
+          <Icon type="plus-circle" />
+          <span style={{ fontWeight: 'bold' }}>Add Build Tool</span>
+        </Link>
+      </Menu.Item>
+    );
+  }
+
+  let manageBuildToolMenu = null;
+  if (useValidateUserHasAllPermissions(['manage-git-provider'])) {
+    manageBuildToolMenu = (
+      <Menu.Item key="manage-build-tool">
+        <Link to="/app/manage-build-tool">
+          <Icon type="container" />
+          <span style={{ fontWeight: 'bold' }}>Mange Build Tool</span>
+        </Link>
+      </Menu.Item>
+    );
+  }
+
+  let buildToolSubMenu = null;
+  if (useValidateUserHasAnyPermission(["create-build-tool", "manage-build-tool"])) {
+    buildToolSubMenu = (
+      <SubMenu key="build-tools" title={<span> <Icon type="tool" /><span style={{ fontWeight: 'bold' }}>Build Tools</span></span>}>
+        {createBuildToolMenu}
+        {manageBuildToolMenu}
+      </SubMenu>
+    )
+  }
+
+  let resourceSubMenu = null;
+  if (useValidateUserHasAnyPermission(["create-git-provider", "manage-git-provider", "create-build-tool", "manage-build-tool"])) {
+    resourceSubMenu = (
+      <SubMenu key="resources" title={<span><Icon type="appstore" /><span style={{ fontWeight: 'bold' }}>Resources</span></span>}>
+        {gitProviderSubMenu}
+        {buildToolSubMenu}
+      </SubMenu>
+    )
+  }
 
   return (
     <Layout style={{ height: '100vh', backgroundColor: '#efefef', padding: '0px' }}>
@@ -253,8 +330,9 @@ function Home() {
             </Menu.Item>
             {tenantsSubMenu}
             {usersSubMenu}
+            {resourceSubMenu}
 
-            <SubMenu
+            {/* <SubMenu
               key="resources"
               title={<span>
                 <Icon type="appstore" />
@@ -298,7 +376,7 @@ function Home() {
                   </Link>
                 </Menu.Item>
               </SubMenu>
-            </SubMenu>
+            </SubMenu> */}
           </Menu>
         </Sider>
 
@@ -324,10 +402,10 @@ function Home() {
                   <ProtectedRoute path="/app/manage-users1" component={ManageUsers1} permissions={['manage-users']} />
                   <ProtectedRoute path="/app/create-user" component={CreateUser} permissions={['create-user']} />
                   <ProtectedRoute path="/app/manage-users" component={ManageUsers} permissions={['manage-users']} />
-                  <ProtectedRoute path="/app/add-git-provider" component={CreateGitProvider} />
-                  <ProtectedRoute path="/app/manage-git-provider" component={ManageGitProvider} />
-                  <ProtectedRoute path="/app/add-build-tool" component={CreateBuildTool} />
-                  <ProtectedRoute path="/app/manage-build-tool" component={ManageBuildTool} />
+                  <ProtectedRoute path="/app/add-git-provider" component={CreateGitProvider} permissions={['create-git-provider']} />
+                  <ProtectedRoute path="/app/manage-git-provider" component={ManageGitProvider} permissions={['manage-git-provider']} />
+                  <ProtectedRoute path="/app/add-build-tool" component={CreateBuildTool} permissions={['create-build-tool']} />
+                  <ProtectedRoute path="/app/manage-build-tool" component={ManageBuildTool} permissions={['manage-build-tool']} />
                   <ProtectedRoute component={Nomatch} />
                 </Switch>
               </Col>

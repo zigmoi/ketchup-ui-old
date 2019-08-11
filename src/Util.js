@@ -56,6 +56,8 @@ export function mapRolesToPermissions(roles) {
         if (role === "ROLE_SUPER_ADMIN") {
             permissions.push("create-tenant", "view-tenant", "update-tenant", "delete-tenant", "manage-tenants", "list-all-tenants");
             permissions.push("create-user", "view-user", "update-user", "delete-user", "manage-users", "list-all-users");
+            permissions.push("create-git-provider", "manage-git-provider", "view-git-provider", "update-git-provider", "delete-git-provider", "list-all-git-provider");
+            permissions.push("create-build-tool", "manage-build-tool", "view-build-tool", "update-build-tool", "delete-build-tool", "list-all-build-tool");
         }
         if (role === "ROLE_TENANT_ADMIN") {
             permissions.push("create-user", "view-user", "update-user", "delete-user", "manage-users", "list-all-users");
