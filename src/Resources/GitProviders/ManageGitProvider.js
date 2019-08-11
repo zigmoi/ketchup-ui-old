@@ -1,27 +1,20 @@
-import React, { Component } from 'react';
-import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm, Tag, PageHeader } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm, Tag } from 'antd';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import moment from 'moment';
 
-class ManageGitProvider extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            visible: false,
-            dataSource: [],
-            columns: [],
-            selectedRecord: null,
-        }
-    }
+function ManageGitProvider() {
+    const [iconLoading, setIconLoading] = useState(false);
+    const [columns, setColumns] = useState([]);
+    const [dataSource, setDataSource] = useState([]);
 
-    componentDidMount() {
+    useEffect(() => {
         document.title = "Manage Git Providers";
-        this.setColumns();
-        this.loadAll();
-    }
+        initColumns();
+        loadAll();
+    }, []);
 
-    setColumns = () => {
+    function initColumns() {
         const columns = [{
             title: '#',
             key: '#',
@@ -29,9 +22,9 @@ class ManageGitProvider extends Component {
                 <span>{index + 1}</span>
             )
         }, {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'id',
+            title: 'User Name',
+            dataIndex: 'userName',
+            key: 'userName',
         }, {
             title: 'Display Name',
             dataIndex: 'displayName',
@@ -57,97 +50,87 @@ class ManageGitProvider extends Component {
             render: (text, record) => (
                 <span>
                     <Popconfirm title="Confirm operation?"
-                        okText="Go Ahead" cancelText="Cancel" onConfirm={this.toggleStatus}>
+                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => toggleStatus(record)}>
                         <Button type="danger">{record.enabled ? 'Disable' : 'Enable'}</Button>
                     </Popconfirm>
                     <Divider type="vertical" />
                     <Popconfirm title="Confirm operation?"
-                        okText="Go Ahead" cancelText="Cancel" onConfirm={this.delete}>
+                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => deleteUser(record)}>
                         <Button type="danger">Delete</Button>
                     </Popconfirm>
                 </span>
             )
         }];
 
-        this.setState({ "columns": columns });
+        setColumns(columns);
     }
 
-    setSelectedRow = (record) => {
-        console.log(record);
-        this.setState({ selectedRecord: record });
+    function reloadTabularData() {
+        loadAll();
     }
 
-    reloadTabularData = () => {
-        this.loadAll();
-    }
-
-
-    loadAll = () => {
-        this.setState({ "iconLoading": true });
-        axios.get('http://localhost:8097/v1/tenants')
+    function loadAll() {
+        setIconLoading(true);
+        axios.get('http://localhost:8097/v1/users')
             .then((response) => {
-                this.setState({ "iconLoading": false });
-                this.setState({ "dataSource": response.data });
+                setIconLoading(false);
+                setDataSource(response.data);
             })
             .catch((error) => {
-                this.setState({ "iconLoading": false });
+                setIconLoading(false);
             });
     }
 
-    toggleStatus = () => {
-        this.setState({ "iconLoading": true });
-        let tenantId = this.state.selectedRecord.id;
-        let tenantStatus = !this.state.selectedRecord.enabled;
-        let url = 'http://localhost:8097/v1/tenant/' + tenantId + '/enable/' + tenantStatus
+
+    function deleteUser(selectedRecord) {
+        setIconLoading(true);
+        let userName = selectedRecord.userName;
+        axios.delete('http://localhost:8097/v1/user/' + userName)
+            .then((response) => {
+                setIconLoading(false);
+                reloadTabularData();
+                message.success('User deleted successfully.');
+            })
+            .catch((error) => {
+                setIconLoading(false);
+            });
+    }
+
+    function toggleStatus(selectedRecord) {
+        setIconLoading(true);
+        let userName = selectedRecord.userName;
+        let userStatus = !selectedRecord.enabled;
+        let url = 'http://localhost:8097/v1/user/' + userName + '/enable/' + userStatus
         axios.put(url)
             .then((response) => {
-                this.setState({ "iconLoading": false });
-                this.loadAll();
+                setIconLoading(false);
+                reloadTabularData();
                 message.success('Operation completed successfully.');
             })
             .catch((error) => {
-                this.setState({ "iconLoading": false });
+                setIconLoading(false);
             });
     }
 
-    delete = () => {
-        this.setState({ "iconLoading": true });
-
-        let tenantId = this.state.selectedRecord.id;
-        axios.delete('http://localhost:8097/v1/tenant/' + tenantId)
-            .then((response) => {
-                this.setState({ "iconLoading": false });
-                this.loadAll();
-                message.success('Tenant deleted successfully.');
-            })
-            .catch((error) => {
-                this.setState({ "iconLoading": false });
-            });
-    }
-
-    render() {
-        return (
-            <div style={{ minHeight: 'calc(100vh - 64px)' }}>
-                <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
-                    <Col span={24}>
-                        <label style={{ fontWeight: 'bold' }} >Manage Tenants</label>
-                        <span>&nbsp;&nbsp;</span>
-                        <Spin spinning={this.state.iconLoading} />
-                    </Col>
-                </Row>
-                <Row type="flex" justify="center" align="middle">
-                    <Col span={22}>
-                        <Table dataSource={this.state.dataSource}
-                            pagination={{ defaultPageSize: 8 }}
-                            columns={this.state.columns}
-                            onRowClick={this.setSelectedRow}
-                            size="middle" rowKey={record => record.id} />
-                    </Col>
-                </Row>
-            </div>
-        );
-    }
+    return (
+        <div style={{ minHeight: 'calc(100vh - 64px)' }}>
+            {/* <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
+                <Col span={24}>
+                    <label style={{ fontWeight: 'bold' }} >Manage Users 1</label>
+                    <span>&nbsp;&nbsp;</span>
+                    <Spin spinning={iconLoading} />
+                </Col>
+            </Row> */}
+            <Row type="flex" justify="center" align="middle" style={{paddingTop: '10px'}}>
+                <Col span={22}>
+                    <Table dataSource={dataSource}
+                        pagination={{ defaultPageSize: 8 }}
+                        columns={columns}
+                        size="middle" rowKey={record => record.userName} />
+                </Col>
+            </Row>
+        </div>
+    );
 }
-
 
 export default ManageGitProvider;

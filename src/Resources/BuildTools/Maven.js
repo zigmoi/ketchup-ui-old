@@ -1,80 +1,61 @@
-import React, { Component, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Form, Icon, Input, Button } from 'antd';
 import { Row, Col, message, Spin, Upload } from 'antd';
 import axios from 'axios';
 
-const FormItem = Form.Item;
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 8 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 14 },
-    },
-};
+function Maven() {
+    const [settingName, setSettingName] = useState('');
+    const [fileList, setFileList] = useState([]);
+    const [uploading, setUploading] = useState(false);
 
-class Maven extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            settingName: '',
-            fileList: [],
-            uploading: false
-        }
-    }
-
-    componentDidMount() {
-        document.title = "Maven"
-    }
-
-    handleUpload = () => {
-        const { fileList, settingName } = this.state;
+    const FormItem = Form.Item;
+    const formItemLayout = {
+        labelCol: {
+            xs: { span: 24 },
+            sm: { span: 8 },
+        },
+        wrapperCol: {
+            xs: { span: 24 },
+            sm: { span: 14 },
+        },
+    };
+    
+    function handleUpload() {
+        setUploading(true);
         const formData = new FormData();
         fileList.forEach(file => {
           formData.append('file[]', file);
         });
         formData.append('settingName', settingName);
     
-        this.setState({
-          uploading: true,
-        });
-
         axios.post('http://localhost:8097/v1/resource/createBuildTool', formData)
         .then((response) => {
-            this.setState({ uploading: false, fileList: [], settingName: '' });
+            setUploading(false);
+            setSettingName('');
+            setFileList([]);
             message.success('Maven settings.xml file added.', 5);
         })
         .catch((error) => {
-            this.setState({ uploading: false });
+            setUploading(false);
             message.error('Maven settings.xml upload error.', 5)
         });
     }
 
-    render = () => {
-        const { uploading, fileList } = this.state;
-        const props = {
+    const props = {
         onRemove: file => {
-            this.setState(state => {
-            const index = state.fileList.indexOf(file);
-            const newFileList = state.fileList.slice();
+            const index = fileList.indexOf(file);
+            const newFileList = fileList.slice();
             newFileList.splice(index, 1);
-            return {
-                fileList: newFileList,
-            };
-            });
+            setFileList(newFileList);
         },
         beforeUpload: file => {
-            this.setState(state => ({
-            fileList: [...state.fileList, file],
-            }));
+            setFileList([...fileList, file]);
             return false;
         },
         fileList,
-        };
-        return (
+    };
+
+    return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                     <Col span={24}>
@@ -85,15 +66,15 @@ class Maven extends Component {
                 <Row type="flex" justify="center" align="middle">
                     <Col span={20}  >
                         <Form style={{ backgroundColor: 'white' }}>
-                            <FormItem {...formItemLayout} label="Setting Name " colon={false}>
-                                <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                    placeholder=" Setting Name "
-                                    value={this.state.settingName}
-                                    onChange={(e) => { this.setState({ settingName: e.target.value }) }} />
+                            <FormItem {...formItemLayout} label="Setting Name" colon={false}>
+                                <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 15 }} />}
+                                    placeholder="Setting Name"
+                                    value={settingName}
+                                    onChange={(e) => { setSettingName(e.target.value) }} />
                             </FormItem>
 
                             <FormItem {...formItemLayout} label="Upload Settings File " colon={false}>
-                                <Row type="flex" justify="left" align="left">
+                                <Row type="flex" justify="start" align="top">
                                     <Col>
                                         <Upload {...props} >
                                             <Button>
@@ -102,7 +83,7 @@ class Maven extends Component {
                                         </Upload>
                                     </Col>
                                     <Col style={{ paddingLeft: 10}}>
-                                        <Button type="primary" onClick={this.handleUpload}
+                                        <Button type="primary" onClick={handleUpload}
                                             disabled={fileList.length === 0} loading={uploading}
                                         >
                                             {uploading ? 'Uploading' : 'Submit'}
@@ -114,8 +95,7 @@ class Maven extends Component {
                     </Col>
                 </Row>
         </div>
-        );
-    }
+    );
 }
 
 export default Maven;
