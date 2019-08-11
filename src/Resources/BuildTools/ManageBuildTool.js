@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 
-class ManageGitProvider extends Component {
+class ManageBuildTool extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -16,7 +16,7 @@ class ManageGitProvider extends Component {
     }
 
     componentDidMount() {
-        document.title = "Manage Tenants";
+        document.title = "Manage Build Tools";
         this.setColumns();
         this.loadAll();
     }
@@ -150,4 +150,4 @@ class ManageGitProvider extends Component {
 }
 
 
-export default ManageGitProvider;
+export default ManageBuildTool;
