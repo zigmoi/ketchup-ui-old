@@ -127,11 +127,20 @@ class ManageTenants extends Component {
     render() {
         return (
             <div style={{ minHeight: 'calc(100vh - 64px)' }}>
-                <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
-                    <Col span={24}>
-                        <label style={{ fontWeight: 'bold' }} >Manage Tenants</label>
-                        <span>&nbsp;&nbsp;</span>
-                        <Spin spinning={this.state.iconLoading} />
+                <Row type="flex" justify="start" align="middle" style={{ paddingTop: '10px', paddingBottom: '5px' }}>
+                    <Col span={11} offset={1}>
+                        <Row type="flex" justify="start" align="middle">
+                            <label style={{ fontWeight: 'bold', fontSize: 18 }} > Manage Tenants</label>
+                            <span>&nbsp;&nbsp;</span>
+                            <Spin spinning={this.state.iconLoading} />
+                        </Row>
+                    </Col>
+                    <Col span={11} offset={-1}>
+                        <Row type="flex" justify="end" align="middle">
+                            <Button type="primary" style={{ fontWeight: 'bold'}} >
+                                <Link to={"/app/create-tenant"}>Create Tenant</Link>
+                            </Button>
+                        </Row>
                     </Col>
                 </Row>
                 <Row type="flex" justify="center" align="middle">

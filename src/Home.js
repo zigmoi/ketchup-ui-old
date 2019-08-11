@@ -94,20 +94,6 @@ function Home() {
     </Menu.Item >
   )
 
-  let createTenantMenu;
-  if (useValidateUserHasAllPermissions(['create-tenant'])) {
-    createTenantMenu = (
-      <Menu.Item key="create-tenant">
-        <Link to="/app/create-tenant">
-          <Icon type="plus-circle" />
-          <span style={{ fontWeight: 'bold' }}>Create</span>
-        </Link>
-      </Menu.Item>
-    );
-  } else {
-    createTenantMenu = null;
-  }
-
   let manageTenantsMenu;
   if (useValidateUserHasAllPermissions(['manage-tenants'])) {
     manageTenantsMenu = (
@@ -132,7 +118,6 @@ function Home() {
           <span style={{ fontWeight: 'bold' }}>Tenants</span>
         </span>}
       >
-        {createTenantMenu}
         {manageTenantsMenu}
       </SubMenu>
     )
@@ -225,7 +210,7 @@ function Home() {
         <Menu
           theme="light"
           mode="horizontal"
-          activeKey= "Heading"
+          activeKey="Heading"
           style={{ backgroundColor: '#fff' }}
         >
           {/* <Menu.Item key="Spinner" style={{ fontWeight: 'bold', float: 'left' }}>
@@ -238,11 +223,11 @@ function Home() {
           {userProfileButton}
           <Menu.Item key="Project" style={{ fontWeight: 'bold', color: 'black', float: 'left', float: "right" }}>
             <span style={{ fontSize: 14 }}> Active Project: </span>
-            <Select defaultValue={projectId} 
-                value={projectId} 
-                size={"small"}
-                style={{ width: 120 }} 
-                onChange={onProjectChange}>
+            <Select defaultValue={projectId}
+              value={projectId}
+              size={"small"}
+              style={{ width: 120 }}
+              onChange={onProjectChange}>
               <Option value="p1">P1</Option>
               <Option value="p2">P2</Option>
               <Option value="p3">P3</Option>
@@ -277,29 +262,29 @@ function Home() {
               </span>}
             >
               <SubMenu
-              key="git-provider"
-              title={<span>
-                <Icon type="github" />
-                <span style={{ fontWeight: 'bold' }}>Git Providers</span>
-              </span>}>
-              <Menu.Item key="add-git-provider">
-                <Link to="/app/add-git-provider">
-                  <Icon type="plus-circle" />
-                  <span style={{ fontWeight: 'bold' }}>Add Git Provider</span>
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="manage-git-provider">
-                <Link to="/app/manage-git-provider">
-                  <Icon type="container" />
-                  <span style={{ fontWeight: 'bold' }}>Manage Git Provider</span>
-                </Link>
-              </Menu.Item>
+                key="git-provider"
+                title={<span>
+                  <Icon type="github" />
+                  <span style={{ fontWeight: 'bold' }}>Git Providers</span>
+                </span>}>
+                <Menu.Item key="add-git-provider">
+                  <Link to="/app/add-git-provider">
+                    <Icon type="plus-circle" />
+                    <span style={{ fontWeight: 'bold' }}>Add Git Provider</span>
+                  </Link>
+                </Menu.Item>
+                <Menu.Item key="manage-git-provider">
+                  <Link to="/app/manage-git-provider">
+                    <Icon type="container" />
+                    <span style={{ fontWeight: 'bold' }}>Manage Git Provider</span>
+                  </Link>
+                </Menu.Item>
               </SubMenu>
-            
+
               <SubMenu key="build-tools"
-              title={<span> <Icon type="tool" />
-                <span style={{ fontWeight: 'bold' }}>Build Tools</span>
-              </span>}>
+                title={<span> <Icon type="tool" />
+                  <span style={{ fontWeight: 'bold' }}>Build Tools</span>
+                </span>}>
                 <Menu.Item key="add-build-tool">
                   <Link to="/app/add-build-tool">
                     <Icon type="plus-circle" />
@@ -313,7 +298,7 @@ function Home() {
                   </Link>
                 </Menu.Item>
               </SubMenu>
-              </SubMenu>
+            </SubMenu>
           </Menu>
         </Sider>
 
