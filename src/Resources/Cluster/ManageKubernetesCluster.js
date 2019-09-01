@@ -4,7 +4,7 @@ import { Skeleton, Switch, Card, Icon, Avatar} from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 
-function ManageBuildTool() {
+function ManageKubernetesCluster() {
     const [loading, setLoading] = useState(true);
 
     const { Meta } = Card;
@@ -43,4 +43,4 @@ function ManageBuildTool() {
     );
 }
 
-export default ManageBuildTool;
+export default ManageKubernetesCluster;
