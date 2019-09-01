@@ -3,7 +3,7 @@ import { Form, Icon, Input, Button } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
 
-function AWS() {
+function Aws() {
     const [iconLoading, setIconLoading] = useState(false);
     const [displayName, setDisplayName] = useState('');
     const [accessId, setAccessId] = useState('');
@@ -83,4 +83,4 @@ function AWS() {
     );
 }
 
-export default AWS;
+export default Aws;

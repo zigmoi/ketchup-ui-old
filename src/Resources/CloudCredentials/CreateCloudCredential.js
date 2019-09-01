@@ -1,6 +1,6 @@
 import React, { Component, useContext, useState } from 'react';
 import { Tabs } from 'antd';
-import AWS from './AWS'
+import AWS from './Aws'
 
 function CreateCloudCredential() {
     document.title = "Create Cloud Credentials";
