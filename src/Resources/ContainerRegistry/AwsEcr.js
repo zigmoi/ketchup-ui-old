@@ -3,12 +3,12 @@ import { Form, Icon, Input, Button } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
 
-function BitBucket() {
+function AwsEcr() {
     const [iconLoading, setIconLoading] = useState(false);
     const [displayName, setDisplayName] = useState('');
-    const [repoListUrl, setRepoListUrl] = useState('https://api.bitbucket.org/1.0/user/repositories');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [cloudCredentialId, setCloudCredentialId] = useState('');
+    const [registryId, setRegistryId] = useState('');
+    const [registryUrl, setRegistryUrl] = useState('');
 
     const FormItem = Form.Item;
     const formItemLayout = {
@@ -22,62 +22,56 @@ function BitBucket() {
         },
     };
 
-    function createGitProvider () {
+    function createCotainerRegistry() {
         setIconLoading(true);
         var data = {
-            'provider': 'bitbucket',
-            'repoListUrl': repoListUrl,
+            'provider': 'aws-ecr',
             'displayName': displayName,
-            'username': username,
-            'password': password,
+            'cloudCredentialId': cloudCredentialId,
+            'registryId': registryId,
+            'registryUrl': registryUrl,
         };
-        axios.post('http://localhost:8097/v1/create-git-provider', data)
+        axios.post('http://localhost:8097/v1/tenant-cloud-registry', data)
             .then((response) => {
                 console.log(response);
                 setIconLoading(false);
-                message.success('Git provider added.', 5);
+                message.success('AWS registry added.', 5);
             })
             .catch((error) => {
+                console.log(error);
+                message.error(error.message);
                 setIconLoading(false);
             });
     }
 
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
-            {/* <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
-                <Col span={24}>
-                    <label style={{ fontWeight: 'bold' }} >Add BitBucket Details</label>
-                    <span>&nbsp;&nbsp;</span>
-                    <Spin spinning={iconLoading} />
-                </Col>
-            </Row> */}
             <Row type="flex" justify="center" align="middle">
                 <Col span={20}  >
                     <Form style={{ backgroundColor: 'white' }}>
-                        <FormItem {...formItemLayout} label="Repo List URL" colon={false}>
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 15 }} />}
-                                placeholder="Repo List URL"
-                                value={repoListUrl}
-                                disabled= {true}
-                                onChange={(e) => { setRepoListUrl(e.target.value) }} />
-                        </FormItem>
                         <FormItem {...formItemLayout} label="Display Name" colon={false}>
                             <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 15 }} />}
                                 placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Bitbucket Username" colon={false}>
+                        <FormItem {...formItemLayout} label="AWS Cloud Credential" colon={false}>
                             <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 15 }} />}
-                                placeholder="Bitbucket Username"
-                                value={username}
-                                onChange={(e) => { setUsername(e.target.value) }} />
+                                placeholder="AWS Cloud Credential"
+                                value={cloudCredentialId}
+                                onChange={(e) => { setCloudCredentialId(e.target.value) }} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Bitbucket Password" colon={false}>
-                            <Input.Password style={{ fontSize: 20 }} prefix={<Icon type="lock" style={{ fontSize: 15 }} />}
-                                type="password" placeholder="Bitbucket Password"
-                                value={password}
-                                onChange={(e) => { setPassword(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="ECR Registry Id" colon={false}>
+                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 15 }} />}
+                                placeholder="ECR Registry Id"
+                                value={registryId}
+                                onChange={(e) => { setRegistryId(e.target.value) }} />
+                        </FormItem>
+                        <FormItem {...formItemLayout} label="ECR Registry URL" colon={false}>
+                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 15 }} />}
+                                placeholder="ECR Registry URL"
+                                value={registryUrl}
+                                onChange={(e) => { setRegistryUrl(e.target.value) }} />
                         </FormItem>
 
                         <FormItem>
@@ -86,7 +80,7 @@ function BitBucket() {
                                     <Button type="primary" icon={'check-circle-o'}
                                         loading={iconLoading}
                                         htmlType="submit"
-                                        onClick={createGitProvider} >Create</Button>
+                                        onClick={createCotainerRegistry} >Create</Button>
                                 </Col>
                             </Row>
                         </FormItem>
@@ -97,4 +91,4 @@ function BitBucket() {
     );
 }
 
-export default BitBucket;
+export default AwsEcr;

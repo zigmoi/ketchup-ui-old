@@ -193,6 +193,83 @@ function Home() {
     projectsSubMenu = null;
   }
 
+  let createGitProviderMenu = null;
+  if (useValidateUserHasAnyRole(['ROLE_TENANT_ADMIN'])) {
+    createGitProviderMenu = (
+      <Menu.Item key="add-git-provider">
+        <Link to="/app/add-git-provider">
+          <Icon type="plus-circle" />
+          <span style={{ fontWeight: 'bold' }}>Add Git Provider</span>
+        </Link>
+      </Menu.Item>
+    );
+  }
+
+  let manageGitProviderMenu = null;
+  if (useValidateUserHasAnyRole(['ROLE_TENANT_ADMIN'])) {
+    manageGitProviderMenu = (
+      <Menu.Item key="manage-git-provider">
+        <Link to="/app/manage-git-provider">
+          <Icon type="container" />
+          <span style={{ fontWeight: 'bold' }}>Manage Git Provider</span>
+        </Link>
+      </Menu.Item>
+    );
+  }
+
+  let gitProviderSubMenu = null;
+  if (useValidateUserHasAnyRole(['ROLE_TENANT_ADMIN'])) {
+    gitProviderSubMenu = (
+      <SubMenu key="git-provider" title={<span> <Icon type="github" /> <span style={{ fontWeight: 'bold' }}>Git Providers</span></span>}>
+        {createGitProviderMenu}
+        {manageGitProviderMenu}
+      </SubMenu>
+    )
+  }
+
+  let createBuildToolMenu = null;
+  if (useValidateUserHasAnyRole(['ROLE_TENANT_ADMIN'])) {
+    createBuildToolMenu = (
+      <Menu.Item key="add-build-tool">
+        <Link to="/app/add-build-tool">
+          <Icon type="plus-circle" />
+          <span style={{ fontWeight: 'bold' }}>Add Build Tool</span>
+        </Link>
+      </Menu.Item>
+    );
+  }
+
+  let manageBuildToolMenu = null;
+  if (useValidateUserHasAnyRole(['ROLE_TENANT_ADMIN'])) {
+    manageBuildToolMenu = (
+      <Menu.Item key="manage-build-tool">
+        <Link to="/app/manage-build-tool">
+          <Icon type="container" />
+          <span style={{ fontWeight: 'bold' }}>Mange Build Tool</span>
+        </Link>
+      </Menu.Item>
+    );
+  }
+
+  let buildToolSubMenu = null;
+  if (useValidateUserHasAnyRole(['ROLE_TENANT_ADMIN'])) {
+    buildToolSubMenu = (
+      <SubMenu key="build-tools" title={<span> <Icon type="tool" /><span style={{ fontWeight: 'bold' }}>Build Tools</span></span>}>
+        {createBuildToolMenu}
+        {manageBuildToolMenu}
+      </SubMenu>
+    )
+  }
+
+  let resourceSubMenu = null;
+  if (useValidateUserHasAnyRole(['ROLE_TENANT_ADMIN'])) {
+    resourceSubMenu = (
+      <SubMenu key="resources" title={<span><Icon type="appstore" /><span style={{ fontWeight: 'bold' }}>Resources</span></span>}>
+        {gitProviderSubMenu}
+        {buildToolSubMenu}
+      </SubMenu>
+    )
+  }
 
   return (
     <Layout style={{ height: '100vh', backgroundColor: '#efefef', padding: '0px' }}>
@@ -245,52 +322,7 @@ function Home() {
             {tenantsSubMenu}
             {usersSubMenu}
             {projectsSubMenu}
-
-            <SubMenu
-              key="resources"
-              title={<span>
-                <Icon type="appstore" />
-                <span style={{ fontWeight: 'bold' }}>Resources</span>
-              </span>}
-            >
-              <SubMenu
-                key="git-provider"
-                title={<span>
-                  <Icon type="github" />
-                  <span style={{ fontWeight: 'bold' }}>Git Providers</span>
-                </span>}>
-                <Menu.Item key="add-git-provider">
-                  <Link to="/app/add-git-provider">
-                    <Icon type="plus-circle" />
-                    <span style={{ fontWeight: 'bold' }}>Add Git Provider</span>
-                  </Link>
-                </Menu.Item>
-                <Menu.Item key="manage-git-provider">
-                  <Link to="/app/manage-git-provider">
-                    <Icon type="container" />
-                    <span style={{ fontWeight: 'bold' }}>Manage Git Provider</span>
-                  </Link>
-                </Menu.Item>
-              </SubMenu>
-
-              <SubMenu key="build-tools"
-                title={<span> <Icon type="tool" />
-                  <span style={{ fontWeight: 'bold' }}>Build Tools</span>
-                </span>}>
-                <Menu.Item key="add-build-tool">
-                  <Link to="/app/add-build-tool">
-                    <Icon type="plus-circle" />
-                    <span style={{ fontWeight: 'bold' }}>Add Build Tool</span>
-                  </Link>
-                </Menu.Item>
-                <Menu.Item key="manage-build-tool">
-                  <Link to="/app/manage-build-tool">
-                    <Icon type="container" />
-                    <span style={{ fontWeight: 'bold' }}>Mange Build Tool</span>
-                  </Link>
-                </Menu.Item>
-              </SubMenu>
-            </SubMenu>
+            {resourceSubMenu}
           </Menu>
         </Sider>
 

@@ -1,20 +1,20 @@
 import React, { Component, useContext, useState } from 'react';
 import { Tabs } from 'antd';
-import BitBucket from './BitBucket'
+import AWS from './Aws'
 
-function CreateGitProvider() {
-    document.title = "Create Git Providers";
+function CreateCloudCredential() {
+    document.title = "Create Cloud Credentials";
     const { TabPane } = Tabs;
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Tabs defaultActiveKey="bitbucket">
-                <TabPane tab="Bitbucket" key="bitbucket">
-                    <BitBucket />
+                <TabPane tab="AWS" key="cc-aws">
+                    <AWS />
                 </TabPane>
-                <TabPane tab="GitHub" key="github">
+                <TabPane tab="GCP" key="cc-gcp">
                     Coming Soon ...
                 </TabPane>
-                <TabPane tab="GitLab" key="gitlab">
+                <TabPane tab="AZURE" key="cc-azure">
                     Coming Soon ...
                 </TabPane>
             </Tabs>
@@ -22,4 +22,4 @@ function CreateGitProvider() {
     );
 }
 
-export default CreateGitProvider;
+export default CreateCloudCredential;

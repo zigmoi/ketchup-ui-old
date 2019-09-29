@@ -3,7 +3,7 @@ import { Form, Icon, Input, Button } from 'antd';
 import { Row, Col, message, Spin, Upload } from 'antd';
 import axios from 'axios';
 
-function Maven() {
+function CreateKubernetesCluster() {
     const [settingName, setSettingName] = useState('');
     const [fileList, setFileList] = useState([]);
     const [uploading, setUploading] = useState(false);
@@ -28,16 +28,16 @@ function Maven() {
         });
         formData.append('settingName', settingName);
     
-        axios.post('http://localhost:8097/v1/resource/createBuildTool', formData)
+        axios.post('http://localhost:8097/v1/tenant-cloud-cluster-file-upload', formData)
         .then((response) => {
             setUploading(false);
             setSettingName('');
             setFileList([]);
-            message.success('Maven settings.xml file added.', 5);
+            message.success('K8S cluster file added.', 5);
         })
         .catch((error) => {
             setUploading(false);
-            message.error('Maven settings.xml upload error.', 5)
+            message.error('K8S cluster upload error.', 5)
         });
     }
 
@@ -78,7 +78,7 @@ function Maven() {
                                     <Col>
                                         <Upload {...props} >
                                             <Button>
-                                                <Icon type="upload" /> Select Maven Settings.xml File
+                                                <Icon type="upload" /> Select K8S Settings File
                                             </Button>
                                         </Upload>
                                     </Col>
@@ -98,4 +98,4 @@ function Maven() {
     );
 }
 
-export default Maven;
+export default CreateKubernetesCluster;
