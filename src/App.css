@@ -4,7 +4,37 @@
 }
 
 .ant-layout-sider-trigger{
-  background-color: #fff;
-  color: red
+  background-color: #000c17;
+  color: white
+}
+
+.ant-menu.ant-menu-dark .ant-menu-item-selected{
+  background-color: #000c17;
+}
+
+.ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected{
+  background-color: #000c17;
+}
+
+.ant-btn-primary{
+  background-color: #ffffff;
+  color: #000c17;
+  border-color: #8c8c8c;
+}
+
+.ant-btn-primary:hover {
+  background-color: #f5f5f5;
+  color: #000c17;
+  border-color: #8c8c8c;
+}
+
+.ant-btn-danger{
+  background-color: #ffffff;
+  color: #000c17;
+  border-color: #8c8c8c;
+}
+
+.ant-btn-danger:hover{
+  background-color: red
 }
 

@@ -3,10 +3,8 @@ import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm, Tag, PageH
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-//import { handleApiResponseErrors } from '../Util';
-import util from '../Util';
 
-class ManageTenants extends Component {
+class ManageUsersOld extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,7 +15,7 @@ class ManageTenants extends Component {
     }
 
     componentDidMount() {
-        document.title = "Manage Tenants";
+        document.title = "Manage Users";
         this.setColumns();
         this.loadAll();
     }
@@ -30,15 +28,15 @@ class ManageTenants extends Component {
                 <span>{index + 1}</span>
             )
         }, {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'id',
+            title: 'User Name',
+            dataIndex: 'userName',
+            key: 'userName',
         }, {
             title: 'Display Name',
             dataIndex: 'displayName',
             key: 'displayName',
         }, {
-            title: 'Status',
+            title: 'Is Active',
             dataIndex: 'enabled',
             key: 'enabled',
             render: (text, record) => (
@@ -63,7 +61,7 @@ class ManageTenants extends Component {
                     </Popconfirm>
                     <Divider type="vertical" />
                     <Popconfirm title="Confirm operation?"
-                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => this.deleteTenant(record)}>
+                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => this.deleteUser(record)}>
                         <Button type="danger">Delete</Button>
                     </Popconfirm>
                 </span>
@@ -73,7 +71,6 @@ class ManageTenants extends Component {
         this.setState({ "columns": columns });
     }
 
-
     reloadTabularData = () => {
         this.loadAll();
     }
@@ -81,24 +78,35 @@ class ManageTenants extends Component {
 
     loadAll = () => {
         this.setState({ "iconLoading": true });
-        axios.get('http://localhost:8097/v1/tenants')
+        axios.get('http://localhost:8097/v1/users')
             .then((response) => {
                 this.setState({ "iconLoading": false });
                 this.setState({ "dataSource": response.data });
-                // util.handleApiResponseErrors();
-                // message.info(util.getApiRequestDefaults());
             })
             .catch((error) => {
-                console.log(error.response);
+                this.setState({ "iconLoading": false });
+            });
+    }
+
+    deleteUser = (selectedRecord) => {
+        this.setState({ "iconLoading": true });
+        let userName = selectedRecord.userName;
+        axios.delete('http://localhost:8097/v1/user/' + userName)
+            .then((response) => {
+                this.setState({ "iconLoading": false });
+                this.loadAll();
+                message.success('User deleted successfully.');
+            })
+            .catch((error) => {
                 this.setState({ "iconLoading": false });
             });
     }
 
     toggleStatus = (selectedRecord) => {
         this.setState({ "iconLoading": true });
-        let tenantId = selectedRecord.id;
-        let tenantStatus = !selectedRecord.enabled;
-        let url = 'http://localhost:8097/v1/tenant/' + tenantId + '/enable/' + tenantStatus
+        let userName = selectedRecord.userName;
+        let userStatus = !selectedRecord.enabled;
+        let url = 'http://localhost:8097/v1/user/' + userName + '/enable/' + userStatus
         axios.put(url)
             .then((response) => {
                 this.setState({ "iconLoading": false });
@@ -110,37 +118,14 @@ class ManageTenants extends Component {
             });
     }
 
-    deleteTenant = (selectedRecord) => {
-        this.setState({ "iconLoading": true });
-        let tenantId = selectedRecord.id;
-        axios.delete('http://localhost:8097/v1/tenant/' + tenantId)
-            .then((response) => {
-                this.setState({ "iconLoading": false });
-                this.loadAll();
-                message.success('Tenant deleted successfully.');
-            })
-            .catch((error) => {
-                this.setState({ "iconLoading": false });
-            });
-    }
-
     render() {
         return (
             <div style={{ minHeight: 'calc(100vh - 64px)' }}>
-                <Row type="flex" justify="start" align="middle" style={{ paddingTop: '10px', paddingBottom: '5px' }}>
-                    <Col span={11} offset={1}>
-                        <Row type="flex" justify="start" align="middle">
-                            <label style={{ fontWeight: 'bold', fontSize: 18 }} > Manage Tenants</label>
-                            <span>&nbsp;&nbsp;</span>
-                            <Spin spinning={this.state.iconLoading} />
-                        </Row>
-                    </Col>
-                    <Col span={11} offset={-1}>
-                        <Row type="flex" justify="end" align="middle">
-                            <Button type="primary"  >
-                                <Link to={"/app/create-tenant"}>Create Tenant</Link>
-                            </Button>
-                        </Row>
+                <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
+                    <Col span={24}>
+                        <label style={{ fontWeight: 'bold' }} >Manage Users Old</label>
+                        <span>&nbsp;&nbsp;</span>
+                        <Spin spinning={this.state.iconLoading} />
                     </Col>
                 </Row>
                 <Row type="flex" justify="center" align="middle">
@@ -148,7 +133,7 @@ class ManageTenants extends Component {
                         <Table dataSource={this.state.dataSource}
                             pagination={{ defaultPageSize: 8 }}
                             columns={this.state.columns}
-                            size="middle" rowKey={record => record.id} />
+                            size="middle" rowKey={record => record.userName} />
                     </Col>
                 </Row>
             </div>
@@ -157,4 +142,4 @@ class ManageTenants extends Component {
 }
 
 
-export default ManageTenants;
+export default ManageUsersOld;

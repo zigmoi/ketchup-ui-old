@@ -91,10 +91,9 @@ function Login(props) {
         "Authorization": "Bearer " + accessToken
       }
     }
-    axios.get('http://localhost:8097/v1/user/' + loggedInUserName, config)
+    axios.get('http://localhost:8097/v1/user/my/profile', config)
       .then((response) => {
         console.log("getUserInfo", response);
-        let permissions = mapRolesToPermissions(response.data.roles);
         let user = {
           id: loggedInUserName,
           accessToken: accessToken,
@@ -102,11 +101,10 @@ function Login(props) {
           roles: response.data.roles,
           tenantId: response.data.tenantId,
           email: response.data.email,
-          permissions: permissions
         };
 
         userContext.setCurrentUser(user);
-        projectContext.setCurrentProject({projectId: "p1"});
+        projectContext.setCurrentProject({ projectId: "p1" });
         history.push(from);
       })
       .catch((error) => {

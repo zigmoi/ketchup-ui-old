@@ -1,21 +1,21 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import useLoginStatus from './useLoginStatus';
-import useValidateUserHasAllPermissions from './useValidateUserPermissions';
 import AccessDenied from './AccessDenied';
+import useValidateUserHasAnyRole from './useValidateUserHasAnyRole';
 
-function ProtectedRoute({ component: Component, permissions: permissions, ...rest }) {
+function ProtectedRoute({ component: Component, roles: roles, ...rest }) {
     console.log("In protected route");
     const loginStatus = useLoginStatus();
-    console.log(permissions);
-    let requiredPermissions = permissions || [];
-    let hasPermissions = useValidateUserHasAllPermissions(requiredPermissions);
-    console.log("hasPermissions", hasPermissions);
+    console.log(roles);
+    let requiredRoles = roles || [];
+    let hasRoles = useValidateUserHasAnyRole(requiredRoles);
+    console.log("hasRoles", hasRoles);
 
 
     let AuthenticatedView;
     if (loginStatus) {
-        if (hasPermissions) {
+        if (hasRoles) {
             AuthenticatedView = (
                 <Component {...rest} />
             );

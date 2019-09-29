@@ -4,14 +4,14 @@ import axios from 'axios';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 
-function ManageUsers() {
+function ManageProjects() {
     const [iconLoading, setIconLoading] = useState(false);
     const [columns, setColumns] = useState([]);
     const [dataSource, setDataSource] = useState([]);
 
     useEffect(() => {
-        console.log("in effect Manage Users");
-        document.title = "Manage Users";
+        console.log("in effect Manage Projects");
+        document.title = "Manage Projects";
         initColumns();
         loadAll();
     }, []);
@@ -24,26 +24,15 @@ function ManageUsers() {
                 <span>{index + 1}</span>
             )
         }, {
-            title: 'User Name',
-            dataIndex: 'userName',
-            key: 'userName',
-        }, {
-            title: 'Display Name',
-            dataIndex: 'displayName',
-            key: 'displayName',
-        }, {
-            title: 'Status',
-            dataIndex: 'enabled',
-            key: 'enabled',
-            render: (text, record) => (
-                record.enabled ? <Tag color="blue">Active</Tag> : <Tag color="red">Disabled</Tag>
-            )
+            title: 'Name',
+            dataIndex: 'id.resourceId',
+            key: 'id',
         }, {
             title: 'Creation Date',
             dataIndex: 'creationDate',
             key: 'creationDate',
             render: (text, record) => (
-                moment(record.creationDate).format("LLL")
+                moment(record.creationDate).format("MMM D, YYYY")
             )
         }, {
             title: 'Actions',
@@ -51,13 +40,16 @@ function ManageUsers() {
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <Popconfirm title="Confirm operation?"
-                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => toggleStatus(record)}>
-                        <Button type="danger" size="small">{record.enabled ? 'Disable' : 'Enable'}</Button>
-                    </Popconfirm>
+                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/members`}>Members</Link></Button>
+                    <Divider type="vertical" />
+                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/permissions`}>Permissions</Link></Button>
+                    <Divider type="vertical" />
+                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/settings`}>Settings</Link></Button>
+                    <Divider type="vertical" />
+                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/deployments`}>Deployments</Link></Button>
                     <Divider type="vertical" />
                     <Popconfirm title="Confirm operation?"
-                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => deleteUser(record)}>
+                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => deleteProject(record)}>
                         <Button type="danger" size="small">Delete</Button>
                     </Popconfirm>
                 </span>
@@ -73,7 +65,7 @@ function ManageUsers() {
 
     function loadAll() {
         setIconLoading(true);
-        axios.get('http://localhost:8097/v1/users')
+        axios.get('http://localhost:8097/v1/projects')
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);
@@ -84,30 +76,15 @@ function ManageUsers() {
     }
 
 
-    function deleteUser(selectedRecord) {
+    function deleteProject(selectedRecord) {
         setIconLoading(true);
-        let userName = selectedRecord.userName;
-        axios.delete('http://localhost:8097/v1/user/' + userName)
+        console.log(selectedRecord);
+        let projectName = selectedRecord.id.resourceId;
+        axios.delete('http://localhost:8097/v1/project/' + projectName)
             .then((response) => {
                 setIconLoading(false);
                 reloadTabularData();
-                message.success('User deleted successfully.');
-            })
-            .catch((error) => {
-                setIconLoading(false);
-            });
-    }
-
-    function toggleStatus(selectedRecord) {
-        setIconLoading(true);
-        let userName = selectedRecord.userName;
-        let userStatus = !selectedRecord.enabled;
-        let url = 'http://localhost:8097/v1/user/' + userName + '/enable/' + userStatus
-        axios.put(url)
-            .then((response) => {
-                setIconLoading(false);
-                reloadTabularData();
-                message.success('Operation completed successfully.');
+                message.success('Project deleted successfully.');
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -119,7 +96,7 @@ function ManageUsers() {
             <Row type="flex" justify="start" align="middle" style={{ paddingTop: '10px', paddingBottom: '5px' }}>
                 <Col span={11} offset={1}>
                     <Row type="flex" justify="start" align="middle">
-                        <label style={{ fontWeight: 'bold', fontSize: 18 }} > Manage Users</label>
+                        <label style={{ fontWeight: 'bold', fontSize: 18 }} > Manage Projects</label>
                         <span>&nbsp;&nbsp;</span>
                         <Spin spinning={iconLoading} />
                     </Row>
@@ -127,7 +104,7 @@ function ManageUsers() {
                 <Col span={11} offset={-1}>
                     <Row type="flex" justify="end" align="middle">
                         <Button type="primary"  >
-                            <Link to={"/app/create-user"}>Create User</Link>
+                            <Link to={"/app/project/create"}>Create Project</Link>
                         </Button>
                     </Row>
                 </Col>
@@ -137,11 +114,11 @@ function ManageUsers() {
                     <Table dataSource={dataSource}
                         pagination={{ defaultPageSize: 8 }}
                         columns={columns}
-                        size="middle" rowKey={record => record.userName} />
+                        size="middle" rowKey={record => record.id.resourceId} />
                 </Col>
             </Row>
         </div>
     );
 }
 
-export default ManageUsers;
+export default ManageProjects;
