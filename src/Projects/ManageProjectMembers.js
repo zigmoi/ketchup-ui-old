@@ -45,11 +45,13 @@ function ManageProjectMembers() {
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <Button type="primary">Permissions</Button>
+                    <Button type="primary" size="small">
+                        <Link to={`/app/project/${projectResourceId}/permissions/${record}`}>Permissions</Link>
+                    </Button>
                     <Divider type="vertical" />
                     <Popconfirm title="Confirm operation?"
                         okText="Go Ahead" cancelText="Cancel" onConfirm={() => removeProjectMember(record)}>
-                        <Button type="danger">Remove</Button>
+                        <Button type="danger" size="small">Remove</Button>
                     </Popconfirm>
                 </span>
             )
@@ -139,7 +141,7 @@ function ManageProjectMembers() {
                     <Table dataSource={dataSource}
                         pagination={{ defaultPageSize: 8 }}
                         columns={columns}
-                        size="middle" rowKey={record => record.id} />
+                        size="middle" rowKey={record => record} />
                 </Col>
             </Row>
         </div>

@@ -16,18 +16,21 @@ function ManageProjectPermissions() {
         },
     };
 
+    const { projectResourceId, userId } = useParams();
     const [iconLoading, setIconLoading] = useState(false);
     const [columns, setColumns] = useState([]);
     const [dataSource, setDataSource] = useState([]);
-    const [userName, setUserName] = useState("");
-    const [projectResourceIdentifier, setProjectResourceIdentifier] = useState("");
+    const [userName, setUserName] = useState(userId || "");
+    const [projectResourceIdentifier, setProjectResourceIdentifier] = useState(projectResourceId || "");
     const [selectedPermissions, setselectedPermissions] = useState([]);
-    const { projectResourceId } = useParams();
+
 
     useEffect(() => {
         document.title = "Manage Project Permissions";
-        setProjectResourceIdentifier(projectResourceId);
         initColumns();
+        if (projectResourceId && userId) {
+            loadPermissions();
+        }
     }, []);
 
     function initColumns() {
@@ -77,8 +80,8 @@ function ManageProjectPermissions() {
             message.error("Please provide a valid project ID!");
             return;
         }
-        if ((selectedPermissions.indexOf("create-project") > -1 || selectedPermissions.indexOf("assign-create-project") > -1) 
-                && projectResourceIdentifier != "*") {
+        if ((selectedPermissions.indexOf("create-project") > -1 || selectedPermissions.indexOf("assign-create-project") > -1)
+            && projectResourceIdentifier != "*") {
             message.error("create-project and assign-create-project permissions can be assigned for ALL projects and not for specific project!");
             return;
         }
@@ -109,8 +112,8 @@ function ManageProjectPermissions() {
             message.error("Please provide a valid project ID!");
             return;
         }
-        if ((selectedPermissions.indexOf("create-project") > -1 || selectedPermissions.indexOf("assign-create-project") > -1) 
-                && projectResourceIdentifier != "*") {
+        if ((selectedPermissions.indexOf("create-project") > -1 || selectedPermissions.indexOf("assign-create-project") > -1)
+            && projectResourceIdentifier != "*") {
             message.error("create-project and assign-create-project permissions can be revoked for ALL projects and not for specific project!");
             return;
         }
@@ -198,39 +201,39 @@ function ManageProjectPermissions() {
                     <Form style={{ backgroundColor: 'white' }}>
                         <Row type="flex" justify="start" align="middle">
                             <Col>
-                                    <Input style={{ fontSize: 12 }}
-                                        placeholder=" projectId"
-                                        size="small"
-                                        value={projectResourceIdentifier}
-                                        onChange={(e) => { setProjectResourceIdentifier(e.target.value) }} />
+                                <Input style={{ fontSize: 12 }}
+                                    placeholder=" projectId"
+                                    size="small"
+                                    value={projectResourceIdentifier}
+                                    onChange={(e) => { setProjectResourceIdentifier(e.target.value) }} />
                             </Col>
                             <Divider type="vertical" />
                             <Col>
-                                    <Input style={{ fontSize: 12 }}
-                                        placeholder=" username"
-                                        size="small"
-                                        value={userName}
-                                        onChange={(e) => { setUserName(e.target.value) }} />
+                                <Input style={{ fontSize: 12 }}
+                                    placeholder=" username"
+                                    size="small"
+                                    value={userName}
+                                    onChange={(e) => { setUserName(e.target.value) }} />
                             </Col>
                             <Divider type="vertical" />
                             <Col>
-                                    <Button type="primary"
-                                        size="small" 
-                                        htmlType="button" 
-                                        onClick={() => loadPermissions()}>Load Permissions</Button>
+                                <Button type="primary"
+                                    size="small"
+                                    htmlType="button"
+                                    onClick={() => loadPermissions()}>Load Permissions</Button>
                             </Col>
                         </Row>
                         <br />
                         <Row type="flex" justify="start" align="middle">
-                            
-                                <Button size="small" type="primary" htmlType="button" onClick={() => assignSelectedPermissions()}>Assign Permissions</Button>
-                                <Divider type="vertical" />
-                                <Button size="small" type="primary" htmlType="button" onClick={() => revokeSelectedPermissions()}>Revoke Permissions</Button>
-                                <Divider type="vertical" />
-                                <Button size="small" type="danger" htmlType="button" onClick={() => assignSelectedPermissionsOnAllProjects()}>Assign Permissions on ALL Projects</Button>
-                                <Divider type="vertical" />
-                                <Button size="small" type="danger" htmlType="button" onClick={() => revokeSelectedPermissionsOnAllProjects()}>Revoke Permissions on ALL Projects</Button>
-                             
+
+                            <Button size="small" type="primary" htmlType="button" onClick={() => assignSelectedPermissions()}>Assign Permissions</Button>
+                            <Divider type="vertical" />
+                            <Button size="small" type="primary" htmlType="button" onClick={() => revokeSelectedPermissions()}>Revoke Permissions</Button>
+                            <Divider type="vertical" />
+                            <Button size="small" type="danger" htmlType="button" onClick={() => assignSelectedPermissionsOnAllProjects()}>Assign Permissions on ALL Projects</Button>
+                            <Divider type="vertical" />
+                            <Button size="small" type="danger" htmlType="button" onClick={() => revokeSelectedPermissionsOnAllProjects()}>Revoke Permissions on ALL Projects</Button>
+
                         </Row>
                     </Form>
                     <Table dataSource={dataSource}
