@@ -54,8 +54,12 @@ function axiosInterceptor(userContext, history, location) {
                     //Thus using localStorage and window.location directly.
                     //localStorage.removeItem("currentUser");
                     //  window.location.href = "/login";
-                    userContext.clearCurrentUser();
-                    history.push("/login", { from: location.pathname });
+                    setTimeout(function () { 
+                        //Allows promise to resolve before history.push executes 
+                        //and hence avoids set state executing after component unmounts. 
+                        userContext.clearCurrentUser();
+                        history.push("/login", { from: location.pathname });
+                    }, 500);
                 } else if (responseStatus === 403) {
                     message.error('Access denied, If you think you should have access to this resource, please contact support.', 5);
                 } else if (responseStatus === 404) {
