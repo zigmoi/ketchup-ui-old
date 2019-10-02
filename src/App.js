@@ -5,8 +5,8 @@ import { Route, Switch } from 'react-router-dom';
 import Home from './Home';
 import Login from './Login';
 import Nomatch from './Nomatch';
-import UserProvider from './UserProvider';
-import ProjectProvider from './ProjectProvider';
+import {UserProvider} from './UserContext.js';
+import {ProjectProvider} from './ProjectContext.js'
 
 function App() {
   return (

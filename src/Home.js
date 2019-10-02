@@ -1,9 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
 import './App.css';
 import { Switch, Link, useHistory, useLocation } from 'react-router-dom';
-import { Icon, Layout, Menu, Spin, Popover, Avatar, Select, message } from 'antd';
+import { Icon, Layout, Menu, Popover, Avatar, Select, message } from 'antd';
 import { Row, Col } from 'antd';
 
+import axiosInterceptor from './axiosInterceptor';
 import useValidateUserHasAnyRole from './useValidateUserHasAnyRole';
 import useValidateUserHasAllRoles from './useValidateUserHasAllRoles';
 
@@ -14,26 +15,23 @@ import ProtectedRoute from './ProtectedRoute';
 
 import Nomatch from './Nomatch';
 import Dashboard from './Dashboard';
-import Dashboard1 from './Dashboard1';
 import ManageTenants from './Tenants/ManageTenants';
-import ManageUsersOld from './Users/ManageUsersOld';
 import CreateTenant from './Tenants/CreateTenant';
-import CreateUserOld from './Users/CreateUserOld';
 
 import CreateUser from './Users/CreateUser';
 import ManageUsers from './Users/ManageUsers';
-
-import ManageProjects from './Projects/ManageProjects';
 
 import CreateGitProvider from './Resources/GitProviders/CreateGitProvider';
 import ManageGitProvider from './Resources/GitProviders/ManageGitProvider';
 import CreateBuildTool from './Resources/BuildTools/CreateBuildTool';
 import ManageBuildTool from './Resources/BuildTools/ManageBuildTool';
+
 import CreateProject from './Projects/CreateProject';
 import ViewProject from './Projects/ViewProject';
+import ManageProjects from './Projects/ManageProjects';
 import ManageProjectMembers from './Projects/ManageProjectMembers';
 import ManageProjectPermissions from './Projects/ManageProjectPermissions';
-import axiosInterceptor from './axiosInterceptor';
+
 
 
 
@@ -352,22 +350,19 @@ function Home() {
                   <ProtectedRoute path="/" exact component={Dashboard} />
                   <ProtectedRoute path="/app" exact component={Dashboard} />
                   <ProtectedRoute path="/app/dashboard" component={Dashboard} />
-                  <ProtectedRoute path="/app/dashboard1" component={Dashboard1} />
                   <ProtectedRoute path="/app/create-tenant" component={CreateTenant} roles={['ROLE_SUPER_ADMIN']} />
                   <ProtectedRoute path="/app/manage-tenants" component={ManageTenants} roles={['ROLE_SUPER_ADMIN']} />
                   <ProtectedRoute path="/app/create-user" component={CreateUser} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />
                   <ProtectedRoute path="/app/manage-users" component={ManageUsers} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />
-                  <ProtectedRoute path="/app/create-user-old" component={CreateUserOld} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />
-                  <ProtectedRoute path="/app/manage-users-old" component={ManageUsersOld} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />
-                  <ProtectedRoute path="/app/add-git-provider" component={CreateGitProvider} />
-                  <ProtectedRoute path="/app/manage-git-provider" component={ManageGitProvider} />
-                  <ProtectedRoute path="/app/add-build-tool" component={CreateBuildTool} />
-                  <ProtectedRoute path="/app/manage-build-tool" component={ManageBuildTool} />
                   <ProtectedRoute path="/app/project/create" component={CreateProject} />
                   <ProtectedRoute path="/app/projects" component={ManageProjects} />
                   <ProtectedRoute path="/app/project/:projectResourceId/view" component={ViewProject} />
                   <ProtectedRoute path="/app/project/:projectResourceId/members" component={ManageProjectMembers} />
                   <ProtectedRoute path="/app/project/:projectResourceId/permissions" component={ManageProjectPermissions} />
+                  <ProtectedRoute path="/app/add-git-provider" component={CreateGitProvider} />
+                  <ProtectedRoute path="/app/manage-git-provider" component={ManageGitProvider} />
+                  <ProtectedRoute path="/app/add-build-tool" component={CreateBuildTool} />
+                  <ProtectedRoute path="/app/manage-build-tool" component={ManageBuildTool} />
                   <ProtectedRoute component={Nomatch} />
                 </Switch>
               </Col>

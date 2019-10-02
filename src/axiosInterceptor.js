@@ -49,11 +49,6 @@ function axiosInterceptor(userContext, history, location) {
                 }
                 if (responseStatus === 401) {
                     message.error('Authentication required, Please login to continue.', 5);
-                    //UserProvider has not wrapped this so userContext.clearCurrentUser is not available here.
-                    //withRouter around interceptors parent component and passing history props is making is render multiple times.
-                    //Thus using localStorage and window.location directly.
-                    //localStorage.removeItem("currentUser");
-                    //  window.location.href = "/login";
                     setTimeout(function () { 
                         //Allows promise to resolve before history.push executes 
                         //and hence avoids set state executing after component unmounts. 
