@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import './App.css';
-import { Switch, Link } from 'react-router-dom';
+import { Switch, Link, useHistory, useLocation } from 'react-router-dom';
 import { Icon, Layout, Menu, Spin, Popover, Avatar, Select, message } from 'antd';
 import { Row, Col } from 'antd';
 
@@ -33,16 +33,27 @@ import CreateProject from './Projects/CreateProject';
 import ViewProject from './Projects/ViewProject';
 import ManageProjectMembers from './Projects/ManageProjectMembers';
 import ManageProjectPermissions from './Projects/ManageProjectPermissions';
-
+import axiosInterceptor from './axiosInterceptor';
 
 
 
 function Home() {
+  const userContext = useContext(UserContext);
+  let history = useHistory();
+  let location = useLocation();
+  useEffect(() => {
+    //home is loaded again when user gets logged out to login page.
+    //on login user is redirected to a route which mounts Home page again.
+    //thus interceptor gets called again.
+    //To prevent inteceptor has a check (If its already loaded) before setting it up. 
+    axiosInterceptor(userContext, history, location);
+  }, []);
+
   const { Header, Content, Sider } = Layout;
   const SubMenu = Menu.SubMenu;
   const { Option } = Select;
 
-  const userContext = useContext(UserContext);
+
   const projectContext = useContext(ProjectContext);
   const currentProject = useCurrentProject();
 
@@ -53,7 +64,7 @@ function Home() {
   useEffect(() => {
     console.log("in effect home, project: ", currentProject);
     setProjectId(currentProject ? currentProject.projectId : "");
-  }, []);
+  }, [currentProject]);
 
 
   function onProjectChange(value) {

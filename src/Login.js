@@ -1,57 +1,64 @@
 import React, { useContext, useState, useEffect } from 'react';
-import UserContext from './UserContext';
-import { withRouter } from 'react-router-dom';
+import { Row, Col, Form, Icon, Input, Button, Spin, Modal, message, Layout, Menu } from 'antd';
 import qs from 'qs';
 import jwt_decode from 'jwt-decode';
 import axios from 'axios';
+import { useHistory, useLocation } from 'react-router-dom';
 import useLoginStatus from './useLoginStatus';
-import { Form, Icon, Input, Button, Spin, Modal, message, Layout, Menu } from 'antd';
-import { Row, Col } from 'antd';
-import { mapRolesToPermissions } from './Util';
+import UserContext from './UserContext';
 import ProjectContext from './ProjectContext';
 
-function Login(props) {
+const FormItem = Form.Item;
+const { Header, Content } = Layout;
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 6 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 16 },
+  },
+};
+
+function Login() {
   console.log("login");
-  document.title = "Login";
-
-  const FormItem = Form.Item;
-  const { Header, Content } = Layout;
-
-  const formItemLayout = {
-    labelCol: {
-      xs: { span: 24 },
-      sm: { span: 6 },
-    },
-    wrapperCol: {
-      xs: { span: 24 },
-      sm: { span: 16 },
-    },
-  };
-
-
-  let homePageUrl = "/app/dashboard";
-
-  let { from } = props.location.state || { from: { pathname: homePageUrl } };
-  const { history } = props;
-
-  const userContext = useContext(UserContext);
-  const loginStatus = useLoginStatus();
-  const projectContext = useContext(ProjectContext);
-
-
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [iconLoading, setIconLoading] = useState(false);
+  const [isUserLoggingIn, setIsUserLoggingIn] = useState(false);
+  const [from, setFrom] = useState("/app/dashboard");
 
+  let history = useHistory();
+  let location = useLocation();
+
+  const userContext = useContext(UserContext);
+  const projectContext = useContext(ProjectContext);
+  const loginStatus = useLoginStatus();
 
   useEffect(() => {
     console.log("in effect login");
-    if (loginStatus) {
-      history.push(from);
+    document.title = "Login";
+    //execution comes here when login is in progress and current user is set.
+    //loginStatus gets updated via context api and hence execution comes here.
+    //variable isUserLoggingIn is used to prevent history.replace
+    //from executiing twice and loading route twice.
+    //Once its executed in useEffect and secind time in getUserInfo.
+    //Without this check route gets called twice also causes interceptor to load twice.
+
+    if (location.state && location.state.from && location.state.from.pathname) {
+        setFrom(from => location.state.from.pathname);
     }
-  }, []);
+
+    if (loginStatus && isUserLoggingIn == false) {
+      history.replace(from);
+    }
+  }, [loginStatus]);
+
 
   function submitRequest() {
-    //  this.setState({loadingIcon: true});
+    setIconLoading(true);
 
     var params = {
       "grant_type": "password",
@@ -74,18 +81,20 @@ function Login(props) {
       headers: { "content-type": "application/x-www-form-urlencoded" }
     }).then((response) => {
       console.log(response);
-      // this.setState({loadingIcon: false});
+      setIconLoading(false);
       // var decoded_token = jwt_decode(response.data.access_token);
       // console.log(decoded_token);
       getUserInfo(username, response.data.access_token);
     })
       .catch((error) => {
         console.log("Error in login request: ", error);
+        setIconLoading(false);
       });
 
   }
 
   function getUserInfo(loggedInUserName, accessToken) {
+    setIconLoading(true);
     let config = {
       headers: {
         "Authorization": "Bearer " + accessToken
@@ -94,6 +103,7 @@ function Login(props) {
     axios.get('http://localhost:8097/v1/user/my/profile', config)
       .then((response) => {
         console.log("getUserInfo", response);
+        setIconLoading(false);
         let user = {
           id: loggedInUserName,
           accessToken: accessToken,
@@ -103,12 +113,14 @@ function Login(props) {
           email: response.data.email,
         };
 
+        setIsUserLoggingIn(true);
         userContext.setCurrentUser(user);
         projectContext.setCurrentProject({ projectId: "p1" });
-        history.push(from);
+        history.replace(from);
       })
       .catch((error) => {
-        message.error("Unable to fetch profile information.")
+        message.error("Unable to fetch profile information.");
+        setIconLoading(false);
       });
   }
 
@@ -135,10 +147,7 @@ function Login(props) {
                 <br />
                 <label style={{ fontSize: 15 }}><b>Login</b></label>
                 <br />
-
-                {/* <Spin spinning={this.state.loadingIcon}>
-          </Spin> */}
-
+                <Spin spinning={iconLoading}></Spin>
                 <br />
                 <br />
                 <FormItem {...formItemLayout} label="Username:">
@@ -173,4 +182,4 @@ function Login(props) {
   );
 }
 
-export default withRouter(Login);
+export default Login;

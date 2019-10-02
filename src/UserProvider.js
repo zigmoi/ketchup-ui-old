@@ -7,17 +7,17 @@ class UserProvider extends Component {
     }
 
     setCurrentUser = (user) => {
-        console.log("setting logged in user.")
-        console.log(user);
-        this.setState({ currentUser: user });
+        console.log("started setting logged in user:", user);
         localStorage.setItem('currentUser', JSON.stringify(user));
+        this.setState({ currentUser: user });
         console.log("setting logged in user complete.")
     }
 
     clearCurrentUser = () => {
-        console.log("logout")
-        this.setState({ currentUser: null });
+        console.log("clear current user started.");
         localStorage.removeItem("currentUser");
+        this.setState({ currentUser: null });
+        console.log("clear current user complete.");
     }
 
 
