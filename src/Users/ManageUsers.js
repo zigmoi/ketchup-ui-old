@@ -51,6 +51,8 @@ function ManageUsers() {
             key: 'action',
             render: (text, record) => (
                 <span>
+                    <Button type="primary" size="small"><Link to={`/app/user/${record.userName}/roles`}>Roles</Link></Button>
+                    <Divider type="vertical" />
                     <Popconfirm title="Confirm operation?"
                         okText="Go Ahead" cancelText="Cancel" onConfirm={() => toggleStatus(record)}>
                         <Button type="danger" size="small">{record.enabled ? 'Disable' : 'Enable'}</Button>

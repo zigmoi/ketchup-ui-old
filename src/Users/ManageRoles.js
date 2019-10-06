@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm, Input } from 'antd';
+import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm, Select } from 'antd';
 import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
-function ManageProjectMembers() {
+function ManageRoles() {
+    const Option = Select.Option;
+
     const [iconLoading, setIconLoading] = useState(false);
     const [columns, setColumns] = useState([]);
     const [dataSource, setDataSource] = useState([]);
-    const [memberName, setMemberName] = useState("");
-    const { projectResourceId } = useParams();
+    const [role, setRole] = useState("");
+    const { userName } = useParams();
 
     useEffect(() => {
-        document.title = "Manage Project Members";
+        document.title = "Manage Roles";
         initColumns();
         loadAll();
     }, []);
@@ -33,12 +35,8 @@ function ManageProjectMembers() {
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <Button type="primary" size="small">
-                        <Link to={`/app/project/${projectResourceId}/permissions/${record}`}>Permissions</Link>
-                    </Button>
-                    <Divider type="vertical" />
                     <Popconfirm title="Confirm operation?"
-                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => removeProjectMember(record)}>
+                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => removeRole(record)}>
                         <Button type="danger" size="small">Remove</Button>
                     </Popconfirm>
                 </span>
@@ -54,12 +52,12 @@ function ManageProjectMembers() {
 
     function loadAll() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/project/${projectResourceId}/members`)
+        axios.get(`http://localhost:8097/v1/user/${userName}/roles`)
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);
                 if (response.data.length == 0) {
-                    message.info("No members found!");
+                    message.info("No roles found!");
                 }
             })
             .catch((error) => {
@@ -68,32 +66,33 @@ function ManageProjectMembers() {
     }
 
 
-    function removeProjectMember(selectedRecord) {
+    function removeRole(selectedRecord) {
         setIconLoading(true);
-        let memberName = selectedRecord;
-        axios.post(`http://localhost:8097/v1/project/${projectResourceId}/member/${memberName}/remove`)
+        let roleName = selectedRecord;
+        axios.put(`http://localhost:8097/v1/user/${userName}/role/${roleName}/remove`)
             .then((response) => {
                 setIconLoading(false);
-                setMemberName("");
+                setRole("");
                 reloadTabularData();
-                message.success('Member removed successfully.');
+                message.success('Role removed successfully.');
             })
             .catch((error) => {
                 setIconLoading(false);
             });
     }
 
-    function addMember() {
-        if (memberName === "") {
-            message.error("Please provide a valid user name to add as member!");
+    function addRole() {
+        if (!role) {
+            message.error("Please select a valid role!");
             return;
         }
+
         setIconLoading(true);
-        axios.post(`http://localhost:8097/v1/project/${projectResourceId}/member/${memberName}/add`)
+        axios.put(`http://localhost:8097/v1/user/${userName}/role/${role}/add`)
             .then((response) => {
                 setIconLoading(false);
                 reloadTabularData();
-                message.success('Member added successfully.');
+                message.success('Role added successfully.');
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -105,7 +104,7 @@ function ManageProjectMembers() {
             <Row type="flex" justify="start" align="middle" style={{ paddingTop: '10px', paddingBottom: '5px' }}>
                 <Col span={11} offset={1}>
                     <Row type="flex" justify="start" align="middle">
-                        <label style={{ fontWeight: 'bold', fontSize: 18 }} > Manage Project Members</label>
+                        <label style={{ fontWeight: 'bold', fontSize: 18 }} > Manage Roles</label>
                         <span>&nbsp;&nbsp;</span>
                         <Spin spinning={iconLoading} />
                     </Row>
@@ -116,18 +115,24 @@ function ManageProjectMembers() {
                 <Col span={22}>
                     <Row type="flex" justify="start" align="middle">
                         <Col>
-                            <Input style={{ fontSize: 12 }}
-                                placeholder=" username"
+                            <Select style={{ fontSize: 12, width: 200 }}
+                                allowClear
                                 size="small"
-                                value={memberName}
-                                onChange={(e) => { setMemberName(e.target.value) }} />
+                                value={role}
+                                onChange={(e) => { setRole(e) }}>
+                                <Option value="ROLE_USER">USER</Option>
+                                <Option value="ROLE_TENANT_ADMIN">TENANT ADMIN</Option>
+                                <Option value="ROLE_USER_ADMIN">USER ADMIN</Option>
+                                <Option value="ROLE_CONFIG_ADMIN">CONFIGURATION ADMIN</Option>
+                                <Option value="ROLE_SUPER_ADMIN">SUPER ADMIN</Option>
+                            </Select>
                         </Col>
                         <Divider type="vertical" />
                         <Col>
                             <Button type="primary"
                                 size="small"
                                 htmlType="button"
-                                onClick={() => addMember()}>Add Member</Button>
+                                onClick={() => addRole()}>Add Role</Button>
                         </Col>
                     </Row>
                     <Table dataSource={dataSource}
@@ -140,4 +145,4 @@ function ManageProjectMembers() {
     );
 }
 
-export default ManageProjectMembers;
+export default ManageRoles;

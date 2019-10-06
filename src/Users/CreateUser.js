@@ -1,26 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Form, Icon, Input, Button } from 'antd';
-import { Row, Col, message, Spin, Select } from 'antd';
+import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
-import { Link, useHistory } from 'react-router-dom';
-import UserContext from '../UserContext';
+import { useHistory } from 'react-router-dom';
 
 function CreateUser() {
-    const [iconLoading, setIconLoading] = useState(false);
-    const [userName, setUserName] = useState("");
-    const [password, setPassword] = useState("");
-    const [displayName, setDisplayName] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [role, setRole] = useState("");
-
-    let history =  useHistory();
-    const user = useContext(UserContext);
-
-    const Option = Select.Option;
     const FormItem = Form.Item;
-
     const formItemLayout = {
         labelCol: {
             xs: { span: 24 },
@@ -34,9 +19,15 @@ function CreateUser() {
 
     document.title = "Create User";
 
-    function changeRole(selectedRole) {
-        setRole(selectedRole);
-    }
+    const [iconLoading, setIconLoading] = useState(false);
+    const [userName, setUserName] = useState("");
+    const [password, setPassword] = useState("");
+    const [displayName, setDisplayName] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+
+    let history = useHistory();
 
     function createUser() {
         setIconLoading(true);
@@ -48,7 +39,7 @@ function CreateUser() {
             'firstName': firstName,
             'lastName': lastName,
             'email': email,
-            'roles': [role],
+            'roles': [],
         };
         axios.post('http://localhost:8097/v1/user/', data)
             .then((response) => {
@@ -110,15 +101,6 @@ function CreateUser() {
                                 value={email}
                                 onChange={(e) => { setEmail(e.target.value) }} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Role:">
-                            <Select value={role}
-                                onChange={changeRole}>
-                                <Option value="ROLE_ADMIN">ROLE_ADMIN</Option>
-                                <Option value="ROLE_USER">ROLE_USER</Option>
-                            </Select>
-                        </FormItem>
-
-
 
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">

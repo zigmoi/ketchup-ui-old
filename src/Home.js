@@ -20,6 +20,7 @@ import CreateTenant from './Tenants/CreateTenant';
 
 import CreateUser from './Users/CreateUser';
 import ManageUsers from './Users/ManageUsers';
+import ManageRoles from './Users/ManageRoles';
 
 import CreateGitProvider from './Resources/GitProviders/CreateGitProvider';
 import ManageGitProvider from './Resources/GitProviders/ManageGitProvider';
@@ -31,8 +32,6 @@ import ViewProject from './Projects/ViewProject';
 import ManageProjects from './Projects/ManageProjects';
 import ManageProjectMembers from './Projects/ManageProjectMembers';
 import ManageProjectPermissions from './Projects/ManageProjectPermissions';
-
-
 
 
 function Home() {
@@ -354,6 +353,7 @@ function Home() {
                   <ProtectedRoute path="/app/manage-tenants" component={ManageTenants} roles={['ROLE_SUPER_ADMIN']} />
                   <ProtectedRoute path="/app/create-user" component={CreateUser} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />
                   <ProtectedRoute path="/app/manage-users" component={ManageUsers} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />
+                  <ProtectedRoute path="/app/user/:userName/roles" component={ManageRoles} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />
                   <ProtectedRoute path="/app/project/create" component={CreateProject} />
                   <ProtectedRoute path="/app/projects" component={ManageProjects} />
                   <ProtectedRoute path="/app/project/:projectResourceId/view" component={ViewProject} />
