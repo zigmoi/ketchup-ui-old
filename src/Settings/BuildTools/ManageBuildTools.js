@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm, Tag } from 'antd';
+import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
-function ManageProjects() {
+function ManageBuildTools() {
     const [iconLoading, setIconLoading] = useState(false);
     const [columns, setColumns] = useState([]);
     const [dataSource, setDataSource] = useState([]);
 
+    let { projectResourceId } = useParams();
+    
     useEffect(() => {
-        console.log("in effect Manage Projects");
-        document.title = "Manage Projects";
+        document.title = "Manage Build Tools";
         initColumns();
         loadAll();
     }, []);
@@ -25,32 +26,33 @@ function ManageProjects() {
             )
         }, {
             title: 'Name',
-            dataIndex: 'id.resourceId',
-            key: 'id',
+            dataIndex: 'displayName',
+            key: 'displayName',
         }, {
-            title: 'Creation Date',
-            dataIndex: 'creationDate',
-            key: 'creationDate',
-            render: (text, record) => (
-                moment(record.creationDate).format("MMM D, YYYY")
-            )
+            title: 'Provider',
+            dataIndex: 'provider',
+            key: 'provider',
         }, {
             title: 'Actions',
             dataIndex: 'action',
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/members`}>Members</Link></Button>
+                    <Button type="primary" size="small">
+                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/build-tool/view`}>
+                            View
+                        </Link>
+                    </Button>
                     <Divider type="vertical" />
-                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/permissions`}>Permissions</Link></Button>
-                    <Divider type="vertical" />
-                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/settings/cloud-providers`}>Settings</Link></Button>
-                    <Divider type="vertical" />
-                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/deployments`}>Deployments</Link></Button>
+                    <Button type="primary" size="small">
+                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/build-tool/edit`}>
+                            Edit
+                        </Link>
+                    </Button>
                     <Divider type="vertical" />
                     <Popconfirm title="Confirm operation?"
-                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => deleteProject(record)}>
-                        <Button type="danger" size="small">Delete</Button>
+                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => deleteSetting(record)}>
+                        <Button type="danger" size="small">Remove</Button>
                     </Popconfirm>
                 </span>
             )
@@ -65,7 +67,7 @@ function ManageProjects() {
 
     function loadAll() {
         setIconLoading(true);
-        axios.get('http://localhost:8097/v1/projects')
+        axios.get(`http://localhost:8097/v1/settings/list-all-build-tool/${projectResourceId}`)
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);
@@ -76,15 +78,14 @@ function ManageProjects() {
     }
 
 
-    function deleteProject(selectedRecord) {
+    function deleteSetting(selectedRecord) {
         setIconLoading(true);
-        console.log(selectedRecord);
-        let projectName = selectedRecord.id.resourceId;
-        axios.delete('http://localhost:8097/v1/project/' + projectName)
+        let settingId = selectedRecord.settingId;
+        axios.delete(`http://localhost:8097/v1/settings/cloud-provider/${projectResourceId}/${settingId}`)
             .then((response) => {
                 setIconLoading(false);
                 reloadTabularData();
-                message.success('Project deleted successfully.');
+                message.success('Build tool removed successfully.');
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -96,7 +97,7 @@ function ManageProjects() {
             <Row type="flex" justify="start" align="middle" style={{ paddingTop: '10px', paddingBottom: '5px' }}>
                 <Col span={11} offset={1}>
                     <Row type="flex" justify="start" align="middle">
-                        <label style={{ fontWeight: 'bold', fontSize: 18 }} > Manage Projects</label>
+                        <label style={{ fontWeight: 'bold', fontSize: 18 }} >Build Tools</label>
                         <span>&nbsp;&nbsp;</span>
                         <Spin spinning={iconLoading} />
                     </Row>
@@ -104,7 +105,7 @@ function ManageProjects() {
                 <Col span={11} offset={-1}>
                     <Row type="flex" justify="end" align="middle">
                         <Button type="primary"  >
-                            <Link to={"/app/project/create"}>Create Project</Link>
+                            <Link to={`/app/project/${projectResourceId}/setting/build-tool/add`}>Add</Link>
                         </Button>
                     </Row>
                 </Col>
@@ -114,11 +115,11 @@ function ManageProjects() {
                     <Table dataSource={dataSource}
                         pagination={{ defaultPageSize: 8 }}
                         columns={columns}
-                        size="middle" rowKey={record => record.id.resourceId} />
+                        size="middle" rowKey={record => record.settingId} />
                 </Col>
             </Row>
         </div>
     );
 }
 
-export default ManageProjects;
+export default ManageBuildTools;

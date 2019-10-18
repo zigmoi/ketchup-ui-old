@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { Form, Icon, Input, Button } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
-function CreateUser() {
-    const FormItem = Form.Item;
+const FormItem = Form.Item;
     const formItemLayout = {
         labelCol: {
             xs: { span: 24 },
@@ -16,37 +15,36 @@ function CreateUser() {
             sm: { span: 14 },
         },
     };
-
-    document.title = "Create User";
+function CreateGitProvider() {
+    document.title = "Add Git Provider";
 
     const [iconLoading, setIconLoading] = useState(false);
+    const [displayName, setDisplayName] = useState("");
+    const [provider, setProvider] = useState("");
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
-    const [displayName, setDisplayName] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
+    const [repoListUrl, setRepoListUrl] = useState("");
 
     let history = useHistory();
+    let { projectResourceId } = useParams();
 
-    function createUser() {
+    function CreateGitProvider() {
         setIconLoading(true);
         var data = {
-            'userName': userName,
-            'password': password,
-            'enabled': true,
+            'projectId': projectResourceId,
+            'settingId': "s1",
             'displayName': displayName,
-            'firstName': firstName,
-            'lastName': lastName,
-            'email': email,
-            'roles': [],
+            'provider': provider,
+            'username': userName,
+            'password': password,
+            'repoListUrl': repoListUrl,
         };
-        axios.post('http://localhost:8097/v1/user/', data)
+        axios.post('http://localhost:8097/v1/settings/git-provider', data)
             .then((response) => {
                 console.log(response);
                 setIconLoading(false);
-                message.success('User created successfully.', 5);
-                history.push("/app/manage-users");
+                message.success('Git Provider added successfully.', 5);
+                history.push(`/app/project/${projectResourceId}/settings/git-providers`);
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -57,7 +55,7 @@ function CreateUser() {
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Create New User</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Add Git Provider</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
@@ -65,9 +63,21 @@ function CreateUser() {
             <Row type="flex" justify="center" align="middle">
                 <Col span={24}  >
                     <Form style={{ backgroundColor: 'white' }}>
-                        <FormItem {...formItemLayout} label="User Name:">
+                    <FormItem {...formItemLayout} label="Display Name:">
                             <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
                                 autoFocus
+                                placeholder=" Display Name"
+                                value={displayName}
+                                onChange={(e) => { setDisplayName(e.target.value) }} />
+                        </FormItem>
+                        <FormItem {...formItemLayout} label="Provider:">
+                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
+                                placeholder=" Provider"
+                                value={provider}
+                                onChange={(e) => { setProvider(e.target.value) }} />
+                        </FormItem>
+                        <FormItem {...formItemLayout} label="User Name:">
+                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
                                 placeholder=" User Name"
                                 value={userName}
                                 onChange={(e) => { setUserName(e.target.value) }} />
@@ -78,38 +88,19 @@ function CreateUser() {
                                 value={password}
                                 onChange={(e) => { setPassword(e.target.value) }} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Display Name:">
+                        <FormItem {...formItemLayout} label="Repository List URL:">
                             <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" Display Name"
-                                value={displayName}
-                                onChange={(e) => { setDisplayName(e.target.value) }} />
+                                placeholder=" Repository List URL"
+                                value={repoListUrl}
+                                onChange={(e) => { setRepoListUrl(e.target.value) }} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="First Name:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" First Name"
-                                value={firstName}
-                                onChange={(e) => { setFirstName(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Last Name:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" Last Name"
-                                value={lastName}
-                                onChange={(e) => { setLastName(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Email:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" Email"
-                                value={email}
-                                onChange={(e) => { setEmail(e.target.value) }} />
-                        </FormItem>
-
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">
                                 <Col>
                                     <Button type="primary"
                                         loading={iconLoading}
                                         htmlType="submit"
-                                        onClick={createUser} >Submit</Button>
+                                        onClick={CreateGitProvider} >Submit</Button>
                                 </Col>
                             </Row>
                         </FormItem>
@@ -120,4 +111,4 @@ function CreateUser() {
     );
 }
 
-export default CreateUser;
+export default CreateGitProvider;

@@ -152,6 +152,7 @@ function Login() {
                 <br />
                 <FormItem {...formItemLayout} label="Username:">
                   <Input prefix={<Icon type="user" style={{ fontSize: 20 }} />} placeholder=" Username"
+                    autoFocus
                     value={username}
                     onChange={(e) => { setUsername(e.target.value) }} />
                 </FormItem>

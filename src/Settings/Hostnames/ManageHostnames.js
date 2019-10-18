@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm, Tag } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
-function ManageProjects() {
+function ManageHostnames() {
     const [iconLoading, setIconLoading] = useState(false);
     const [columns, setColumns] = useState([]);
     const [dataSource, setDataSource] = useState([]);
 
+    let { projectResourceId } = useParams();
+
     useEffect(() => {
-        console.log("in effect Manage Projects");
-        document.title = "Manage Projects";
+        document.title = "Manage Hostnames";
         initColumns();
         loadAll();
     }, []);
@@ -24,32 +25,21 @@ function ManageProjects() {
                 <span>{index + 1}</span>
             )
         }, {
-            title: 'Name',
-            dataIndex: 'id.resourceId',
-            key: 'id',
-        }, {
-            title: 'Creation Date',
-            dataIndex: 'creationDate',
-            key: 'creationDate',
-            render: (text, record) => (
-                moment(record.creationDate).format("MMM D, YYYY")
-            )
+            title: 'Display Name',
+            dataIndex: 'displayName',
+            key: 'displayName',
         }, {
             title: 'Actions',
             dataIndex: 'action',
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/members`}>Members</Link></Button>
+                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/members`}>View</Link></Button>
                     <Divider type="vertical" />
-                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/permissions`}>Permissions</Link></Button>
-                    <Divider type="vertical" />
-                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/settings/cloud-providers`}>Settings</Link></Button>
-                    <Divider type="vertical" />
-                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/deployments`}>Deployments</Link></Button>
+                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/permissions`}>Edit</Link></Button>
                     <Divider type="vertical" />
                     <Popconfirm title="Confirm operation?"
-                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => deleteProject(record)}>
+                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => deleteSetting(record)}>
                         <Button type="danger" size="small">Delete</Button>
                     </Popconfirm>
                 </span>
@@ -65,7 +55,7 @@ function ManageProjects() {
 
     function loadAll() {
         setIconLoading(true);
-        axios.get('http://localhost:8097/v1/projects')
+        axios.get(`http://localhost:8097/v1/settings/list-all-hostname-ip-mapping/${projectResourceId}`)
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);
@@ -76,15 +66,15 @@ function ManageProjects() {
     }
 
 
-    function deleteProject(selectedRecord) {
+    function deleteSetting(selectedRecord) {
         setIconLoading(true);
         console.log(selectedRecord);
         let projectName = selectedRecord.id.resourceId;
-        axios.delete('http://localhost:8097/v1/project/' + projectName)
+        axios.delete('http://localhost:8097/v1/settings/hostname-ip-mapping/' + projectName)
             .then((response) => {
                 setIconLoading(false);
                 reloadTabularData();
-                message.success('Project deleted successfully.');
+                message.success('Hostname deleted successfully.');
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -96,7 +86,7 @@ function ManageProjects() {
             <Row type="flex" justify="start" align="middle" style={{ paddingTop: '10px', paddingBottom: '5px' }}>
                 <Col span={11} offset={1}>
                     <Row type="flex" justify="start" align="middle">
-                        <label style={{ fontWeight: 'bold', fontSize: 18 }} > Manage Projects</label>
+                        <label style={{ fontWeight: 'bold', fontSize: 18 }} >Hostnames</label>
                         <span>&nbsp;&nbsp;</span>
                         <Spin spinning={iconLoading} />
                     </Row>
@@ -104,7 +94,7 @@ function ManageProjects() {
                 <Col span={11} offset={-1}>
                     <Row type="flex" justify="end" align="middle">
                         <Button type="primary"  >
-                            <Link to={"/app/project/create"}>Create Project</Link>
+                            <Link to={`/app/project/${projectResourceId}/setting/add-hostname`}>Add</Link>
                         </Button>
                     </Row>
                 </Col>
@@ -121,4 +111,4 @@ function ManageProjects() {
     );
 }
 
-export default ManageProjects;
+export default ManageHostnames;

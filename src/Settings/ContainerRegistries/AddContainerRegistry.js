@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { Form, Icon, Input, Button } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
-function CreateUser() {
-    const FormItem = Form.Item;
+const FormItem = Form.Item;
     const formItemLayout = {
         labelCol: {
             xs: { span: 24 },
@@ -17,36 +16,37 @@ function CreateUser() {
         },
     };
 
-    document.title = "Create User";
+
+function AddContainerRegistry() {
+    document.title = "Add Cloud Provider";
 
     const [iconLoading, setIconLoading] = useState(false);
-    const [userName, setUserName] = useState("");
-    const [password, setPassword] = useState("");
     const [displayName, setDisplayName] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
+    const [provider, setProvider] = useState("");
+    const [registryId, setRegistryId] = useState("");
+    const [registryUrl, setRegistryUrl] = useState("");
+    const [cloudCredentialId, setCloudCredentialId] = useState("");
 
     let history = useHistory();
+    let { projectResourceId } = useParams();
 
-    function createUser() {
+    function AddContainerRegistry() {
         setIconLoading(true);
         var data = {
-            'userName': userName,
-            'password': password,
-            'enabled': true,
+            'projectId': projectResourceId,
+            'settingId': "s1",
             'displayName': displayName,
-            'firstName': firstName,
-            'lastName': lastName,
-            'email': email,
-            'roles': [],
+            'provider': provider,
+            'registryId': registryId,
+            'registryUrl': registryUrl,
+            'cloudCredentialId': cloudCredentialId,
         };
-        axios.post('http://localhost:8097/v1/user/', data)
+        axios.post('http://localhost:8097/v1/settings/container-registry', data)
             .then((response) => {
                 console.log(response);
                 setIconLoading(false);
-                message.success('User created successfully.', 5);
-                history.push("/app/manage-users");
+                message.success('Container registry added successfully.', 5);
+                history.push(`/app/project/${projectResourceId}/settings/container-registries`);
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -57,7 +57,7 @@ function CreateUser() {
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Create New User</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Add Container Registry</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
@@ -65,51 +65,44 @@ function CreateUser() {
             <Row type="flex" justify="center" align="middle">
                 <Col span={24}  >
                     <Form style={{ backgroundColor: 'white' }}>
-                        <FormItem {...formItemLayout} label="User Name:">
+                    <FormItem {...formItemLayout} label="Display Name:">
                             <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
                                 autoFocus
-                                placeholder=" User Name"
-                                value={userName}
-                                onChange={(e) => { setUserName(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Password:">
-                            <Input.Password style={{ fontSize: 20 }} prefix={<Icon type="lock" style={{ fontSize: 20 }} />}
-                                type="password" placeholder=" Password"
-                                value={password}
-                                onChange={(e) => { setPassword(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Display Name:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
                                 placeholder=" Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="First Name:">
+                        <FormItem {...formItemLayout} label="Provider:">
                             <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" First Name"
-                                value={firstName}
-                                onChange={(e) => { setFirstName(e.target.value) }} />
+                                placeholder=" Provider"
+                                value={provider}
+                                onChange={(e) => { setProvider(e.target.value) }} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Last Name:">
+                        <FormItem {...formItemLayout} label="Registry ID:">
                             <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" Last Name"
-                                value={lastName}
-                                onChange={(e) => { setLastName(e.target.value) }} />
+                                placeholder=" Registry ID"
+                                value={registryId}
+                                onChange={(e) => { setRegistryId(e.target.value) }} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Email:">
+                        <FormItem {...formItemLayout} label="Registry URL:">
                             <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" Email"
-                                value={email}
-                                onChange={(e) => { setEmail(e.target.value) }} />
+                                placeholder=" Registry URL"
+                                value={registryUrl}
+                                onChange={(e) => { setRegistryUrl(e.target.value) }} />
                         </FormItem>
-
+                        <FormItem {...formItemLayout} label="Cloud Credential ID:">
+                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
+                                placeholder=" Cloud Credential ID"
+                                value={cloudCredentialId}
+                                onChange={(e) => { setCloudCredentialId(e.target.value) }} />
+                        </FormItem>
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">
                                 <Col>
                                     <Button type="primary"
                                         loading={iconLoading}
                                         htmlType="submit"
-                                        onClick={createUser} >Submit</Button>
+                                        onClick={AddContainerRegistry} >Submit</Button>
                                 </Col>
                             </Row>
                         </FormItem>
@@ -120,4 +113,4 @@ function CreateUser() {
     );
 }
 
-export default CreateUser;
+export default AddContainerRegistry;
