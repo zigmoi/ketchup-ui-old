@@ -8,7 +8,7 @@ const FormItem = Form.Item;
     const formItemLayout = {
         labelCol: {
             xs: { span: 24 },
-            sm: { span: 8 },
+            sm: { span: 6 },
         },
         wrapperCol: {
             xs: { span: 24 },
@@ -64,33 +64,28 @@ function CreateGitProvider() {
                 <Col span={24}  >
                     <Form style={{ backgroundColor: 'white' }}>
                     <FormItem {...formItemLayout} label="Display Name:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                autoFocus
+                            <Input autoFocus
                                 placeholder=" Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" Provider"
+                            <Input placeholder=" Provider"
                                 value={provider}
                                 onChange={(e) => { setProvider(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="User Name:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" User Name"
+                            <Input placeholder=" User Name"
                                 value={userName}
                                 onChange={(e) => { setUserName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Password:">
-                            <Input.Password style={{ fontSize: 20 }} prefix={<Icon type="lock" style={{ fontSize: 20 }} />}
-                                type="password" placeholder=" Password"
+                            <Input.Password type="password" placeholder=" Password"
                                 value={password}
                                 onChange={(e) => { setPassword(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Repository List URL:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" Repository List URL"
+                            <Input placeholder=" Repository List URL"
                                 value={repoListUrl}
                                 onChange={(e) => { setRepoListUrl(e.target.value) }} />
                         </FormItem>

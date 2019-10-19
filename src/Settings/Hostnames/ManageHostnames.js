@@ -34,15 +34,23 @@ function ManageHostnames() {
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/members`}>View</Link></Button>
-                    <Divider type="vertical" />
-                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/permissions`}>Edit</Link></Button>
-                    <Divider type="vertical" />
-                    <Popconfirm title="Confirm operation?"
-                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => deleteSetting(record)}>
-                        <Button type="danger" size="small">Delete</Button>
-                    </Popconfirm>
-                </span>
+                <Button type="primary" size="small">
+                    <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/hostname/edit?mode=VIEW`}>
+                        View
+                    </Link>
+                </Button>
+                <Divider type="vertical" />
+                <Button type="primary" size="small">
+                    <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/hostname/edit?mode=EDIT`}>
+                        Edit
+                    </Link>
+                </Button>
+                <Divider type="vertical" />
+                <Popconfirm title="Confirm operation?"
+                    okText="Go Ahead" cancelText="Cancel" onConfirm={() => deleteSetting(record)}>
+                    <Button type="danger" size="small">Remove</Button>
+                </Popconfirm>
+            </span>
             )
         }];
 
@@ -68,13 +76,12 @@ function ManageHostnames() {
 
     function deleteSetting(selectedRecord) {
         setIconLoading(true);
-        console.log(selectedRecord);
-        let projectName = selectedRecord.id.resourceId;
-        axios.delete('http://localhost:8097/v1/settings/hostname-ip-mapping/' + projectName)
+        let settingId = selectedRecord.settingId;
+        axios.delete(`http://localhost:8097/v1/settings/hostname-ip-mapping/${projectResourceId}/${settingId}`)
             .then((response) => {
                 setIconLoading(false);
                 reloadTabularData();
-                message.success('Hostname deleted successfully.');
+                message.success('Hostname removed successfully.');
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -94,7 +101,7 @@ function ManageHostnames() {
                 <Col span={11} offset={-1}>
                     <Row type="flex" justify="end" align="middle">
                         <Button type="primary"  >
-                            <Link to={`/app/project/${projectResourceId}/setting/add-hostname`}>Add</Link>
+                            <Link to={`/app/project/${projectResourceId}/setting/hostname/add`}>Add</Link>
                         </Button>
                     </Row>
                 </Col>
@@ -104,7 +111,7 @@ function ManageHostnames() {
                     <Table dataSource={dataSource}
                         pagination={{ defaultPageSize: 8 }}
                         columns={columns}
-                        size="middle" rowKey={record => record.id.resourceId} />
+                        size="middle" rowKey={record => record.settingId} />
                 </Col>
             </Row>
         </div>

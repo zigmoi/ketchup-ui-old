@@ -43,13 +43,13 @@ function ManageCloudProviders() {
             render: (text, record) => (
                 <span>
                     <Button type="primary" size="small">
-                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/cloud-provider/view`}>
+                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/cloud-provider/edit?mode=VIEW`}>
                             View
                         </Link>
                     </Button>
                     <Divider type="vertical" />
                     <Button type="primary" size="small">
-                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/cloud-provider/edit`}>
+                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/cloud-provider/edit?mode=EDIT`}>
                             Edit
                         </Link>
                     </Button>

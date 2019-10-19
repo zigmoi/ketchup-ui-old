@@ -15,7 +15,7 @@ function ManageSettings() {
     let { projectResourceId, settingId } = useParams();
 
     useEffect(() => {
-        setSelectedKey(settingId);
+        setSelectedKey([settingId]);
     }, [settingId]);
 
     let settingsView = null;

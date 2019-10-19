@@ -39,13 +39,13 @@ function ManageBuildTools() {
             render: (text, record) => (
                 <span>
                     <Button type="primary" size="small">
-                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/build-tool/view`}>
+                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/build-tool/edit?mode=VIEW`}>
                             View
                         </Link>
                     </Button>
                     <Divider type="vertical" />
                     <Button type="primary" size="small">
-                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/build-tool/edit`}>
+                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/build-tool/edit?mode=EDIT`}>
                             Edit
                         </Link>
                     </Button>

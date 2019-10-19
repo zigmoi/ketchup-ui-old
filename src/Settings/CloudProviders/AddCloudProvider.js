@@ -8,7 +8,7 @@ const FormItem = Form.Item;
     const formItemLayout = {
         labelCol: {
             xs: { span: 24 },
-            sm: { span: 8 },
+            sm: { span: 6 },
         },
         wrapperCol: {
             xs: { span: 24 },
@@ -64,27 +64,23 @@ function AddCloudProvider() {
                 <Col span={24}  >
                     <Form style={{ backgroundColor: 'white' }}>
                     <FormItem {...formItemLayout} label="Display Name:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                autoFocus
+                            <Input autoFocus
                                 placeholder=" Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" Provider"
+                            <Input placeholder=" Provider"
                                 value={provider}
                                 onChange={(e) => { setProvider(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Access ID:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" Access ID"
+                            <Input placeholder=" Access ID"
                                 value={accessId}
                                 onChange={(e) => { setAccessId(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Secret Key:">
-                            <Input.Password style={{ fontSize: 20 }} prefix={<Icon type="lock" style={{ fontSize: 20 }} />}
-                                type="password" placeholder=" Secret Key"
+                            <Input.Password type="password" placeholder=" Secret Key"
                                 value={secretKey}
                                 onChange={(e) => { setSecretKey(e.target.value) }} />
                         </FormItem>

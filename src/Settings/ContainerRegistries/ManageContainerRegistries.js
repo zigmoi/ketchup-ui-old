@@ -43,13 +43,13 @@ function ManageContainerRegistries() {
             render: (text, record) => (
                 <span>
                     <Button type="primary" size="small">
-                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/container-registry/view`}>
+                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/container-registry/edit?mode=VIEW`}>
                             View
                         </Link>
                     </Button>
                     <Divider type="vertical" />
                     <Button type="primary" size="small">
-                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/container-registry/edit`}>
+                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/container-registry/edit?mode=EDIT`}>
                             Edit
                         </Link>
                     </Button>

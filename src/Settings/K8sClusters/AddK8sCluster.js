@@ -8,7 +8,7 @@ const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 8 },
+        sm: { span: 6 },
     },
     wrapperCol: {
         xs: { span: 24 },
@@ -61,27 +61,23 @@ function AddK8sCluster() {
                 <Col span={24}  >
                     <Form style={{ backgroundColor: 'white' }}>
                     <FormItem {...formItemLayout} label="Display Name:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                autoFocus
+                            <Input autoFocus
                                 placeholder=" Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" Provider"
+                            <Input placeholder=" Provider"
                                 value={provider}
                                 onChange={(e) => { setProvider(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="File Name:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" File Name"
+                            <Input placeholder=" File Name"
                                 value={fileName}
                                 onChange={(e) => { setFileName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="File Data">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" File Data"
+                            <Input placeholder=" File Data"
                                 value={fileData}
                                 onChange={(e) => { setFileData(e.target.value) }} />
                         </FormItem>

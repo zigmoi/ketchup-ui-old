@@ -43,13 +43,13 @@ function ManageGitProviders() {
             render: (text, record) => (
                 <span>
                     <Button type="primary" size="small">
-                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/git-provider/view`}>
+                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/git-provider/edit?mode=VIEW`}>
                             View
                         </Link>
                     </Button>
                     <Divider type="vertical" />
                     <Button type="primary" size="small">
-                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/git-provider/edit`}>
+                        <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/git-provider/edit?mode=EDIT`}>
                             Edit
                         </Link>
                     </Button>
