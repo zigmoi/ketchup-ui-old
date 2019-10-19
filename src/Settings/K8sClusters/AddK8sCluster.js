@@ -32,7 +32,7 @@ function AddK8sCluster() {
         var data = {
             'projectId': projectResourceId,
             'fileName': fileName,
-            'fileData': fileData,
+            'fileData': btoa(fileData),
             'displayName': displayName,
             'provider': provider,
         };
@@ -77,7 +77,8 @@ function AddK8sCluster() {
                                 onChange={(e) => { setFileName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="File Data">
-                            <Input placeholder=" File Data"
+                            <Input.TextArea placeholder=" File Data"
+                                autosize={{minRows: 10, maxRows: 15}}
                                 value={fileData}
                                 onChange={(e) => { setFileData(e.target.value) }} />
                         </FormItem>

@@ -59,7 +59,7 @@ function EditK8sCluster() {
                 setDisplayName(response.data.displayName);
                 setProvider(response.data.provider);
                 setFileName(response.data.fileName);
-                setFileData(response.data.fileData);
+                setFileData(atob(response.data.fileData));
                 setLastUpdatedBy(response.data.lastUpdatedBy);
                 setLastUpdatedOn(response.data.lastUpdatedOn);
             })
@@ -76,7 +76,7 @@ function EditK8sCluster() {
             'displayName': displayName,
             'provider': provider,
             'fileName': fileName,
-            'fileData': fileData,
+            'fileData': btoa(fileData),
         };
         axios.put(`http://localhost:8097/v1/settings/kubernetes-cluster/${projectResourceId}/${settingId}`, data)
             .then((response) => {
@@ -160,8 +160,9 @@ function EditK8sCluster() {
                                 onChange={(e) => { setFileName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="File Data">
-                            <Input readOnly={isViewMode}
+                            <Input.TextArea readOnly={isViewMode}
                                 placeholder=" File Data"
+                                autosize={{minRows: 10, maxRows: 15}}
                                 value={fileData}
                                 onChange={(e) => { setFileData(e.target.value) }} />
                         </FormItem>
