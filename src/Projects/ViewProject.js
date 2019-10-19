@@ -12,7 +12,7 @@ function ViewProject() {
     const formItemLayout = {
         labelCol: {
             xs: { span: 24 },
-            sm: { span: 8 },
+            sm: { span: 6 },
         },
         wrapperCol: {
             xs: { span: 24 },
@@ -60,14 +60,12 @@ function ViewProject() {
                         <Tabs defaultActiveKey={"general"}>
                             <TabPane tab="General" key="general">
                                 <FormItem {...formItemLayout} label="Name:">
-                                    <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                        placeholder=" Name"
+                                    <Input placeholder=" Name"
                                         value={name}
                                         onChange={(e) => { setName(e.target.value) }} />
                                 </FormItem>
                                 <FormItem {...formItemLayout} label="Description:">
-                                    <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                        placeholder=" Description"
+                                    <Input placeholder=" Description"
                                         value={description}
                                         onChange={(e) => { setDescription(e.target.value) }} />
                                 </FormItem>

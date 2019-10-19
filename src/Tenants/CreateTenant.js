@@ -8,7 +8,7 @@ const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 8 },
+        sm: { span: 6 },
     },
     wrapperCol: {
         xs: { span: 24 },
@@ -59,26 +59,23 @@ function CreateTenant() {
                 <Col span={20}  >
                     <Form style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="ID:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" ID"
+                            <Input placeholder=" ID"
                                 value={id}
                                 onChange={(e) => { setId(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Display Name:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" Display Name"
+                            <Input placeholder=" Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Default User Email:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" Default User Email"
+                            <Input placeholder=" Default User Email"
                                 value={defaultUserEmail}
                                 onChange={(e) => { setDefaultUserEmail(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Default User Password:">
-                            <Input.Password style={{ fontSize: 20 }} prefix={<Icon type="lock" style={{ fontSize: 20 }} />}
-                                type="password" placeholder=" Default User Password"
+                            <Input.Password type="password" 
+                                placeholder=" Default User Password"
                                 value={defaultUserPassword}
                                 onChange={(e) => { setDefaultUserPassword(e.target.value) }} />
                         </FormItem>
@@ -86,7 +83,7 @@ function CreateTenant() {
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">
                                 <Col>
-                                    <Button type="primary" icon={'check-circle-o'}
+                                    <Button type="primary"
                                         loading={iconLoading}
                                         htmlType="submit"
                                         onClick={createTenant} >Submit</Button>

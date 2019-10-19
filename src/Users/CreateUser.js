@@ -9,7 +9,7 @@ function CreateUser() {
     const formItemLayout = {
         labelCol: {
             xs: { span: 24 },
-            sm: { span: 8 },
+            sm: { span: 6 },
         },
         wrapperCol: {
             xs: { span: 24 },
@@ -66,39 +66,33 @@ function CreateUser() {
                 <Col span={24}  >
                     <Form style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="User Name:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                autoFocus
+                            <Input autoFocus
                                 placeholder=" User Name"
                                 value={userName}
                                 onChange={(e) => { setUserName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Password:">
-                            <Input.Password style={{ fontSize: 20 }} prefix={<Icon type="lock" style={{ fontSize: 20 }} />}
-                                type="password" placeholder=" Password"
+                            <Input.Password type="password" placeholder=" Password"
                                 value={password}
                                 onChange={(e) => { setPassword(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Display Name:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" Display Name"
+                            <Input placeholder=" Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="First Name:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" First Name"
+                            <Input placeholder=" First Name"
                                 value={firstName}
                                 onChange={(e) => { setFirstName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Last Name:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" Last Name"
+                            <Input placeholder=" Last Name"
                                 value={lastName}
                                 onChange={(e) => { setLastName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Email:">
-                            <Input style={{ fontSize: 20 }} prefix={<Icon type="edit" style={{ fontSize: 20 }} />}
-                                placeholder=" Email"
+                            <Input placeholder=" Email"
                                 value={email}
                                 onChange={(e) => { setEmail(e.target.value) }} />
                         </FormItem>
