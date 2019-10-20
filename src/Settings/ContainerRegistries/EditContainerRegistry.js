@@ -81,7 +81,7 @@ function EditContainerRegistry() {
             'registryUrl': registryUrl,
             'cloudCredentialId': cloudCredentialId,
         };
-        axios.put(`http://localhost:8097/v1/settings/cloud-provider/${projectResourceId}/${settingId}`, data)
+        axios.put(`http://localhost:8097/v1/settings/container-registry/${projectResourceId}/${settingId}`, data)
             .then((response) => {
                 setIconLoading(false);
                 message.success('Container registry updated successfully.', 5);
