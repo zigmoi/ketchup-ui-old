@@ -59,23 +59,23 @@ function CreateTenant() {
                 <Col span={20}  >
                     <Form style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="ID:">
-                            <Input placeholder=" ID"
+                            <Input placeholder="ID"
                                 value={id}
                                 onChange={(e) => { setId(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Display Name:">
-                            <Input placeholder=" Display Name"
+                            <Input placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Default User Email:">
-                            <Input placeholder=" Default User Email"
+                            <Input placeholder="Default User Email"
                                 value={defaultUserEmail}
                                 onChange={(e) => { setDefaultUserEmail(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Default User Password:">
                             <Input.Password type="password" 
-                                placeholder=" Default User Password"
+                                placeholder="Default User Password"
                                 value={defaultUserPassword}
                                 onChange={(e) => { setDefaultUserPassword(e.target.value) }} />
                         </FormItem>

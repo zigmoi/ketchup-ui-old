@@ -56,7 +56,7 @@ function AddHostname() {
                     <Form style={{ backgroundColor: 'white' }}>
                     <FormItem {...formItemLayout} label="Display Name:">
                             <Input autoFocus
-                                placeholder=" Display Name"
+                                placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>

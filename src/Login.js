@@ -151,13 +151,13 @@ function Login() {
                 <br />
                 <br />
                 <FormItem {...formItemLayout} label="Username:">
-                  <Input prefix={<Icon type="user" style={{ fontSize: 20 }} />} placeholder=" Username"
+                  <Input placeholder="Username"
                     autoFocus
                     value={username}
                     onChange={(e) => { setUsername(e.target.value) }} />
                 </FormItem>
                 <FormItem {...formItemLayout} label="Password:">
-                  <Input.Password prefix={<Icon type="lock" style={{ fontSize: 20 }} />} placeholder=" Password"
+                  <Input.Password placeholder="Password"
                     value={password}
                     onChange={(e) => { setPassword(e.target.value) }} />
                 </FormItem>

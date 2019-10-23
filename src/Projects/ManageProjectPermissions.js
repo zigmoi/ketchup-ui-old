@@ -202,7 +202,7 @@ function ManageProjectPermissions() {
                         <Row type="flex" justify="start" align="middle">
                             <Col>
                                 <Input style={{ fontSize: 12 }}
-                                    placeholder=" projectId"
+                                    placeholder="projectId"
                                     size="small"
                                     value={projectResourceIdentifier}
                                     onChange={(e) => { setProjectResourceIdentifier(e.target.value) }} />
@@ -210,7 +210,7 @@ function ManageProjectPermissions() {
                             <Divider type="vertical" />
                             <Col>
                                 <Input style={{ fontSize: 12 }}
-                                    placeholder=" username"
+                                    placeholder="username"
                                     size="small"
                                     value={userName}
                                     onChange={(e) => { setUserName(e.target.value) }} />

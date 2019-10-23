@@ -146,31 +146,31 @@ function EditContainerRegistry() {
                         <FormItem {...formItemLayout} label="Display Name:">
                             <Input autoFocus
                                 readOnly={isViewMode}
-                                placeholder=" Display Name"
+                                placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
                             <Input readOnly={isViewMode}
-                                placeholder=" Provider"
+                                placeholder="Provider"
                                 value={provider}
                                 onChange={(e) => { setProvider(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Registry ID:">
                             <Input readOnly={isViewMode}
-                                placeholder=" Registry ID"
+                                placeholder="Registry ID"
                                 value={registryId}
                                 onChange={(e) => { setRegistryId(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Registry URL:">
                             <Input readOnly={isViewMode}
-                                placeholder=" Registry URL"
+                                placeholder="Registry URL"
                                 value={registryUrl}
                                 onChange={(e) => { setRegistryUrl(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Cloud Credential ID:">
                             <Input readOnly={isViewMode}
-                                placeholder=" Cloud Credential ID"
+                                placeholder="Cloud Credential ID"
                                 value={cloudCredentialId}
                                 onChange={(e) => { setCloudCredentialId(e.target.value) }} />
                         </FormItem>

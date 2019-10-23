@@ -67,27 +67,27 @@ function AddContainerRegistry() {
                     <Form style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="Display Name:">
                             <Input autoFocus
-                                placeholder=" Display Name"
+                                placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
-                            <Input placeholder=" Provider"
+                            <Input placeholder="Provider"
                                 value={provider}
                                 onChange={(e) => { setProvider(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Registry ID:">
-                            <Input placeholder=" Registry ID"
+                            <Input placeholder="Registry ID"
                                 value={registryId}
                                 onChange={(e) => { setRegistryId(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Registry URL:">
-                            <Input placeholder=" Registry URL"
+                            <Input placeholder="Registry URL"
                                 value={registryUrl}
                                 onChange={(e) => { setRegistryUrl(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Cloud Credential ID:">
-                            <Input placeholder=" Cloud Credential ID"
+                            <Input placeholder="Cloud Credential ID"
                                 value={cloudCredentialId}
                                 onChange={(e) => { setCloudCredentialId(e.target.value) }} />
                         </FormItem>

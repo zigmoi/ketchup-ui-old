@@ -143,25 +143,25 @@ function EditCloudProvider() {
                         <FormItem {...formItemLayout} label="Display Name:">
                             <Input autoFocus
                                 readOnly={isViewMode}
-                                placeholder=" Display Name"
+                                placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
                             <Input readOnly={isViewMode}
-                                placeholder=" Provider"
+                                placeholder="Provider"
                                 value={provider}
                                 onChange={(e) => { setProvider(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Access ID:">
                             <Input readOnly={isViewMode}
-                                placeholder=" Access ID"
+                                placeholder="Access ID"
                                 value={accessId}
                                 onChange={(e) => { setAccessId(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Secret Key:">
                             <Input.Password type="password"
-                                placeholder=" Secret Key"
+                                placeholder="Secret Key"
                                 readOnly={isViewMode}
                                 value={secretKey}
                                 onChange={(e) => { setSecretKey(e.target.value) }} />

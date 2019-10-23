@@ -65,27 +65,27 @@ function CreateGitProvider() {
                     <Form style={{ backgroundColor: 'white' }}>
                     <FormItem {...formItemLayout} label="Display Name:">
                             <Input autoFocus
-                                placeholder=" Display Name"
+                                placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
-                            <Input placeholder=" Provider"
+                            <Input placeholder="Provider"
                                 value={provider}
                                 onChange={(e) => { setProvider(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="User Name:">
-                            <Input placeholder=" User Name"
+                            <Input placeholder="User Name"
                                 value={userName}
                                 onChange={(e) => { setUserName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Password:">
-                            <Input.Password type="password" placeholder=" Password"
+                            <Input.Password type="password" placeholder="Password"
                                 value={password}
                                 onChange={(e) => { setPassword(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Repository List URL:">
-                            <Input placeholder=" Repository List URL"
+                            <Input placeholder="Repository List URL"
                                 value={repoListUrl}
                                 onChange={(e) => { setRepoListUrl(e.target.value) }} />
                         </FormItem>

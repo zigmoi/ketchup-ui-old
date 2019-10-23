@@ -60,12 +60,12 @@ function ViewProject() {
                         <Tabs defaultActiveKey={"general"}>
                             <TabPane tab="General" key="general">
                                 <FormItem {...formItemLayout} label="Name:">
-                                    <Input placeholder=" Name"
+                                    <Input placeholder="Name"
                                         value={name}
                                         onChange={(e) => { setName(e.target.value) }} />
                                 </FormItem>
                                 <FormItem {...formItemLayout} label="Description:">
-                                    <Input placeholder=" Description"
+                                    <Input placeholder="Description"
                                         value={description}
                                         onChange={(e) => { setDescription(e.target.value) }} />
                                 </FormItem>

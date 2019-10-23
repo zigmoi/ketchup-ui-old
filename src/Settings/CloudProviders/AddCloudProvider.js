@@ -65,22 +65,22 @@ function AddCloudProvider() {
                     <Form style={{ backgroundColor: 'white' }}>
                     <FormItem {...formItemLayout} label="Display Name:">
                             <Input autoFocus
-                                placeholder=" Display Name"
+                                placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
-                            <Input placeholder=" Provider"
+                            <Input placeholder="Provider"
                                 value={provider}
                                 onChange={(e) => { setProvider(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Access ID:">
-                            <Input placeholder=" Access ID"
+                            <Input placeholder="Access ID"
                                 value={accessId}
                                 onChange={(e) => { setAccessId(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Secret Key:">
-                            <Input.Password type="password" placeholder=" Secret Key"
+                            <Input.Password type="password" placeholder="Secret Key"
                                 value={secretKey}
                                 onChange={(e) => { setSecretKey(e.target.value) }} />
                         </FormItem>

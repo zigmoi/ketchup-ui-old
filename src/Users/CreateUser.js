@@ -67,32 +67,32 @@ function CreateUser() {
                     <Form style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="User Name:">
                             <Input autoFocus
-                                placeholder=" User Name"
+                                placeholder="User Name"
                                 value={userName}
                                 onChange={(e) => { setUserName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Password:">
-                            <Input.Password type="password" placeholder=" Password"
+                            <Input.Password type="password" placeholder="Password"
                                 value={password}
                                 onChange={(e) => { setPassword(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Display Name:">
-                            <Input placeholder=" Display Name"
+                            <Input placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="First Name:">
-                            <Input placeholder=" First Name"
+                            <Input placeholder="First Name"
                                 value={firstName}
                                 onChange={(e) => { setFirstName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Last Name:">
-                            <Input placeholder=" Last Name"
+                            <Input placeholder="Last Name"
                                 value={lastName}
                                 onChange={(e) => { setLastName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Email:">
-                            <Input placeholder=" Email"
+                            <Input placeholder="Email"
                                 value={email}
                                 onChange={(e) => { setEmail(e.target.value) }} />
                         </FormItem>

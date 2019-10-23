@@ -60,12 +60,12 @@ function CreateProject(props) {
                     <Form style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="Name:">
                             <Input autoFocus
-                                placeholder=" Name"
+                                placeholder="Name"
                                 value={name}
                                 onChange={(e) => { setName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Description:">
-                            <Input placeholder=" Description"
+                            <Input placeholder="Description"
                                 value={description}
                                 onChange={(e) => { setDescription(e.target.value) }} />
                         </FormItem>

@@ -143,25 +143,25 @@ function EditBuildTool() {
                         <FormItem {...formItemLayout} label="Display Name:">
                             <Input autoFocus
                                 readOnly={isViewMode}
-                                placeholder=" Display Name"
+                                placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
                             <Input readOnly={isViewMode}
-                                placeholder=" Provider"
+                                placeholder="Provider"
                                 value={provider}
                                 onChange={(e) => { setProvider(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="File Name:">
                             <Input readOnly={isViewMode}
-                                placeholder=" File Name"
+                                placeholder="File Name"
                                 value={fileName}
                                 onChange={(e) => { setFileName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="File Data">
                             <Input.TextArea readOnly={isViewMode}
-                                placeholder=" File Data"
+                                placeholder="File Data"
                                 autosize={{minRows: 10, maxRows: 15}}
                                 value={fileData}
                                 onChange={(e) => { setFileData(e.target.value) }} />

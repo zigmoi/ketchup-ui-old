@@ -117,7 +117,7 @@ function ManageProjectMembers() {
                     <Row type="flex" justify="start" align="middle">
                         <Col>
                             <Input style={{ fontSize: 12 }}
-                                placeholder=" username"
+                                placeholder="username"
                                 size="small"
                                 value={memberName}
                                 onChange={(e) => { setMemberName(e.target.value) }} />

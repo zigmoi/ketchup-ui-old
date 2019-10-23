@@ -64,22 +64,22 @@ function AddBuildTool() {
                     <Form style={{ backgroundColor: 'white' }}>
                     <FormItem {...formItemLayout} label="Display Name:">
                             <Input autoFocus
-                                placeholder=" Display Name"
+                                placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
-                            <Input placeholder=" Provider"
+                            <Input placeholder="Provider"
                                 value={provider}
                                 onChange={(e) => { setProvider(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="File Name:">
-                            <Input placeholder=" File Name"
+                            <Input placeholder="File Name"
                                 value={fileName}
                                 onChange={(e) => { setFileName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="File Data">
-                            <Input.TextArea placeholder=" File Data"
+                            <Input.TextArea placeholder="File Data"
                                 autosize={{minRows: 10, maxRows: 15}}
                                 value={fileData}
                                 onChange={(e) => { setFileData(e.target.value) }} />

@@ -146,31 +146,31 @@ function EditGitProvider() {
                         <FormItem {...formItemLayout} label="Display Name:">
                             <Input autoFocus
                                 readOnly={isViewMode}
-                                placeholder=" Display Name"
+                                placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
                             <Input readOnly={isViewMode}
-                                placeholder=" Provider"
+                                placeholder="Provider"
                                 value={provider}
                                 onChange={(e) => { setProvider(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="User Name:">
                             <Input readOnly={isViewMode}
-                                placeholder=" User Name"
+                                placeholder="User Name"
                                 value={userName}
                                 onChange={(e) => { setUserName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Password:">
                             <Input.Password readOnly={isViewMode}
-                                type="password" placeholder=" Password"
+                                type="password" placeholder="Password"
                                 value={password}
                                 onChange={(e) => { setPassword(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Repository List URL:">
                             <Input readOnly={isViewMode}
-                                placeholder=" Repository List URL"
+                                placeholder="Repository List URL"
                                 value={repoListUrl}
                                 onChange={(e) => { setRepoListUrl(e.target.value) }} />
                         </FormItem>
