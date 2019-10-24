@@ -46,6 +46,9 @@ import EditK8sCluster from './Settings/K8sClusters/EditK8sCluster';
 
 import AddHostname from './Settings/Hostnames/AddHostname';
 
+import ManageDeployments from './Deployments/ManageDeployments';
+import CreateDeployment from './Deployments/CreateDeployment';
+
 
 
 function Home() {
@@ -307,6 +310,8 @@ function Home() {
                   <ProtectedRoute path="/app/project/:projectResourceId/setting/kubernetes-cluster/add" component={AddK8sCluster} />
                   <ProtectedRoute path="/app/project/:projectResourceId/setting/:settingId/kubernetes-cluster/edit" component={EditK8sCluster} />
                   <ProtectedRoute path="/app/project/:projectResourceId/setting/hostname/add" component={AddHostname} />
+                  <ProtectedRoute path="/app/project/:projectResourceId/deployments" component={ManageDeployments} />
+                  <ProtectedRoute path="/app/project/:projectResourceId/deployment/create" component={CreateDeployment} />
                   <ProtectedRoute component={Nomatch} />
                 </Switch>
               </Col>
