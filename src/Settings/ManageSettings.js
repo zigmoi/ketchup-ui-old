@@ -1,12 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Spin, Menu, Result } from 'antd';
-import { Link, useParams } from 'react-router-dom';
+import { Row, Col, Spin, Menu } from 'antd';
+import { Link, useParams, Switch } from 'react-router-dom';
+import ProtectedRoute from '../ProtectedRoute';
+import Nomatch from '../Nomatch';
+
 import ManageCloudProviders from './CloudProviders/ManageCloudProviders';
+import AddCloudProvider from '../Settings/CloudProviders/AddCloudProvider';
+import EditCloudProvider from '../Settings/CloudProviders/EditCloudProvider';
+
 import ManageContainerRegistries from './ContainerRegistries/ManageContainerRegistries';
+import AddContainerRegistry from '../Settings/ContainerRegistries/AddContainerRegistry';
+import EditContainerRegistry from '../Settings/ContainerRegistries/EditContainerRegistry';
+
 import ManageGitProviders from './GitProviders/ManageGitProviders';
+import AddGitProvider from '../Settings/GitProviders/AddGitProvider';
+import EditGitProvider from '../Settings/GitProviders/EditGItProvider';
+
 import ManageBuildTools from './BuildTools/ManageBuildTools';
+import AddBuildTool from '../Settings/BuildTools/AddBuildTool';
+import EditBuildTool from '../Settings/BuildTools/EditBuildTool';
+
 import ManageK8sClusters from './K8sClusters/ManageK8sClusters';
+import AddK8sCluster from '../Settings/K8sClusters/AddK8sCluster';
+import EditK8sCluster from '../Settings/K8sClusters/EditK8sCluster';
+
 import ManageHostnames from './Hostnames/ManageHostnames';
+import AddHostname from '../Settings/Hostnames/AddHostname';
+
+
 
 function ManageSettings() {
     const [iconLoading, setIconLoading] = useState(false);
@@ -18,22 +39,6 @@ function ManageSettings() {
         setSelectedKey([settingId]);
     }, [settingId]);
 
-    let settingsView = null;
-    if (settingId === "build-tools") {
-        settingsView = (<ManageBuildTools />);
-    } else if (settingId === "cloud-providers") {
-        settingsView = (<ManageCloudProviders />);
-    } else if (settingId === "container-registries") {
-        settingsView = (<ManageContainerRegistries />);
-    } else if (settingId === "git-providers") {
-        settingsView = (<ManageGitProviders />);
-    } else if (settingId === "kubernetes-clusters") {
-        settingsView = (<ManageK8sClusters />);
-    } else if (settingId === "hostnames") {
-        settingsView = (<ManageHostnames />);
-    } else {
-        settingsView = (<Result title="Setting Not Found!" />);
-    }
 
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
@@ -73,12 +78,12 @@ function ManageSettings() {
                             <Link to={`/app/project/${projectResourceId}/settings/git-providers`}>
                                 <span>Git Providers</span>
                             </Link>
-                        </Menu.Item> 
+                        </Menu.Item>
                         <Menu.Item key="build-tools">
                             <Link to={`/app/project/${projectResourceId}/settings/build-tools`}>
                                 <span>Build Tools</span>
                             </Link>
-                        </Menu.Item>   
+                        </Menu.Item>
                         <Menu.Item key="hostnames">
                             <Link to={`/app/project/${projectResourceId}/settings/hostnames`}>
                                 <span>Hostnames</span>
@@ -87,7 +92,32 @@ function ManageSettings() {
                     </Menu>
                 </Col>
                 <Col span={17} offset={1}>
-                    {settingsView}
+                    <Switch>
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/build-tools" component={ManageBuildTools} />
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/build-tool/add" component={AddBuildTool} />
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/:settingId/build-tool/edit" component={EditBuildTool} />
+
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/cloud-providers" component={ManageCloudProviders} />
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/cloud-provider/add" component={AddCloudProvider} />
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/:settingId/cloud-provider/edit" component={EditCloudProvider} />
+
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/git-providers" component={ManageGitProviders} />
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/git-provider/add" component={AddGitProvider} />
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/:settingId/git-provider/edit" component={EditGitProvider} />
+
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/container-registries" component={ManageContainerRegistries} />
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/container-registry/add" component={AddContainerRegistry} />
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/:settingId/container-registry/edit" component={EditContainerRegistry} />
+
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/kubernetes-clusters" component={ManageK8sClusters} />
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/kubernetes-cluster/add" component={AddK8sCluster} />
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/:settingId/kubernetes-cluster/edit" component={EditK8sCluster} />
+
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/hostnames" component={ManageHostnames} />
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/hostname/add" component={AddHostname} />
+
+                        <ProtectedRoute component={Nomatch} />
+                    </Switch>
                 </Col>
             </Row>
         </div>

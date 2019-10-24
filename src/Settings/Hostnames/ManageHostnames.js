@@ -35,13 +35,13 @@ function ManageHostnames() {
             render: (text, record) => (
                 <span>
                 <Button type="primary" size="small">
-                    <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/hostname/edit?mode=VIEW`}>
+                    <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/hostname/edit?mode=VIEW`}>
                         View
                     </Link>
                 </Button>
                 <Divider type="vertical" />
                 <Button type="primary" size="small">
-                    <Link to={`/app/project/${projectResourceId}/setting/${record.settingId}/hostname/edit?mode=EDIT`}>
+                    <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/hostname/edit?mode=EDIT`}>
                         Edit
                     </Link>
                 </Button>
@@ -101,7 +101,7 @@ function ManageHostnames() {
                 <Col span={11} offset={-1}>
                     <Row type="flex" justify="end" align="middle">
                         <Button type="primary"  >
-                            <Link to={`/app/project/${projectResourceId}/setting/hostname/add`}>Add</Link>
+                            <Link to={`/app/project/${projectResourceId}/settings/hostname/add`}>Add</Link>
                         </Button>
                     </Row>
                 </Col>

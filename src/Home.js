@@ -29,22 +29,6 @@ import ManageProjectMembers from './Projects/ManageProjectMembers';
 import ManageProjectPermissions from './Projects/ManageProjectPermissions';
 
 import ManageSettings from './Settings/ManageSettings';
-import AddCloudProvider from './Settings/CloudProviders/AddCloudProvider';
-import EditCloudProvider from './Settings/CloudProviders/EditCloudProvider';
-
-import AddContainerRegistry from './Settings/ContainerRegistries/AddContainerRegistry';
-import EditContainerRegistry from './Settings/ContainerRegistries/EditContainerRegistry';
-
-import AddGitProvider from './Settings/GitProviders/AddGitProvider';
-import EditGitProvider from './Settings/GitProviders/EditGItProvider';
-
-import AddBuildTool from './Settings/BuildTools/AddBuildTool';
-import EditBuildTool from './Settings/BuildTools/EditBuildTool';
-
-import AddK8sCluster from './Settings/K8sClusters/AddK8sCluster';
-import EditK8sCluster from './Settings/K8sClusters/EditK8sCluster';
-
-import AddHostname from './Settings/Hostnames/AddHostname';
 
 import ManageDeployments from './Deployments/ManageDeployments';
 import CreateDeployment from './Deployments/CreateDeployment';
@@ -299,17 +283,7 @@ function Home() {
                   <ProtectedRoute path="/app/project/:projectResourceId/members" component={ManageProjectMembers} />
                   <ProtectedRoute path="/app/project/:projectResourceId/permissions" component={ManageProjectPermissions} />
                   <ProtectedRoute path="/app/project/:projectResourceId/settings/:settingId" component={ManageSettings} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/setting/build-tool/add" component={AddBuildTool} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/setting/:settingId/build-tool/edit" component={EditBuildTool} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/setting/cloud-provider/add" component={AddCloudProvider} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/setting/:settingId/cloud-provider/edit" component={EditCloudProvider} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/setting/git-provider/add" component={AddGitProvider} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/setting/:settingId/git-provider/edit" component={EditGitProvider} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/setting/container-registry/add" component={AddContainerRegistry} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/setting/:settingId/container-registry/edit" component={EditContainerRegistry} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/setting/kubernetes-cluster/add" component={AddK8sCluster} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/setting/:settingId/kubernetes-cluster/edit" component={EditK8sCluster} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/setting/hostname/add" component={AddHostname} />
+                  
                   <ProtectedRoute path="/app/project/:projectResourceId/deployments" component={ManageDeployments} />
                   <ProtectedRoute path="/app/project/:projectResourceId/deployment/create" component={CreateDeployment} />
                   <ProtectedRoute component={Nomatch} />
