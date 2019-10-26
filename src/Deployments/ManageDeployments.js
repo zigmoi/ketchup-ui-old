@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm, Tag } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useHistory } from 'react-router-dom';
+import DeploymentContext from '../DeploymentContext';
 
 function ManageDeployments() {
     const [iconLoading, setIconLoading] = useState(false);
     const [columns, setColumns] = useState([]);
     const [dataSource, setDataSource] = useState([]);
     const { projectResourceId } = useParams();
+
+    let history = useHistory();
+    const deploymentContext = useContext(DeploymentContext);
 
     useEffect(() => {
         console.log("in effect Manage Deployments");
@@ -85,6 +89,11 @@ function ManageDeployments() {
             });
     }
 
+    function viewDetails() {
+        deploymentContext.setCurrentDeployment({ "deploymentId": "d1" });
+        history.push(`/app/project/${projectResourceId}/deployment/create`);
+    }
+
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="start" align="middle" style={{ paddingTop: '10px', paddingBottom: '5px' }}>
@@ -99,6 +108,9 @@ function ManageDeployments() {
                     <Row type="flex" justify="end" align="middle">
                         <Button type="primary"  >
                             <Link to={`/app/project/${projectResourceId}/deployment/create`}>Create Deployment</Link>
+                        </Button>
+                        <Button type="primary" onClick={viewDetails} >
+                            Test
                         </Button>
                     </Row>
                 </Col>

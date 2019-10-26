@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm, Tag } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import ProjectContext from '../ProjectContext';
 
 function ManageProjects() {
     const [iconLoading, setIconLoading] = useState(false);
     const [columns, setColumns] = useState([]);
     const [dataSource, setDataSource] = useState([]);
 
+    let history = useHistory();
+    const projectContext = useContext(ProjectContext);
+    
     useEffect(() => {
         console.log("in effect Manage Projects");
         document.title = "Manage Projects";
@@ -40,6 +44,8 @@ function ManageProjects() {
             key: 'action',
             render: (text, record) => (
                 <span>
+                    <Button type="primary" size="small" onClick={()=> viewDetails(record)}>View</Button>
+                    <Divider type="vertical" />
                     <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/members`}>Members</Link></Button>
                     <Divider type="vertical" />
                     <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/permissions`}>Permissions</Link></Button>
@@ -89,6 +95,13 @@ function ManageProjects() {
             .catch((error) => {
                 setIconLoading(false);
             });
+    }
+
+    function viewDetails(selectedRecord) {
+        console.log("View project details selectedRecord", selectedRecord);
+        let projectName = selectedRecord.id.resourceId;
+        projectContext.setCurrentProject({ "projectId": projectName }); 
+        history.push(`/app/project/${projectName}/members`);
     }
 
     return (

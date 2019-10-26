@@ -14,7 +14,7 @@ function ManageProjectMembers() {
         document.title = "Manage Project Members";
         initColumns();
         loadAll();
-    }, []);
+    }, [projectResourceId]);
 
     function initColumns() {
         const columns = [{

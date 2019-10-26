@@ -6,7 +6,6 @@ import axios from 'axios';
 import { useHistory, useLocation } from 'react-router-dom';
 import useLoginStatus from './useLoginStatus';
 import UserContext from './UserContext';
-import ProjectContext from './ProjectContext';
 
 const FormItem = Form.Item;
 const { Header, Content } = Layout;
@@ -34,7 +33,6 @@ function Login() {
   let location = useLocation();
 
   const userContext = useContext(UserContext);
-  const projectContext = useContext(ProjectContext);
   const loginStatus = useLoginStatus();
 
   useEffect(() => {
@@ -115,7 +113,6 @@ function Login() {
 
         setIsUserLoggingIn(true);
         userContext.setCurrentUser(user);
-        projectContext.setCurrentProject({ projectId: "p1" });
         history.replace(from);
       })
       .catch((error) => {

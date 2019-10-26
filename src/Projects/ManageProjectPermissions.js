@@ -28,10 +28,12 @@ function ManageProjectPermissions() {
     useEffect(() => {
         document.title = "Manage Project Permissions";
         initColumns();
+        setProjectResourceIdentifier(projectResourceId || "");
+        setUserName(userId || "");
         if (projectResourceId && userId) {
             loadPermissions();
-        }
-    }, []);
+        } 
+    }, [projectResourceId, userId]);
 
     function initColumns() {
         const columns = [{

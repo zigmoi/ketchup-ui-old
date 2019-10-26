@@ -38,3 +38,11 @@
   background-color: red
 }
 
+.side-menu-link-custom{
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.side-menu-link-custom:hover {
+  color: #fff;
+}
+

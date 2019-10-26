@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import './App.css';
 import { Switch, Link, useHistory, useLocation } from 'react-router-dom';
-import { Icon, Layout, Menu, Popover, Avatar, Select, message } from 'antd';
+import { Icon, Layout, Menu, Popover, Avatar, Select, message, Button, Dropdown, Tooltip } from 'antd';
 import { Row, Col } from 'antd';
 
 import axiosInterceptor from './axiosInterceptor';
@@ -11,6 +11,8 @@ import useValidateUserHasAllRoles from './useValidateUserHasAllRoles';
 import UserContext from './UserContext';
 import ProjectContext from './ProjectContext';
 import useCurrentProject from './useCurrentProject';
+import DeploymentContext from './DeploymentContext';
+import useCurrentDeployment from './useCurrentDeployment';
 import ProtectedRoute from './ProtectedRoute';
 
 import Nomatch from './Nomatch';
@@ -51,31 +53,49 @@ function Home() {
   const SubMenu = Menu.SubMenu;
   const { Option } = Select;
 
+  const [collapsed, setCollapsed] = useState(false);
 
   const projectContext = useContext(ProjectContext);
   const currentProject = useCurrentProject();
-
-  const [collapsed, setCollapsed] = useState(false);
   const [projectId, setProjectId] = useState("");
+
+  const deploymentContext = useContext(DeploymentContext);
+  const currentDeployment = useCurrentDeployment();
+  const [deploymentId, setDeploymentId] = useState("");
+  const [sideMenuOpenKeys, setSideMenuOpenKeys] = useState([]);
 
 
   useEffect(() => {
     console.log("in effect home, project: ", currentProject);
+    console.log("in effect home, deployment: ", currentDeployment);
     setProjectId(currentProject ? currentProject.projectId : "");
-  }, [currentProject]);
+    setDeploymentId(currentProject && currentDeployment ? currentDeployment.deploymentId : "");
+    setSideMenuOpenKeys(['project', 'deployment']);
+  }, [currentProject, currentDeployment]);
 
 
   function onProjectChange(value) {
-    console.log(`selected ${value}`);
+    console.log(`selected project: ${value}`);
     projectContext.setCurrentProject({ projectId: value });
     setProjectId(value);
-    message.info(`Activated project ${value}`);
+    deploymentContext.clearCurrentDeployment();
+    setDeploymentId("");
+    history.push(`/app/project/${value}/members`);
+    // message.info(`Activated project ${value}`);
+  }
+
+  function onDeploymentChange(value) {
+    console.log(`selected deployment: ${value}`);
+    deploymentContext.setCurrentDeployment({ deploymentId: value });
+    setDeploymentId(value);
+    history.push(`/app/project/${projectId}/deployment/create`);
+    // message.info(`Activated deployment ${value}`);
   }
 
 
   let userProfileButton;
   const profileContent = (
-    <div>
+    <div style={{ backgroundColor: '#efefef' }}>
       <span>User: </span>
       <span style={{ fontWeight: 'bold' }}>{userContext.currentUser ? userContext.currentUser.id : ""}</span>
       <br />
@@ -90,6 +110,7 @@ function Home() {
       <br />
       <Link to="/login"
         onClick={() => {
+          deploymentContext.clearCurrentDeployment();
           projectContext.clearCurrentProject();
           userContext.clearCurrentUser();
         }}>
@@ -101,7 +122,9 @@ function Home() {
 
   userProfileButton = (
     <Menu.Item key="username" style={{ float: "right" }}>
-      <Popover placement="bottomLeft" content={profileContent} trigger={"click"}>
+      <Popover placement="bottomLeft"
+        content={profileContent}
+        trigger={"click"}>
         <Avatar style={{ backgroundColor: '#f56a00', verticalAlign: 'middle' }} size="large">
           {userContext.currentUser ? userContext.currentUser.displayName.charAt(0).toUpperCase() : ""}
         </Avatar>
@@ -112,10 +135,10 @@ function Home() {
   let manageTenantsMenu;
   if (useValidateUserHasAllRoles(['ROLE_SUPER_ADMIN'])) {
     manageTenantsMenu = (
-      <Menu.Item key="manage-tenants">
+      <Menu.Item key="manage-tenants" style={{ fontSize: 12 }}>
         <Link to="/app/manage-tenants">
-          <Icon type="container" />
-          <span style={{ fontWeight: 'bold' }}>Manage</span>
+          <Icon type="team" />
+          <span style={{ fontWeight: 'bold' }}>Tenants</span>
         </Link>
       </Menu.Item>
     );
@@ -123,30 +146,13 @@ function Home() {
     manageTenantsMenu = null;
   }
 
-  let tenantsSubMenu;
-  if (useValidateUserHasAllRoles(['ROLE_SUPER_ADMIN'])) {
-    tenantsSubMenu = (
-      <SubMenu
-        key="tenants"
-        title={<span>
-          <Icon type="team" />
-          <span style={{ fontWeight: 'bold' }}>Tenants</span>
-        </span>}
-      >
-        {manageTenantsMenu}
-      </SubMenu>
-    )
-  } else {
-    tenantsSubMenu = null;
-  }
-
   let manageUsersMenu;
   if (useValidateUserHasAnyRole(['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN'])) {
     manageUsersMenu = (
-      <Menu.Item key="manage-users">
+      <Menu.Item key="manage-users" style={{ fontSize: 12 }}>
         <Link to="/app/manage-users">
-          <Icon type="container" />
-          <span style={{ fontWeight: 'bold' }}>Manage Users</span>
+          <Icon type="team" />
+          <span style={{ fontWeight: 'bold' }}>Users</span>
         </Link>
       </Menu.Item>
     );
@@ -154,52 +160,155 @@ function Home() {
     manageUsersMenu = null;
   }
 
-  let usersSubMenu;
-  if (useValidateUserHasAnyRole(['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN'])) {
-    usersSubMenu = (
+  let deploymentView = null;
+  if (projectId && deploymentId) {
+    deploymentView = (
       <SubMenu
-        key="users"
+        key="deployment"
+        style={{ fontSize: 12 }}
         title={<span>
-          <Icon type="user" />
-          <span style={{ fontWeight: 'bold' }}>Users</span>
+          <Icon type="deployment-unit" />
+          <span style={{ fontWeight: 'bold', fontSize: 12 }}>
+            <Link to={`/app/project/${projectId}/deployments`} 
+                  className="side-menu-link-custom"
+                  onClick={() => {
+                        deploymentContext.clearCurrentDeployment();
+                        setDeploymentId("");
+            }}>
+              Deployments
+            </Link>
+          </span>
+          <span style={{ fontWeight: 'bold', float: 'right' }}>
+            <Tooltip title="New Deployment">
+              <Link to={`/app/project/${projectId}/deployment/create`}><Icon type="plus-circle" /></Link>
+            </Tooltip>
+          </span>
         </span>}
       >
-        {manageUsersMenu}
+        <Menu.ItemGroup key="active-deployment"
+          title={<span>
+            <Select defaultValue={deploymentId}
+              value={deploymentId}
+              size={"small"}
+              dropdownMatchSelectWidth={false}
+              style={{ width: 200 }}
+              onChange={onDeploymentChange}>
+              <Option value="d1">D1</Option>
+              <Option value="d2">D2</Option>
+              <Option value="d3">D3</Option>
+            </Select>
+          </span>}
+        ></Menu.ItemGroup>
+        <Menu.Item key="deployment-general-details" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
+          <Link to={`/app/project/${projectId}/members`}>
+            <Icon type="container" />
+            <span>General</span>
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="deployment-members" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
+          <Link to={`/app/project/${projectId}/members`}>
+            <Icon type="team" />
+            <span>Members</span>
+          </Link>
+        </Menu.Item>
+        <Menu.Item key="deployment-permissions" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
+          <Link to={`/app/project/${projectId}/permissions`}>
+            <Icon type="lock" />
+            <span>Permissions</span>
+          </Link>
+        </Menu.Item>
       </SubMenu>
-    )
+    );
   } else {
-    usersSubMenu = null;
+    deploymentView = null;
   }
 
-  let manageProjectsMenu;
-  if (useValidateUserHasAnyRole(['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN'])) {
-    manageProjectsMenu = (
+  let projectView = null;
+  if (useValidateUserHasAnyRole(['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']) && projectId) {
+    projectView = (
+      <SubMenu
+        key="project"
+        style={{ fontSize: 12 }}
+        title={<span>
+          <Icon type="project" />
+          <span style={{ fontWeight: 'bold', fontSize: 12 }}>
+            <Link to="/app/projects" 
+              className="side-menu-link-custom"
+              onClick={() => {
+                deploymentContext.clearCurrentDeployment();
+                setDeploymentId("");
+                projectContext.clearCurrentProject();
+                setProjectId("");
+            }}>
+              Projects
+            </Link>
+          </span>
+          <span style={{ fontWeight: 'bold', float: 'right' }}>
+            <Tooltip title="New Project">
+              <Link to={"/app/project/create"}><Icon type="plus-circle" /></Link>
+            </Tooltip>
+          </span>
+        </span>
+        }
+      >
+        <Menu.ItemGroup key="active-project"
+          title={<span>
+            <Select defaultValue={projectId}
+              value={projectId}
+              size={"small"}
+              dropdownMatchSelectWidth={false}
+              style={{ width: 200 }}
+              onChange={onProjectChange}>
+              <Option value="a1">A1</Option>
+              <Option value="p1">P1</Option>
+              <Option value="p2">P2</Option>
+              <Option value="p3">P3</Option>
+            </Select>
+          </span>}
+        >
+          <Menu.Item key="project-general-details" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
+            <Link to={`/app/project/${projectId}/members`}>
+              <Icon type="container" />
+              <span>General</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="project-members" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
+            <Link to={`/app/project/${projectId}/members`}>
+              <Icon type="team" />
+              <span>Members</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="project-permissions" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
+            <Link to={`/app/project/${projectId}/permissions`}>
+              <Icon type="lock" />
+              <span>Permissions</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="project-settings" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
+            <Link to={`/app/project/${projectId}/settings/cloud-providers`}>
+              <Icon type="setting" />
+              <span>Settings</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="project-deployments" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
+            <Link to={`/app/project/${projectId}/deployments`}>
+              <Icon type="deployment-unit" />
+              <span>Deployments</span>
+            </Link>
+          </Menu.Item>
+        </Menu.ItemGroup>
+      </SubMenu>
+
+    );
+  } else {
+    projectView = (
       <Menu.Item key="manage-projects">
         <Link to="/app/projects">
-          <Icon type="container" />
-          <span style={{ fontWeight: 'bold' }}>Manage Projects</span>
+          <Icon type="project" />
+          <span style={{ fontWeight: 'bold', fontSize: 12 }}>Projects</span>
         </Link>
       </Menu.Item>
     );
-  } else {
-    manageProjectsMenu = null;
-  }
-
-  let projectsSubMenu;
-  if (useValidateUserHasAnyRole(['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN'])) {
-    projectsSubMenu = (
-      <SubMenu
-        key="projects"
-        title={<span>
-          <Icon type="project" />
-          <span style={{ fontWeight: 'bold' }}>Projects</span>
-        </span>}
-      >
-        {manageProjectsMenu}
-      </SubMenu>
-    )
-  } else {
-    projectsSubMenu = null;
   }
 
   return (
@@ -211,26 +320,10 @@ function Home() {
           activeKey="Heading"
           theme={"dark"}
         >
-          {/* <Menu.Item key="Spinner" style={{ fontWeight: 'bold', float: 'left' }}>
-          <Spin spinning />
-        </Menu.Item> */}
           <Menu.Item key="Heading" style={{ fontWeight: 'bold', float: 'left' }}>
             <span style={{ fontSize: 14 }}> Ketchup Management Console</span>
           </Menu.Item>
-
           {userProfileButton}
-          <Menu.Item key="Project" style={{ fontWeight: 'bold', float: 'left', float: "right" }}>
-            <span style={{ fontSize: 14 }}> Active Project: </span>
-            <Select defaultValue={projectId}
-              value={projectId}
-              size={"small"}
-              style={{ width: 120 }}
-              onChange={onProjectChange}>
-              <Option value="p1">P1</Option>
-              <Option value="p2">P2</Option>
-              <Option value="p3">P3</Option>
-            </Select>
-          </Menu.Item>
         </Menu>
       </Header>
       <Layout style={{ height: 'calc(100vh - 48px)' }}>
@@ -242,18 +335,20 @@ function Home() {
           theme={"dark"}
           style={{ overflowY: 'auto', overflowX: 'hidden', height: 'calc(100vh - 96px)' }}
         >
-          <Menu mode="inline" theme="dark" style={{ borderRight: 0, textAlign: 'left' }}>
+          <Menu mode="inline" theme="dark"
+            style={{ borderRight: 0, textAlign: 'left' }}
+            openKeys={['project', 'deployment']}>
 
-            <Menu.Item key="dashboard">
+            <Menu.Item key="dashboard" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
               <Link to="/app/dashboard">
                 <Icon type="home" />
                 <span style={{ fontWeight: 'bold' }}>Dashboard</span>
               </Link>
             </Menu.Item>
-            {tenantsSubMenu}
-            {usersSubMenu}
-            {projectsSubMenu}
-            {/* {resourceSubMenu} */}
+            {manageTenantsMenu}
+            {manageUsersMenu}
+            {projectView}
+            {deploymentView}
           </Menu>
         </Sider>
 
@@ -283,7 +378,7 @@ function Home() {
                   <ProtectedRoute path="/app/project/:projectResourceId/members" component={ManageProjectMembers} />
                   <ProtectedRoute path="/app/project/:projectResourceId/permissions" component={ManageProjectPermissions} />
                   <ProtectedRoute path="/app/project/:projectResourceId/settings/:settingId" component={ManageSettings} />
-                  
+
                   <ProtectedRoute path="/app/project/:projectResourceId/deployments" component={ManageDeployments} />
                   <ProtectedRoute path="/app/project/:projectResourceId/deployment/create" component={CreateDeployment} />
                   <ProtectedRoute component={Nomatch} />

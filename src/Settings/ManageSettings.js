@@ -52,7 +52,7 @@ function ManageSettings() {
                 </Col>
             </Row>
             <Row type="flex" justify="center" align="top">
-                <Col span={4}>
+                <Col span={5}>
                     <Menu
                         defaultSelectedKeys={['cloud-providers']}
                         selectedKeys={selectedKey}
