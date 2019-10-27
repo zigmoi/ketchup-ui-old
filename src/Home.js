@@ -63,6 +63,7 @@ function Home() {
   const currentDeployment = useCurrentDeployment();
   const [deploymentId, setDeploymentId] = useState("");
   const [sideMenuOpenKeys, setSideMenuOpenKeys] = useState([]);
+  const [sideMenuPreviousOpenKeys, setSideMenuPreviousOpenKeys] = useState([]);
 
 
   useEffect(() => {
@@ -70,8 +71,27 @@ function Home() {
     console.log("in effect home, deployment: ", currentDeployment);
     setProjectId(currentProject ? currentProject.projectId : "");
     setDeploymentId(currentProject && currentDeployment ? currentDeployment.deploymentId : "");
-    setSideMenuOpenKeys(['project', 'deployment']);
   }, [currentProject, currentDeployment]);
+
+  useEffect(() => {
+    if (projectId && deploymentId) {
+      setSideMenuOpenKeys(['project', 'deployment', ...sideMenuOpenKeys]);
+    } else if (projectId) {
+      setSideMenuOpenKeys(['project', ...sideMenuOpenKeys]);
+    } else {
+      setSideMenuOpenKeys([...sideMenuOpenKeys]);
+    }
+  }, [projectId, deploymentId]);
+
+  useEffect(() => {
+    if (collapsed) {
+      setSideMenuPreviousOpenKeys(sideMenuOpenKeys);
+      setSideMenuOpenKeys([]);
+    } else {
+      setSideMenuOpenKeys(sideMenuPreviousOpenKeys);
+      setSideMenuPreviousOpenKeys([]);
+    }
+  }, [collapsed]);
 
 
   function onProjectChange(value) {
@@ -90,6 +110,20 @@ function Home() {
     setDeploymentId(value);
     history.push(`/app/project/${projectId}/deployment/create`);
     // message.info(`Activated deployment ${value}`);
+  }
+
+  function onSideMenuOpenChange(openKeys) {
+    setSideMenuOpenKeys(openKeys);
+  }
+
+  function handleMenuClick(e) {
+    let selectedKey = e.key;
+    if (sideMenuOpenKeys.indexOf(selectedKey)) {
+      let filteredKeys = sideMenuOpenKeys.filter(key => key !== selectedKey);
+      setSideMenuOpenKeys(filteredKeys);
+    } else {
+      setSideMenuOpenKeys([...sideMenuOpenKeys, selectedKey]);
+    }
   }
 
 
@@ -136,10 +170,17 @@ function Home() {
   if (useValidateUserHasAllRoles(['ROLE_SUPER_ADMIN'])) {
     manageTenantsMenu = (
       <Menu.Item key="manage-tenants" style={{ fontSize: 12 }}>
-        <Link to="/app/manage-tenants">
-          <Icon type="team" />
-          <span style={{ fontWeight: 'bold' }}>Tenants</span>
-        </Link>
+        <span>
+          <Link to="/app/manage-tenants" className="side-menu-link-custom">
+            <Icon type="team" />
+            <span style={{ fontWeight: 'bold' }}>Tenants</span>
+          </Link>
+          <Tooltip title="New Tenant">
+            <Link to={`/app/create-tenant`} style={{ fontWeight: 'bold', float: 'right' }}>
+              <Icon type="plus-circle" />
+            </Link>
+          </Tooltip>
+        </span>
       </Menu.Item>
     );
   } else {
@@ -150,10 +191,17 @@ function Home() {
   if (useValidateUserHasAnyRole(['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN'])) {
     manageUsersMenu = (
       <Menu.Item key="manage-users" style={{ fontSize: 12 }}>
-        <Link to="/app/manage-users">
-          <Icon type="team" />
-          <span style={{ fontWeight: 'bold' }}>Users</span>
-        </Link>
+        <span>
+          <Link to="/app/manage-users" className="side-menu-link-custom">
+            <Icon type="team" />
+            <span style={{ fontWeight: 'bold' }}>Users</span>
+          </Link>
+          <Tooltip title="New User">
+            <Link to={`/app/create-user`} style={{ fontWeight: 'bold', float: 'right' }}>
+              <Icon type="plus-circle" />
+            </Link>
+          </Tooltip>
+        </span>
       </Menu.Item>
     );
   } else {
@@ -165,33 +213,35 @@ function Home() {
     deploymentView = (
       <SubMenu
         key="deployment"
-        style={{ fontSize: 12 }}
         title={<span>
-          <Icon type="deployment-unit" />
-          <span style={{ fontWeight: 'bold', fontSize: 12 }}>
-            <Link to={`/app/project/${projectId}/deployments`} 
-                  className="side-menu-link-custom"
-                  onClick={() => {
-                        deploymentContext.clearCurrentDeployment();
-                        setDeploymentId("");
+          <Link to={`/app/project/${projectId}/deployments`}
+            style={{ fontWeight: 'bold', fontSize: 12 }}
+            className="side-menu-link-custom"
+            onClick={() => {
+              deploymentContext.clearCurrentDeployment();
+              setDeploymentId("");
             }}>
-              Deployments
+            <Icon type="deployment-unit" />
+            <span>Deployments</span>
+          </Link>
+          <Tooltip title="New Deployment">
+            <Link to={`/app/project/${projectId}/deployment/create`} 
+                  style={{ fontWeight: 'bold', float: 'right' }}
+                  onClick={(e) => {e.stopPropagation();}}
+            >
+              <Icon type="plus-circle" />
             </Link>
-          </span>
-          <span style={{ fontWeight: 'bold', float: 'right' }}>
-            <Tooltip title="New Deployment">
-              <Link to={`/app/project/${projectId}/deployment/create`}><Icon type="plus-circle" /></Link>
-            </Tooltip>
-          </span>
+          </Tooltip>
         </span>}
       >
         <Menu.ItemGroup key="active-deployment"
-          title={<span>
+          title={collapsed ? deploymentId : <span>
             <Select defaultValue={deploymentId}
               value={deploymentId}
               size={"small"}
+              showSearch
               dropdownMatchSelectWidth={false}
-              style={{ width: 200 }}
+              style={{ width: 200}}
               onChange={onDeploymentChange}>
               <Option value="d1">D1</Option>
               <Option value="d2">D2</Option>
@@ -230,32 +280,33 @@ function Home() {
         key="project"
         style={{ fontSize: 12 }}
         title={<span>
-          <Icon type="project" />
-          <span style={{ fontWeight: 'bold', fontSize: 12 }}>
-            <Link to="/app/projects" 
-              className="side-menu-link-custom"
-              onClick={() => {
-                deploymentContext.clearCurrentDeployment();
-                setDeploymentId("");
-                projectContext.clearCurrentProject();
-                setProjectId("");
+          <Link to="/app/projects"
+            style={{ fontWeight: 'bold', fontSize: 12 }}
+            className="side-menu-link-custom"
+            onClick={() => {
+              deploymentContext.clearCurrentDeployment();
+              setDeploymentId("");
+              projectContext.clearCurrentProject();
+              setProjectId("");
             }}>
-              Projects
+            <Icon type="project" />
+            <span>Projects</span>
+          </Link>
+          <Tooltip title="New Project">
+            <Link to={"/app/project/create"} 
+                  style={{ fontWeight: 'bold', float: 'right' }}
+                  onClick={(e) => {e.stopPropagation();}}
+            >
+              <Icon type="plus-circle" />
             </Link>
-          </span>
-          <span style={{ fontWeight: 'bold', float: 'right' }}>
-            <Tooltip title="New Project">
-              <Link to={"/app/project/create"}><Icon type="plus-circle" /></Link>
-            </Tooltip>
-          </span>
-        </span>
-        }
-      >
+          </Tooltip>
+        </span>}>
         <Menu.ItemGroup key="active-project"
-          title={<span>
+          title={collapsed ? projectId : <span>
             <Select defaultValue={projectId}
               value={projectId}
               size={"small"}
+              showSearch
               dropdownMatchSelectWidth={false}
               style={{ width: 200 }}
               onChange={onProjectChange}>
@@ -264,8 +315,7 @@ function Home() {
               <Option value="p2">P2</Option>
               <Option value="p3">P3</Option>
             </Select>
-          </span>}
-        >
+          </span>}>
           <Menu.Item key="project-general-details" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
             <Link to={`/app/project/${projectId}/members`}>
               <Icon type="container" />
@@ -290,23 +340,38 @@ function Home() {
               <span>Settings</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="project-deployments" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
-            <Link to={`/app/project/${projectId}/deployments`}>
-              <Icon type="deployment-unit" />
-              <span>Deployments</span>
-            </Link>
-          </Menu.Item>
+          {deploymentId ? null :
+            <Menu.Item key="deployment" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
+              <span>
+                <Link to={`/app/project/${projectId}/deployments`} className="side-menu-link-custom">
+                  <Icon type="deployment-unit" />
+                  <span>Deployments</span>
+                </Link>
+                <Tooltip title="New Deployment">
+                  <Link to={`/app/project/${projectId}/deployment/create`} style={{ fontWeight: 'bold', float: 'right' }}>
+                    <Icon type="plus-circle" />
+                  </Link>
+                </Tooltip>
+              </span>
+            </Menu.Item>}
         </Menu.ItemGroup>
       </SubMenu>
 
     );
   } else {
     projectView = (
-      <Menu.Item key="manage-projects">
-        <Link to="/app/projects">
-          <Icon type="project" />
-          <span style={{ fontWeight: 'bold', fontSize: 12 }}>Projects</span>
-        </Link>
+      <Menu.Item key="project">
+        <span>
+          <Link to="/app/projects" className="side-menu-link-custom">
+            <Icon type="project" />
+            <span style={{ fontWeight: 'bold', fontSize: 12 }}>Projects</span>
+          </Link>
+          <Tooltip title="New Project">
+            <Link to={"/app/project/create"} style={{ fontWeight: 'bold', float: 'right' }}>
+              <Icon type="plus-circle" />
+            </Link>
+          </Tooltip>
+        </span>
       </Menu.Item>
     );
   }
@@ -337,7 +402,10 @@ function Home() {
         >
           <Menu mode="inline" theme="dark"
             style={{ borderRight: 0, textAlign: 'left' }}
-            openKeys={['project', 'deployment']}>
+            onClick={handleMenuClick}
+            onOpenChange={onSideMenuOpenChange}
+            openKeys={sideMenuOpenKeys}
+          >
 
             <Menu.Item key="dashboard" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
               <Link to="/app/dashboard">

@@ -1,11 +1,8 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-import { Route } from 'react-router-dom';
-
-function Dashboard(props) {
-  console.log("dashboard", props);
+function Dashboard() {
+  document.title="Dashboard"
   return (
     <div>
         Dashboard
