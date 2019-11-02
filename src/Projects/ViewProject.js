@@ -1,13 +1,11 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Form, Icon, Input, Button, Tabs } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Form, Icon, Input, Button } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
-import UserContext from '../UserContext';
-import ManageProjectMembers from './ManageProjectMembers';
+import moment from 'moment';
 import { useParams } from 'react-router-dom';
 
 function ViewProject() {
-    const TabPane = Tabs.TabPane;
     const FormItem = Form.Item;
     const formItemLayout = {
         labelCol: {
@@ -23,8 +21,9 @@ function ViewProject() {
     const [iconLoading, setIconLoading] = useState(false);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
+    const [creationDate, setCreationDate] = useState(null);
+
     const { projectResourceId } = useParams();
-    const user = useContext(UserContext);
 
     useEffect(() => {
         document.title = "Project Details";
@@ -39,6 +38,7 @@ function ViewProject() {
                 setIconLoading(false);
                 setName(response.data.id.resourceId);
                 setDescription(response.data.description);
+                setCreationDate(moment(response.data.creationDate).format("LLL"));
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -57,26 +57,15 @@ function ViewProject() {
             <Row type="flex" justify="center" align="middle">
                 <Col span={24}  >
                     <Form style={{ backgroundColor: 'white' }}>
-                        <Tabs defaultActiveKey={"general"}>
-                            <TabPane tab="General" key="general">
-                                <FormItem {...formItemLayout} label="Name:">
-                                    <Input placeholder="Name"
-                                        value={name}
-                                        onChange={(e) => { setName(e.target.value) }} />
-                                </FormItem>
-                                <FormItem {...formItemLayout} label="Description:">
-                                    <Input placeholder="Description"
-                                        value={description}
-                                        onChange={(e) => { setDescription(e.target.value) }} />
-                                </FormItem>
-                            </TabPane>
-                            <TabPane tab="Members" key="members">
-                                <ManageProjectMembers />
-                            </TabPane>
-                            <TabPane tab="Deployments" key="deployments">
-
-                            </TabPane>
-                        </Tabs>
+                        <FormItem {...formItemLayout} label="Name:">
+                            <Input value={name} readOnly />
+                        </FormItem>
+                        <FormItem {...formItemLayout} label="Description:">
+                            <Input value={description} readOnly />
+                        </FormItem>
+                        <FormItem {...formItemLayout} label="Created On:">
+                            <Input value={creationDate} readOnly />
+                        </FormItem>
                     </Form>
                 </Col>
             </Row>

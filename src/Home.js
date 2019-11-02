@@ -117,7 +117,7 @@ function Home() {
 
   let userProfileButton;
   const profileContent = (
-    <div style={{ backgroundColor: '#efefef' }}>
+    <div>
       <span>User: </span>
       <span style={{ fontWeight: 'bold' }}>{userContext.currentUser ? userContext.currentUser.id : ""}</span>
       <br />
@@ -281,7 +281,7 @@ function Home() {
         </span>}>
         <Menu.ItemGroup key="active-project" title={projectId}>
           <Menu.Item key="project-general-details" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
-            <Link to={`/app/project/${projectId}/members`}>
+            <Link to={`/app/project/${projectId}/view`}>
               <Icon type="container" />
               <span>General</span>
             </Link>

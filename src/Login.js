@@ -46,7 +46,7 @@ function Login() {
     //Without this check route gets called twice also causes interceptor to load twice.
 
     if (location.state && location.state.from && location.state.from.pathname) {
-        setFrom( location.state.from.pathname);
+      setFrom(location.state.from.pathname);
     }
 
     if (loginStatus && isUserLoggingIn == false) {
@@ -85,9 +85,74 @@ function Login() {
       getUserInfo(username, response.data.access_token);
     })
       .catch((error) => {
-        console.log("Error in login request: ", error);
         setIconLoading(false);
-      });
+        console.log("Error in login request: ", error);
+        try {
+          if (error.response) {
+            console.log("Error response:", error.response);
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            let responseStatus = error.response.status;
+            let errorMessage = "";
+            if (error.response.data.apierror && error.response.data.apierror.message) {
+              errorMessage = error.response.data.apierror.message;
+            } else if (error.response.data.error_description) {
+              errorMessage = error.response.data.error_description;
+            } else {
+              errorMessage = "";
+            }
+            if (responseStatus === 401) {
+              message.error(errorMessage, 5);
+            } else if (responseStatus === 403) {
+              message.error('Access denied, If you think you should have access to this resource, please contact support.', 5);
+            } else if (responseStatus === 404) {
+              message.error('Resource not found, ' + errorMessage, 5);
+            } else if (responseStatus === 400) {
+              let subErrors = "";
+              if (error.response.data.apierror && error.response.data.apierror.subErrors) {
+                subErrors = error.response.data.apierror.subErrors;
+                let errorView = (
+                  <ul>
+                    {subErrors.map((value, index) => {
+                      return <li key={index}>{value.field} : {value.message}</li>
+                    })}
+                  </ul>);
+                Modal.error({
+                  width: 850,
+                  title: 'Validation Errors:',
+                  content: (
+                    <Row type="flex" justify="center" align="middle">
+                      <Col span={24}>
+                        {errorView}
+                      </Col>
+                    </Row>
+                  ),
+                  onOk() { },
+                });
+              } else {
+                message.error('Invalid request, ' + errorMessage, 5);
+              }
+            } else if (responseStatus === 500) {
+              message.error('Something went wrong, please try again later! If the problem persists, please contact support.', 5);
+            } else {
+              message.error('Something went wrong, please try again later! If the problem persists, kindly contact support.', 5);
+            }
+          } else if (error.request) {
+            //when no response from server, like Timeout, Server down, CORS issue, Network issue.
+            // The request was made but no response was received.
+            //console.log(error.request);
+            message.error('Application server is not accessible, please try again!', 5);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            //console.log('Error', error.message);
+            message.error('Request processing failed, Invalid request.', 5);
+          }
+        } catch (error) {
+          console.log(error);
+          message.error('Something went wrong! If the problem persists, kindly contact support.', 5);
+        };
+      }
+      );
 
   }
 

@@ -20,6 +20,8 @@ function AddHostname() {
 
     const [iconLoading, setIconLoading] = useState(false);
     const [displayName, setDisplayName] = useState("");
+    const [externalServiceIp, setExternalServiceIp] = useState("");
+    const [externalServiceDns, setExternalServiceDns] = useState("");
 
     let history = useHistory();
     let { projectResourceId } = useParams();
@@ -29,6 +31,9 @@ function AddHostname() {
         var data = {
             'projectId': projectResourceId,
             'displayName': displayName,
+            'hostnameIpMapping': {
+                [externalServiceDns]: externalServiceIp
+            }
         };
         axios.post('http://localhost:8097/v1/settings/hostname-ip-mapping', data)
             .then((response) => {
@@ -59,6 +64,18 @@ function AddHostname() {
                                 placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
+                        </FormItem>
+                        <FormItem {...formItemLayout} label="External Service DNS:">
+                            <Input autoFocus
+                                placeholder="External Service DNS"
+                                value={externalServiceDns}
+                                onChange={(e) => { setExternalServiceDns(e.target.value) }} />
+                        </FormItem>
+                        <FormItem {...formItemLayout} label="External Service IP:">
+                            <Input autoFocus
+                                placeholder="External Service IP"
+                                value={externalServiceIp}
+                                onChange={(e) => { setExternalServiceIp(e.target.value) }} />
                         </FormItem>
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">

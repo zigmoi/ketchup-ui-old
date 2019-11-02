@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, Tabs } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
 import { useHistory, useParams } from 'react-router-dom';
 
+const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -84,77 +85,89 @@ function CreateDeployment() {
             <Row type="flex" justify="center" align="middle">
                 <Col span={24}  >
                     <Form style={{ backgroundColor: 'white' }}>
-                        <FormItem {...formItemLayout} label="Display Name:">
-                            <Input autoFocus
-                                placeholder="Display Name"
-                                value={displayName}
-                                onChange={(e) => { setDisplayName(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="App Base URL:">
-                            <Input
-                                placeholder="App Base URL"
-                                value={appBasePath}
-                                onChange={(e) => { setAppBasePath(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="App Port:">
-                            <Input
-                                placeholder="App Port"
-                                value={appServerPort}
-                                onChange={(e) => { setAppServerPort(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Git Provider:">
-                            <Input
-                                placeholder="Git Provider"
-                                value={gitProviderSettingId}
-                                onChange={(e) => { setGitProviderSettingId(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Git Repository Name:">
-                            <Input
-                                placeholder="Git Repository Name"
-                                value={gitRepoName}
-                                onChange={(e) => { setGitRepoName(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Cloud Provider:">
-                            <Input
-                                placeholder="Cloud Provider"
-                                value={cloudProviderSettingId}
-                                onChange={(e) => { setCloudProviderSettingId(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Kubernetes Cluster:">
-                            <Input
-                                placeholder="Kubernetes Cluster"
-                                value={kubernetesClusterSettingId}
-                                onChange={(e) => { setKubernetesClusterSettingId(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Kubernetes Namespace:">
-                            <Input
-                                placeholder="Kubernetes Namespace"
-                                value={kubernetesNamespace}
-                                onChange={(e) => { setKubernetesNamespace(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Kubernetes Service Name:">
-                            <Input placeholder="Kubernetes Service Name"
-                                value={serviceName}
-                                onChange={(e) => { setServiceName(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Container Registry:">
-                            <Input
-                                placeholder="Container Registry"
-                                value={containerRegistrySettingId}
-                                onChange={(e) => { setContainerRegistrySettingId(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Docker Image Repository Name:">
-                            <Input
-                                placeholder="Docker Image Repository Name"
-                                value={dockerImageRepoName}
-                                onChange={(e) => { setDockerImageRepoName(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Build Tool:">
-                            <Input
-                                placeholder="Build Tool"
-                                value={buildToolSettingId}
-                                onChange={(e) => { setBuildToolSettingId(e.target.value) }} />
-                        </FormItem>
+                        <Tabs defaultActiveKey="general">
+                            <TabPane tab="General" key="general">
+                                <FormItem {...formItemLayout} label="Display Name:">
+                                    <Input autoFocus
+                                        placeholder="Display Name"
+                                        value={displayName}
+                                        onChange={(e) => { setDisplayName(e.target.value) }} />
+                                </FormItem>
+                                <FormItem {...formItemLayout} label="App Port:">
+                                    <Input
+                                        placeholder="App Port"
+                                        value={appServerPort}
+                                        onChange={(e) => { setAppServerPort(e.target.value) }} />
+                                </FormItem>
+                                <FormItem {...formItemLayout} label="Kubernetes Cluster:">
+                                    <Input
+                                        placeholder="Kubernetes Cluster"
+                                        value={kubernetesClusterSettingId}
+                                        onChange={(e) => { setKubernetesClusterSettingId(e.target.value) }} />
+                                </FormItem>
+                                <FormItem {...formItemLayout} label="Kubernetes Namespace:">
+                                    <Input
+                                        placeholder="Kubernetes Namespace"
+                                        value={kubernetesNamespace}
+                                        onChange={(e) => { setKubernetesNamespace(e.target.value) }} />
+                                </FormItem>
+                                <FormItem {...formItemLayout} label="Kubernetes Service Name:">
+                                    <Input placeholder="Kubernetes Service Name"
+                                        value={serviceName}
+                                        onChange={(e) => { setServiceName(e.target.value) }} />
+                                </FormItem>
+                            </TabPane>
+                            <TabPane tab="Git Provider" key="git-provider">
+                                <FormItem {...formItemLayout} label="Git Provider:">
+                                    <Input
+                                        placeholder="Git Provider"
+                                        value={gitProviderSettingId}
+                                        onChange={(e) => { setGitProviderSettingId(e.target.value) }} />
+                                </FormItem>
+                                <FormItem {...formItemLayout} label="Git Repository Name:">
+                                    <Input
+                                        placeholder="Git Repository Name"
+                                        value={gitRepoName}
+                                        onChange={(e) => { setGitRepoName(e.target.value) }} />
+                                </FormItem>
+                            </TabPane>
+                            <TabPane tab="Cloud Provider" key="cloud-provider">
+                                <FormItem {...formItemLayout} label="Cloud Provider:">
+                                    <Input
+                                        placeholder="Cloud Provider"
+                                        value={cloudProviderSettingId}
+                                        onChange={(e) => { setCloudProviderSettingId(e.target.value) }} />
+                                </FormItem>
+                            </TabPane>
+                            <TabPane tab="Container Registry" key="container-registry">
+                                <FormItem {...formItemLayout} label="Container Registry:">
+                                    <Input
+                                        placeholder="Container Registry"
+                                        value={containerRegistrySettingId}
+                                        onChange={(e) => { setContainerRegistrySettingId(e.target.value) }} />
+                                </FormItem>
+                                <FormItem {...formItemLayout} label="Docker Image Repository Name:">
+                                    <Input
+                                        placeholder="Docker Image Repository Name"
+                                        value={dockerImageRepoName}
+                                        onChange={(e) => { setDockerImageRepoName(e.target.value) }} />
+                                </FormItem>
+                            </TabPane>
+                            <TabPane tab="Additional" key="additional">
+                                <FormItem {...formItemLayout} label="Build Tool:">
+                                    <Input
+                                        placeholder="Build Tool"
+                                        value={buildToolSettingId}
+                                        onChange={(e) => { setBuildToolSettingId(e.target.value) }} />
+                                </FormItem>
+                                <FormItem {...formItemLayout} label="Base Build Path (Docker Build):">
+                                    <Input
+                                        placeholder="Base Build Path (Docker Build)"
+                                        value={appBasePath}
+                                        onChange={(e) => { setAppBasePath(e.target.value) }} />
+                                </FormItem>
+                            </TabPane>
+                        </Tabs>
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">
                                 <Col>

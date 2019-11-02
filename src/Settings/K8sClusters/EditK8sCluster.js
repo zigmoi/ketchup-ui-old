@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, Divider, Tag } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
+import moment from 'moment';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 
 const FormItem = Form.Item;
@@ -24,7 +25,7 @@ function EditK8sCluster() {
 
     const [displayName, setDisplayName] = useState("");
     const [provider, setProvider] = useState("");
-    const [fileName, setFileName] = useState("");
+    const [fileName, setFileName] = useState("kubeconfig");
     const [fileData, setFileData] = useState("");
     const [lastUpdatedBy, setLastUpdatedBy] = useState("");
     const [lastUpdatedOn, setLastUpdatedOn] = useState("");
@@ -61,7 +62,7 @@ function EditK8sCluster() {
                 setFileName(response.data.fileName);
                 setFileData(atob(response.data.fileData));
                 setLastUpdatedBy(response.data.lastUpdatedBy);
-                setLastUpdatedOn(response.data.lastUpdatedOn);
+                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -89,20 +90,23 @@ function EditK8sCluster() {
             });
     }
 
+    let kubeConfigOptionsView;
     let submitButtonView;
     let lastUpdatedByView;
     let lastUpdatedOnView;
     if (isViewMode) {
         submitButtonView = null;
         lastUpdatedByView = (
-            <FormItem {...formItemLayout} label="Last Updated By :">
-                <Input readOnly value={lastUpdatedBy} />
-            </FormItem>
-
+            <Tag color="blue">{lastUpdatedBy}</Tag>
         );
         lastUpdatedOnView = (
-            <FormItem {...formItemLayout} label="Last Updated On:">
-                <Input readOnly value={lastUpdatedOn} />
+            <Tag color="blue">{lastUpdatedOn}</Tag>
+        );
+        kubeConfigOptionsView = (
+            <FormItem {...formItemLayout} label="Kube Config">
+                <Button type="primary" size="small">View</Button>
+                <Divider type="vertical" />
+                <Button type="primary" size="small">Download</Button>
             </FormItem>
         );
     } else {
@@ -118,6 +122,15 @@ function EditK8sCluster() {
                             onClick={updateSetting} >Submit</Button>
                     </Col>
                 </Row>
+            </FormItem>
+        );
+        kubeConfigOptionsView = (
+            <FormItem {...formItemLayout} label="KubeConfig">
+                <Input.TextArea
+                    placeholder="KubeConfig"
+                    autosize={{ minRows: 10, maxRows: 15 }}
+                    value={fileData}
+                    onChange={(e) => { setFileData(e.target.value) }} />
             </FormItem>
         );
     }
@@ -146,6 +159,8 @@ function EditK8sCluster() {
                                 placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
+                            {lastUpdatedByView}
+                            {lastUpdatedOnView}
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
                             <Input readOnly={isViewMode}
@@ -153,21 +168,7 @@ function EditK8sCluster() {
                                 value={provider}
                                 onChange={(e) => { setProvider(e.target.value) }} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="File Name:">
-                            <Input readOnly={isViewMode}
-                                placeholder="File Name"
-                                value={fileName}
-                                onChange={(e) => { setFileName(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="File Data">
-                            <Input.TextArea readOnly={isViewMode}
-                                placeholder="File Data"
-                                autosize={{minRows: 10, maxRows: 15}}
-                                value={fileData}
-                                onChange={(e) => { setFileData(e.target.value) }} />
-                        </FormItem>
-                        {lastUpdatedOnView}
-                        {lastUpdatedByView}
+                        {kubeConfigOptionsView}
                         {submitButtonView}
                     </Form>
                 </Col>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, Tag } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
+import moment from 'moment';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 
 const FormItem = Form.Item;
@@ -63,7 +64,7 @@ function EditGitProvider() {
                 setPassword(response.data.password);
                 setRepoListUrl(response.data.repoListUrl);
                 setLastUpdatedBy(response.data.lastUpdatedBy);
-                setLastUpdatedOn(response.data.lastUpdatedOn);
+                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -98,15 +99,10 @@ function EditGitProvider() {
     if (isViewMode) {
         submitButtonView = null;
         lastUpdatedByView = (
-            <FormItem {...formItemLayout} label="Last Updated By :">
-                <Input readOnly value={lastUpdatedBy} />
-            </FormItem>
-
+            <Tag color="blue">{lastUpdatedBy}</Tag>
         );
         lastUpdatedOnView = (
-            <FormItem {...formItemLayout} label="Last Updated On:">
-                <Input readOnly value={lastUpdatedOn} />
-            </FormItem>
+            <Tag color="blue">{lastUpdatedOn}</Tag>
         );
     } else {
         lastUpdatedByView = null;
@@ -149,6 +145,8 @@ function EditGitProvider() {
                                 placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
+                            {lastUpdatedByView}
+                            {lastUpdatedOnView}
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
                             <Input readOnly={isViewMode}
@@ -174,8 +172,6 @@ function EditGitProvider() {
                                 value={repoListUrl}
                                 onChange={(e) => { setRepoListUrl(e.target.value) }} />
                         </FormItem>
-                        {lastUpdatedOnView}
-                        {lastUpdatedByView}
                         {submitButtonView}
                     </Form>
                 </Col>

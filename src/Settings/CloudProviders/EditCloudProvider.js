@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, Tag } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
+import moment from 'moment';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 
 const FormItem = Form.Item;
@@ -61,7 +62,7 @@ function EditCloudProvider() {
                 setAccessId(response.data.accessId);
                 setSecretKey(response.data.secretKey);
                 setLastUpdatedBy(response.data.lastUpdatedBy);
-                setLastUpdatedOn(response.data.lastUpdatedOn);
+                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -95,15 +96,10 @@ function EditCloudProvider() {
     if (isViewMode) {
         submitButtonView = null;
         lastUpdatedByView = (
-            <FormItem {...formItemLayout} label="Last Updated By :">
-                <Input readOnly value={lastUpdatedBy} />
-            </FormItem>
-
+            <Tag color="blue">{lastUpdatedBy}</Tag>
         );
         lastUpdatedOnView = (
-            <FormItem {...formItemLayout} label="Last Updated On:">
-                <Input readOnly value={lastUpdatedOn} />
-            </FormItem>
+            <Tag color="blue">{lastUpdatedOn}</Tag>
         );
     } else {
         lastUpdatedByView = null;
@@ -146,6 +142,8 @@ function EditCloudProvider() {
                                 placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
+                            {lastUpdatedByView}
+                            {lastUpdatedOnView}
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
                             <Input readOnly={isViewMode}
@@ -166,8 +164,6 @@ function EditCloudProvider() {
                                 value={secretKey}
                                 onChange={(e) => { setSecretKey(e.target.value) }} />
                         </FormItem>
-                        {lastUpdatedOnView}
-                        {lastUpdatedByView}
                         {submitButtonView}
                     </Form>
                 </Col>

@@ -46,13 +46,7 @@ function ManageProjects() {
                 <span>
                     <Button type="primary" size="small" onClick={() => viewDetails(record)}>View</Button>
                     <Divider type="vertical" />
-                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/members`}>Members</Link></Button>
-                    <Divider type="vertical" />
-                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/permissions`}>Permissions</Link></Button>
-                    <Divider type="vertical" />
-                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/settings/cloud-providers`}>Settings</Link></Button>
-                    <Divider type="vertical" />
-                    <Button type="primary" size="small"><Link to={`/app/project/${record.id.resourceId}/deployments`}>Deployments</Link></Button>
+                    <Button type="primary" size="small" onClick={() => viewDeployments(record)}>Deployments</Button>
                     <Divider type="vertical" />
                     <Popconfirm title="Confirm operation?"
                         okText="Go Ahead" cancelText="Cancel" onConfirm={() => deleteProject(record)}>
@@ -101,7 +95,14 @@ function ManageProjects() {
         console.log("View project details selectedRecord", selectedRecord);
         let projectName = selectedRecord.id.resourceId;
         projectContext.setCurrentProject({ "projectId": projectName });
-        history.push(`/app/project/${projectName}/members`);
+        history.push(`/app/project/${projectName}/view`);
+    }
+
+    function viewDeployments(selectedRecord) {
+        console.log("View project deployments selectedRecord", selectedRecord);
+        let projectName = selectedRecord.id.resourceId;
+        projectContext.setCurrentProject({ "projectId": projectName });
+        history.push(`/app/project/${projectName}/deployments`);
     }
 
     return (
