@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import useLoginStatus from './useLoginStatus';
 import AccessDenied from './AccessDenied';
 import useValidateUserHasAnyRole from './useValidateUserHasAnyRole';
@@ -11,7 +11,7 @@ function ProtectedRoute({ component: Component, roles: roles, ...rest }) {
     let requiredRoles = roles || [];
     let hasRoles = useValidateUserHasAnyRole(requiredRoles);
     console.log("hasRoles", hasRoles);
-
+    let location = useLocation();
 
     let AuthenticatedView;
     if (loginStatus) {
@@ -26,18 +26,12 @@ function ProtectedRoute({ component: Component, roles: roles, ...rest }) {
         }
     } else {
         AuthenticatedView = (
-            <Redirect to={{ pathname: "/login", state: { from: rest.location } }} />
+            <Redirect to={{ pathname: "/login", state: { from: location } }} />
         );
     }
 
 
-    return (
-        <Route
-            {...rest}
-            render={props => AuthenticatedView
-            }
-        />
-    );
+    return (AuthenticatedView);
 }
 
 export default ProtectedRoute;

@@ -46,7 +46,7 @@ function Login() {
     //Without this check route gets called twice also causes interceptor to load twice.
 
     if (location.state && location.state.from && location.state.from.pathname) {
-        setFrom(from => location.state.from.pathname);
+        setFrom( location.state.from.pathname);
     }
 
     if (loginStatus && isUserLoggingIn == false) {

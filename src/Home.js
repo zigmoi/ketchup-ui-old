@@ -1,10 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import './App.css';
-import { Switch, Link, useHistory, useLocation } from 'react-router-dom';
-import { Icon, Layout, Menu, Popover, Avatar, Select, message, Button, Dropdown, Tooltip } from 'antd';
+import { Switch, Link, useHistory, Route } from 'react-router-dom';
+import { Icon, Layout, Menu, Popover, Avatar, Tooltip } from 'antd';
 import { Row, Col } from 'antd';
 
-import axiosInterceptor from './axiosInterceptor';
 import useValidateUserHasAnyRole from './useValidateUserHasAnyRole';
 import useValidateUserHasAllRoles from './useValidateUserHasAllRoles';
 
@@ -35,23 +34,12 @@ import ManageSettings from './Settings/ManageSettings';
 import ManageDeployments from './Deployments/ManageDeployments';
 import CreateDeployment from './Deployments/CreateDeployment';
 
-
-
 function Home() {
   const userContext = useContext(UserContext);
   let history = useHistory();
-  let location = useLocation();
-  useEffect(() => {
-    //home is loaded again when user gets logged out to login page.
-    //on login user is redirected to a route which mounts Home page again.
-    //thus interceptor gets called again.
-    //To prevent inteceptor has a check (If its already loaded) before setting it up. 
-    axiosInterceptor(userContext, history, location);
-  }, []);
 
   const { Header, Content, Sider } = Layout;
   const SubMenu = Menu.SubMenu;
-  const { Option } = Select;
 
   const [collapsed, setCollapsed] = useState(false);
 
@@ -224,49 +212,38 @@ function Home() {
             <Icon type="deployment-unit" />
             <span>Deployments</span>
           </Link>
-          <Tooltip title="New Deployment">
-            <Link to={`/app/project/${projectId}/deployment/create`} 
-                  style={{ fontWeight: 'bold', float: 'right' }}
-                  onClick={(e) => {e.stopPropagation();}}
-            >
-              <Icon type="plus-circle" />
-            </Link>
-          </Tooltip>
+          <span style={{ float: 'right' }} onClick={(e) => { e.stopPropagation(); }}>
+            <Tooltip title="New Deployment">
+              <Link to={`/app/project/${projectId}/deployment/create`}>
+                <Icon type="plus-circle" />
+              </Link>
+            </Tooltip>
+            <Popover placement="rightBottom" content={<ManageProjects />}>
+              <Icon type="ordered-list" />
+            </Popover>
+          </span>
         </span>}
       >
-        <Menu.ItemGroup key="active-deployment"
-          title={collapsed ? deploymentId : <span>
-            <Select defaultValue={deploymentId}
-              value={deploymentId}
-              size={"small"}
-              showSearch
-              dropdownMatchSelectWidth={false}
-              style={{ width: 200}}
-              onChange={onDeploymentChange}>
-              <Option value="d1">D1</Option>
-              <Option value="d2">D2</Option>
-              <Option value="d3">D3</Option>
-            </Select>
-          </span>}
-        ></Menu.ItemGroup>
-        <Menu.Item key="deployment-general-details" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
-          <Link to={`/app/project/${projectId}/members`}>
-            <Icon type="container" />
-            <span>General</span>
-          </Link>
-        </Menu.Item>
-        <Menu.Item key="deployment-members" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
-          <Link to={`/app/project/${projectId}/members`}>
-            <Icon type="team" />
-            <span>Members</span>
-          </Link>
-        </Menu.Item>
-        <Menu.Item key="deployment-permissions" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
-          <Link to={`/app/project/${projectId}/permissions`}>
-            <Icon type="lock" />
-            <span>Permissions</span>
-          </Link>
-        </Menu.Item>
+        <Menu.ItemGroup key="active-deployment" title={deploymentId}>
+          <Menu.Item key="deployment-general-details" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
+            <Link to={`/app/project/${projectId}/members`}>
+              <Icon type="container" />
+              <span>General</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="deployment-members" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
+            <Link to={`/app/project/${projectId}/members`}>
+              <Icon type="team" />
+              <span>Members</span>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="deployment-permissions" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
+            <Link to={`/app/project/${projectId}/permissions`}>
+              <Icon type="lock" />
+              <span>Permissions</span>
+            </Link>
+          </Menu.Item>
+        </Menu.ItemGroup>
       </SubMenu>
     );
   } else {
@@ -278,7 +255,6 @@ function Home() {
     projectView = (
       <SubMenu
         key="project"
-        style={{ fontSize: 12 }}
         title={<span>
           <Link to="/app/projects"
             style={{ fontWeight: 'bold', fontSize: 12 }}
@@ -292,30 +268,18 @@ function Home() {
             <Icon type="project" />
             <span>Projects</span>
           </Link>
-          <Tooltip title="New Project">
-            <Link to={"/app/project/create"} 
-                  style={{ fontWeight: 'bold', float: 'right' }}
-                  onClick={(e) => {e.stopPropagation();}}
-            >
-              <Icon type="plus-circle" />
-            </Link>
-          </Tooltip>
+          <span style={{ float: 'right' }} onClick={(e) => { e.stopPropagation(); }}>
+            <Tooltip title="New Project">
+              <Link to={"/app/project/create"}>
+                <Icon type="plus-circle" />
+              </Link>
+            </Tooltip>
+            <Popover placement="rightBottom" content={<ManageProjects />}>
+              <Icon type="ordered-list" />
+            </Popover>
+          </span>
         </span>}>
-        <Menu.ItemGroup key="active-project"
-          title={collapsed ? projectId : <span>
-            <Select defaultValue={projectId}
-              value={projectId}
-              size={"small"}
-              showSearch
-              dropdownMatchSelectWidth={false}
-              style={{ width: 200 }}
-              onChange={onProjectChange}>
-              <Option value="a1">A1</Option>
-              <Option value="p1">P1</Option>
-              <Option value="p2">P2</Option>
-              <Option value="p3">P3</Option>
-            </Select>
-          </span>}>
+        <Menu.ItemGroup key="active-project" title={projectId}>
           <Menu.Item key="project-general-details" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
             <Link to={`/app/project/${projectId}/members`}>
               <Icon type="container" />
@@ -347,11 +311,15 @@ function Home() {
                   <Icon type="deployment-unit" />
                   <span>Deployments</span>
                 </Link>
-                <Tooltip title="New Deployment">
-                  <Link to={`/app/project/${projectId}/deployment/create`} style={{ fontWeight: 'bold', float: 'right' }}>
-                    <Icon type="plus-circle" />
-                  </Link>
-                </Tooltip>
+                {collapsed ? null :
+                  <span style={{ float: 'right' }}>
+                    <Tooltip title="New Deployment">
+                      <Link to={`/app/project/${projectId}/deployment/create`}>
+                        <Icon type="plus-circle" />
+                      </Link>
+                    </Tooltip>
+                  </span>
+                }
               </span>
             </Menu.Item>}
         </Menu.ItemGroup>
@@ -366,11 +334,13 @@ function Home() {
             <Icon type="project" />
             <span style={{ fontWeight: 'bold', fontSize: 12 }}>Projects</span>
           </Link>
-          <Tooltip title="New Project">
-            <Link to={"/app/project/create"} style={{ fontWeight: 'bold', float: 'right' }}>
-              <Icon type="plus-circle" />
-            </Link>
-          </Tooltip>
+          <span style={{ float: 'right' }}>
+            <Tooltip title="New Project">
+              <Link to={"/app/project/create"}>
+                <Icon type="plus-circle" />
+              </Link>
+            </Tooltip>
+          </span>
         </span>
       </Menu.Item>
     );
@@ -380,7 +350,6 @@ function Home() {
     <Layout style={{ height: '100vh', backgroundColor: '#efefef', padding: '0px' }}>
       <Header theme={"dark"} style={{ height: '48px', padding: '0px' }}>
         <Menu
-          theme="light"
           mode="horizontal"
           activeKey="Heading"
           theme={"dark"}
@@ -422,39 +391,38 @@ function Home() {
 
 
         <Layout style={{
-          borderLeft: '1px solid #e9e9e9',
-          height: 'calc(100vh- 48px)',
-          backgroundColor: '#fff',
-          paddingLeft: '5px, 5px, 0px,0px',
-          overflow: 'auto'
-        }}>
-          <Content style={{ backgroundColor: '#fff' }}>
-            <Row>
-              <Col span={24}>
-                <Switch>
-                  <ProtectedRoute path="/" exact component={Dashboard} />
-                  <ProtectedRoute path="/app" exact component={Dashboard} />
-                  <ProtectedRoute path="/app/dashboard" component={Dashboard} />
-                  <ProtectedRoute path="/app/create-tenant" component={CreateTenant} roles={['ROLE_SUPER_ADMIN']} />
-                  <ProtectedRoute path="/app/manage-tenants" component={ManageTenants} roles={['ROLE_SUPER_ADMIN']} />
-                  <ProtectedRoute path="/app/create-user" component={CreateUser} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />
-                  <ProtectedRoute path="/app/manage-users" component={ManageUsers} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />
-                  <ProtectedRoute path="/app/user/:userName/roles" component={ManageRoles} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />
-                  <ProtectedRoute path="/app/project/create" component={CreateProject} />
-                  <ProtectedRoute path="/app/projects" component={ManageProjects} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/view" component={ViewProject} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/members" component={ManageProjectMembers} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/permissions" component={ManageProjectPermissions} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/settings/:settingId" component={ManageSettings} />
-
-                  <ProtectedRoute path="/app/project/:projectResourceId/deployments" component={ManageDeployments} />
-                  <ProtectedRoute path="/app/project/:projectResourceId/deployment/create" component={CreateDeployment} />
-                  <ProtectedRoute component={Nomatch} />
-                </Switch>
-              </Col>
-            </Row>
-          </Content>
-        </Layout>
+            borderLeft: '1px solid #e9e9e9',
+            height: 'calc(100vh- 48px)',
+            backgroundColor: '#fff',
+            paddingLeft: '5px, 5px, 0px,0px',
+            overflow: 'auto'
+          }}>
+            <Content style={{ backgroundColor: '#fff' }}>
+              <Row>
+                <Col span={24}>  
+                  <Switch>
+                    <Route path="/" exact render={() => <ProtectedRoute component={Dashboard} />} />
+                    <Route path="/app" exact render={() => <ProtectedRoute component={Dashboard} />} />
+                    <Route path="/app/dashboard" render={() => <ProtectedRoute component={Dashboard} />} />
+                    <Route path="/app/create-tenant" render={() => <ProtectedRoute component={CreateTenant} roles={['ROLE_SUPER_ADMIN']} />} />
+                    <Route path="/app/manage-tenants" render={() => <ProtectedRoute component={ManageTenants} roles={['ROLE_SUPER_ADMIN']} />} />
+                    <Route path="/app/create-user" render={() => <ProtectedRoute component={CreateUser} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />} />
+                    <Route path="/app/manage-users" render={() => <ProtectedRoute component={ManageUsers} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />} />
+                    <Route path="/app/user/:userName/roles" render={() => <ProtectedRoute component={ManageRoles} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />} />
+                    <Route path="/app/project/create" render={() => <ProtectedRoute component={CreateProject} />} />
+                    <Route path="/app/projects" render={() => <ProtectedRoute component={ManageProjects} />} />
+                    <Route path="/app/project/:projectResourceId/view" render={() => <ProtectedRoute component={ViewProject} />} />
+                    <Route path="/app/project/:projectResourceId/members" render={() => <ProtectedRoute component={ManageProjectMembers} />} />
+                    <Route path="/app/project/:projectResourceId/permissions/:userId?" render={() => <ProtectedRoute component={ManageProjectPermissions} />} />
+                    <Route path="/app/project/:projectResourceId/settings/:settingId" render={() => <ProtectedRoute component={ManageSettings} />} />
+                    <Route path="/app/project/:projectResourceId/deployments" render={() => <ProtectedRoute component={ManageDeployments} />} />
+                    <Route path="/app/project/:projectResourceId/deployment/create" render={() => <ProtectedRoute component={CreateDeployment} />} />
+                    <Route render={() => <ProtectedRoute component={Nomatch} />} />
+                  </Switch>
+                </Col>
+              </Row>
+            </Content>
+          </Layout>
       </Layout>
     </Layout>
   );

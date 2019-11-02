@@ -32,6 +32,8 @@ function ManageProjectPermissions() {
         setUserName(userId || "");
         if (projectResourceId && userId) {
             loadPermissions();
+        }else{
+            setDataSource([]);
         } 
     }, [projectResourceId, userId]);
 
