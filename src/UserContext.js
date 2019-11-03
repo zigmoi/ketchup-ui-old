@@ -8,8 +8,6 @@ export const UserConsumer = UserContext.Consumer;
 
 export function UserProvider(props) {
     const [loggedInUser, setLoggedInUser] = useState(null);
-    const [axiosRequestInterceptorId, setAxiosRequestInterceptorId] = useState(null);
-    const [axiosResponseInterceptorId, setAxiosResponseInterceptorId] = useState(null);
     let history = useHistory();
     let location = useLocation();
 
@@ -39,10 +37,16 @@ export function UserProvider(props) {
     }
 
     function clearInterceptors() {
-        console.log("clearing up interceptors.");
+        console.log("clearing up interceptors.", axios.interceptors);
         axios.defaults.timeout = 0;
-        axios.interceptors.request.eject(axiosRequestInterceptorId);
-        axios.interceptors.response.eject(axiosResponseInterceptorId);
+        let noOfRequestInterceptors = axios.interceptors.request.handlers.length || 0;
+        for (var i = 0; i <= noOfRequestInterceptors; i++) {
+            axios.interceptors.request.eject(i);
+        }
+        let noOfResponseInterceptors = axios.interceptors.response.handlers.length || 0;
+        for (var i = 0; i <= noOfResponseInterceptors; i++) {
+            axios.interceptors.response.eject(i);
+        }
         console.log("clearing up interceptors complete.");
     }
 
@@ -64,7 +68,6 @@ export function UserProvider(props) {
             console.log("Error in Request Interceptor: ", error);
             return Promise.reject(error);
         });
-        setAxiosRequestInterceptorId(axiosRequestInterceptor);
     }
 
     function setResponseInterceptor(history, location, clearCurrentUser) {
@@ -145,7 +148,6 @@ export function UserProvider(props) {
                 return Promise.reject(error);
             };
         });
-        setAxiosResponseInterceptorId(axiosResponseInterceptor);
     }
 
     return (

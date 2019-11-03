@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm, Icon } from 'antd';
+import { Row, Col, Button, Table, message, Spin, Icon, Tooltip } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import ProjectContext from '../ProjectContext';
 import DeploymentContext from '../DeploymentContext';
 
@@ -77,10 +77,12 @@ function ListProjects() {
                     <Row type="flex" justify="start" align="middle">
                         <label style={{ fontWeight: 'bold', fontSize: 14 }} > Projects</label>
                         <span>&nbsp;&nbsp;</span>
-                        {iconLoading? 
+                        {iconLoading ?
                             <Spin spinning={iconLoading} />
                             :
-                            <Icon type="redo" onClick={reloadTabularData} />
+                            <Tooltip title="Refresh">
+                                <Icon type="reload" onClick={reloadTabularData} />
+                            </Tooltip>
                         }
                     </Row>
                 </Col>
