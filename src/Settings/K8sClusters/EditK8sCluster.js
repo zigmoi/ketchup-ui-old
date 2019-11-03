@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Icon, Input, Button, Divider, Tag } from 'antd';
+import { Form, Icon, Input, Button, Divider, Tag, Tooltip } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import { useHistory, useParams, useLocation } from 'react-router-dom';
+import { useHistory, useParams, useLocation, Link } from 'react-router-dom';
 
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -43,7 +43,7 @@ function EditK8sCluster() {
     useEffect(() => {
         if (isViewMode) {
             document.title = "View Kubernetes Cluster";
-            setPageTitle("View Kubernetes Cluster");
+            setPageTitle("View Kubernetes Cluster ");
         } else {
             document.title = "Edit Kubernetes Cluster";
             setPageTitle("Edit Kubernetes Cluster");
@@ -90,6 +90,7 @@ function EditK8sCluster() {
             });
     }
 
+    let editLink;
     let kubeConfigOptionsView;
     let submitButtonView;
     let lastUpdatedByView;
@@ -109,9 +110,17 @@ function EditK8sCluster() {
                 <Button type="primary" size="small">Download</Button>
             </FormItem>
         );
+        editLink = (
+            <Link to={`/app/project/${projectResourceId}/settings/${settingId}/kubernetes-cluster/edit?mode=EDIT`}>
+                <Tooltip title="Edit">
+                    <Icon type="edit" />
+                </Tooltip>
+            </Link>
+        );
     } else {
         lastUpdatedByView = null;
         lastUpdatedOnView = null;
+        editLink = null;
         submitButtonView = (
             <FormItem>
                 <Row type="flex" justify="center" align="middle">
@@ -139,7 +148,7 @@ function EditK8sCluster() {
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >{pageTitle}</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >{pageTitle}{editLink}</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>

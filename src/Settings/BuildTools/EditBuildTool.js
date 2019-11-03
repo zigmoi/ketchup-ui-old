@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Icon, Input, Button, Tag, Divider } from 'antd';
+import { Form, Icon, Input, Button, Tag, Divider, Tooltip } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import { useHistory, useParams, useLocation } from 'react-router-dom';
+import { useHistory, useParams, useLocation, Link } from 'react-router-dom';
 
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -43,7 +43,7 @@ function EditBuildTool() {
     useEffect(() => {
         if (isViewMode) {
             document.title = "View Build Tool";
-            setPageTitle("View Build Tool");
+            setPageTitle("View Build Tool ");
         } else {
             document.title = "Edit Build Tool";
             setPageTitle("Edit Build Tool");
@@ -90,6 +90,7 @@ function EditBuildTool() {
             });
     }
 
+    let editLink;
     let buildSettingsOptionsView;
     let submitButtonView;
     let lastUpdatedByView;
@@ -109,9 +110,17 @@ function EditBuildTool() {
                 <Button type="primary" size="small">Download</Button>
             </FormItem>
         );
+        editLink = (
+            <Link to={`/app/project/${projectResourceId}/settings/${settingId}/build-tool/edit?mode=EDIT`}>
+                <Tooltip title="Edit">
+                    <Icon type="edit" />
+                </Tooltip>
+            </Link>
+        );
     } else {
         lastUpdatedByView = null;
         lastUpdatedOnView = null;
+        editLink = null;
         submitButtonView = (
             <FormItem>
                 <Row type="flex" justify="center" align="middle">
@@ -139,7 +148,7 @@ function EditBuildTool() {
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >{pageTitle}</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >{pageTitle}{editLink}</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>

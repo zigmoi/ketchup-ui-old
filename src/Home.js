@@ -33,6 +33,7 @@ import ManageSettings from './Settings/ManageSettings';
 
 import ManageDeployments from './Deployments/ManageDeployments';
 import CreateDeployment from './Deployments/CreateDeployment';
+import ListProjects from './Projects/ListProjects';
 
 function Home() {
   const userContext = useContext(UserContext);
@@ -218,7 +219,7 @@ function Home() {
                 <Icon type="plus-circle" />
               </Link>
             </Tooltip>
-            <Popover placement="rightBottom" content={<ManageProjects />}>
+            <Popover placement="rightBottom" content={<ListProjects />}>
               <Icon type="ordered-list" />
             </Popover>
           </span>
@@ -274,7 +275,7 @@ function Home() {
                 <Icon type="plus-circle" />
               </Link>
             </Tooltip>
-            <Popover placement="rightBottom" content={<ManageProjects />}>
+            <Popover placement="rightBottom" content={<ListProjects />}>
               <Icon type="ordered-list" />
             </Popover>
           </span>

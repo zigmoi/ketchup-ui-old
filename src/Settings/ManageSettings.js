@@ -14,7 +14,7 @@ import EditContainerRegistry from '../Settings/ContainerRegistries/EditContainer
 
 import ManageGitProviders from './GitProviders/ManageGitProviders';
 import AddGitProvider from '../Settings/GitProviders/AddGitProvider';
-import EditGitProvider from '../Settings/GitProviders/EditGItProvider';
+import EditGitProvider from '../Settings/GitProviders/EditGitProvider';
 
 import ManageBuildTools from './BuildTools/ManageBuildTools';
 import AddBuildTool from '../Settings/BuildTools/AddBuildTool';

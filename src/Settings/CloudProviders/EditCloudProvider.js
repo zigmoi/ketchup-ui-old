@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Icon, Input, Button, Tag } from 'antd';
-import { Row, Col, message, Spin } from 'antd';
+import { Row, Col, message, Spin, Tooltip } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import { useHistory, useParams, useLocation } from 'react-router-dom';
+import { useHistory, useParams, useLocation, Link } from 'react-router-dom';
 
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -43,7 +43,7 @@ function EditCloudProvider() {
     useEffect(() => {
         if (isViewMode) {
             document.title = "View Cloud Provider";
-            setPageTitle("View Cloud Provider");
+            setPageTitle("View Cloud Provider ");
         } else {
             document.title = "Edit Cloud Provider";
             setPageTitle("Edit Cloud Provider");
@@ -90,6 +90,7 @@ function EditCloudProvider() {
             });
     }
 
+    let editLink;
     let submitButtonView;
     let lastUpdatedByView;
     let lastUpdatedOnView;
@@ -101,9 +102,17 @@ function EditCloudProvider() {
         lastUpdatedOnView = (
             <Tag color="blue">{lastUpdatedOn}</Tag>
         );
+        editLink = (
+            <Link to={`/app/project/${projectResourceId}/settings/${settingId}/cloud-provider/edit?mode=EDIT`}>
+                <Tooltip title="Edit">
+                    <Icon type="edit" />
+                </Tooltip>
+            </Link>
+        );
     } else {
         lastUpdatedByView = null;
         lastUpdatedOnView = null;
+        editLink = null;
         submitButtonView = (
             <FormItem>
                 <Row type="flex" justify="center" align="middle">
@@ -122,7 +131,7 @@ function EditCloudProvider() {
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >{pageTitle}</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >{pageTitle}{editLink}</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
