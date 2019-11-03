@@ -4,6 +4,7 @@ import axios from 'axios';
 import moment from 'moment';
 import { Link, useHistory } from 'react-router-dom';
 import ProjectContext from '../ProjectContext';
+import DeploymentContext from '../DeploymentContext';
 
 function ManageProjects() {
     const [iconLoading, setIconLoading] = useState(false);
@@ -12,7 +13,8 @@ function ManageProjects() {
 
     let history = useHistory();
     const projectContext = useContext(ProjectContext);
-
+    const deploymentContext = useContext(DeploymentContext);
+    
     useEffect(() => {
         console.log("in effect Manage Projects");
         document.title = "Manage Projects";
@@ -95,6 +97,7 @@ function ManageProjects() {
         console.log("View project details selectedRecord", selectedRecord);
         let projectName = selectedRecord.id.resourceId;
         projectContext.setCurrentProject({ "projectId": projectName });
+        deploymentContext.clearCurrentDeployment();
         history.push(`/app/project/${projectName}/view`);
     }
 
@@ -102,6 +105,7 @@ function ManageProjects() {
         console.log("View project deployments selectedRecord", selectedRecord);
         let projectName = selectedRecord.id.resourceId;
         projectContext.setCurrentProject({ "projectId": projectName });
+        deploymentContext.clearCurrentDeployment();
         history.push(`/app/project/${projectName}/deployments`);
     }
 
