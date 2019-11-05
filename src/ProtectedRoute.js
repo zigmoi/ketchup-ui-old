@@ -4,7 +4,7 @@ import useLoginStatus from './useLoginStatus';
 import AccessDenied from './AccessDenied';
 import useValidateUserHasAnyRole from './useValidateUserHasAnyRole';
 
-function ProtectedRoute({ component: Component, roles: roles, ...rest }) {
+function ProtectedRoute({ component: Component, roles, ...rest }) {
     console.log("In protected route");
     const loginStatus = useLoginStatus();
     console.log(roles);

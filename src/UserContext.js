@@ -44,8 +44,8 @@ export function UserProvider(props) {
             axios.interceptors.request.eject(i);
         }
         let noOfResponseInterceptors = axios.interceptors.response.handlers.length || 0;
-        for (var i = 0; i <= noOfResponseInterceptors; i++) {
-            axios.interceptors.response.eject(i);
+        for (var j = 0; j <= noOfResponseInterceptors; j++) {
+            axios.interceptors.response.eject(j);
         }
         console.log("clearing up interceptors complete.");
     }
@@ -53,7 +53,7 @@ export function UserProvider(props) {
     function setRequestInterceptor(accessToken) {
         // Add a request interceptor
         axios.defaults.timeout = 30000;
-        const axiosRequestInterceptor = axios.interceptors.request.use((config) => {
+        axios.interceptors.request.use((config) => {
             // Do something before request is sent
             console.log("In request interceptor, token: ", accessToken);
             if (accessToken) {
@@ -71,7 +71,7 @@ export function UserProvider(props) {
     }
 
     function setResponseInterceptor(history, location, clearCurrentUser) {
-        const axiosResponseInterceptor = axios.interceptors.response.use((response) => {
+        axios.interceptors.response.use((response) => {
             console.log("response:" + response);
             return response;
         }, (error) => {
