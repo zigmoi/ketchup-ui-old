@@ -211,9 +211,11 @@ function Home() {
           </Link>
           <span style={{ float: 'right' }} onClick={(e) => { e.stopPropagation(); }}>
             <Tooltip title="New Deployment">
-              <Link to={`/app/project/${projectId}/deployment/create`}>
-                <Icon type="plus-circle" />
-              </Link>
+              <Icon type="plus-circle"
+                onClick={(e) => {
+                  history.push(`/app/project/${projectId}/deployment/create`);
+                  e.stopPropagation();
+                }} />
             </Tooltip>
             <Popover placement="rightBottom" content={<ListProjects />}>
               <Icon type="ordered-list" />
@@ -270,9 +272,7 @@ function Home() {
             </Link>
             <span style={{ float: 'right' }} onClick={(e) => { e.stopPropagation(); }}>
               <Tooltip title="New Project">
-                <Link to={"/app/project/create"}>
-                  <Icon type="plus-circle" />
-                </Link>
+                <Icon type="plus-circle" onClick={(e) => { history.push("/app/project/create"); e.stopPropagation(); }} />
               </Tooltip>
               <Popover placement="rightBottom" content={<ListProjects />}>
                 <Icon type="ordered-list" />
