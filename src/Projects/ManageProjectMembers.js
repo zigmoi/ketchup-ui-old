@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm, Input } from 'antd';
+import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm, Input, Select } from 'antd';
 import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
 
 function ManageProjectMembers() {
+    const Option = Select.Option;
     const [iconLoading, setIconLoading] = useState(false);
     const [columns, setColumns] = useState([]);
     const [dataSource, setDataSource] = useState([]);
     const [memberName, setMemberName] = useState("");
+    const [users, setUsers] = useState([]);
     const { projectResourceId } = useParams();
 
     useEffect(() => {
         document.title = "Manage Project Members";
         initColumns();
         loadAll();
+        loadAllUsers();
     }, [projectResourceId]);
 
     function initColumns() {
@@ -100,6 +103,18 @@ function ManageProjectMembers() {
             });
     }
 
+    function loadAllUsers() {
+        setIconLoading(true);
+        axios.get(`http://localhost:8097/v1/users`)
+            .then((response) => {
+                setIconLoading(false);
+                setUsers(response.data);
+            })
+            .catch((error) => {
+                setIconLoading(false);
+            });
+    }
+
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="start" align="middle" style={{ paddingTop: '10px', paddingBottom: '5px' }}>
@@ -116,11 +131,17 @@ function ManageProjectMembers() {
                 <Col span={22}>
                     <Row type="flex" justify="start" align="middle">
                         <Col>
-                            <Input style={{ fontSize: 12 }}
-                                placeholder="username"
+                            <Select style={{ fontSize: 12, width: 200 }}
                                 size="small"
+                                showSearch
                                 value={memberName}
-                                onChange={(e) => { setMemberName(e.target.value) }} />
+                                onChange={(e) => { setMemberName(e) }}
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }>
+                                {users.map(user => <Option key={user.userName}>{user.userName}</Option>)}
+                            </Select>
                         </Col>
                         <Divider type="vertical" />
                         <Col>

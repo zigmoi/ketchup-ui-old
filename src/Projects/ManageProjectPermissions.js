@@ -1,28 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm, Form, Input, Icon, Tag } from 'antd';
+import { Row, Col, Button, Table, message, Spin, Divider, Form, Input, Tag, Select } from 'antd';
 import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 function ManageProjectPermissions() {
-    const FormItem = Form.Item;
-    const formItemLayout = {
-        labelCol: {
-            xs: { span: 24 },
-            sm: { span: 8 },
-        },
-        wrapperCol: {
-            xs: { span: 24 },
-            sm: { span: 14 },
-        },
-    };
+    const Option = Select.Option;
 
     const { projectResourceId, userId } = useParams();
+
     const [iconLoading, setIconLoading] = useState(false);
     const [columns, setColumns] = useState([]);
     const [dataSource, setDataSource] = useState([]);
     const [userName, setUserName] = useState(userId || "");
     const [projectResourceIdentifier, setProjectResourceIdentifier] = useState(projectResourceId || "");
     const [selectedPermissions, setselectedPermissions] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [projects, setProjects] = useState([]);
 
 
     useEffect(() => {
@@ -30,11 +23,13 @@ function ManageProjectPermissions() {
         initColumns();
         setProjectResourceIdentifier(projectResourceId || "");
         setUserName(userId || "");
+        loadAllUsers();
+        loadAllProjects();
         if (projectResourceId && userId) {
             loadPermissions();
-        }else{
+        } else {
             setDataSource([]);
-        } 
+        }
     }, [projectResourceId, userId]);
 
     function initColumns() {
@@ -65,7 +60,7 @@ function ManageProjectPermissions() {
 
     function loadPermissions() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/project/${projectResourceId}/user/${userName}/permissions`)
+        axios.get(`http://localhost:8097/v1/project/${projectResourceIdentifier}/user/${userName}/permissions`)
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);
@@ -189,6 +184,30 @@ function ManageProjectPermissions() {
         setselectedPermissions(selectedRowKeys);
     }
 
+    function loadAllUsers() {
+        setIconLoading(true);
+        axios.get(`http://localhost:8097/v1/users`)
+            .then((response) => {
+                setIconLoading(false);
+                setUsers(response.data);
+            })
+            .catch((error) => {
+                setIconLoading(false);
+            });
+    }
+
+    function loadAllProjects() {
+        setIconLoading(true);
+        axios.get(`http://localhost:8097/v1/projects`)
+            .then((response) => {
+                setIconLoading(false);
+                setProjects(response.data);
+            })
+            .catch((error) => {
+                setIconLoading(false);
+            });
+    }
+
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="start" align="middle" style={{ paddingTop: '10px', paddingBottom: '5px' }}>
@@ -205,19 +224,31 @@ function ManageProjectPermissions() {
                     <Form style={{ backgroundColor: 'white' }}>
                         <Row type="flex" justify="start" align="middle">
                             <Col>
-                                <Input style={{ fontSize: 12 }}
-                                    placeholder="projectId"
+                                <Select style={{ fontSize: 12, width: 200 }}
                                     size="small"
+                                    showSearch
                                     value={projectResourceIdentifier}
-                                    onChange={(e) => { setProjectResourceIdentifier(e.target.value) }} />
+                                    onChange={(e) => { setProjectResourceIdentifier(e); setDataSource([]) }}
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }>
+                                    {projects.map(project => <Option key={project.id.resourceId}>{project.id.resourceId}</Option>)}
+                                </Select>
                             </Col>
                             <Divider type="vertical" />
                             <Col>
-                                <Input style={{ fontSize: 12 }}
-                                    placeholder="username"
+                                <Select style={{ fontSize: 12, width: 200 }}
                                     size="small"
+                                    showSearch
                                     value={userName}
-                                    onChange={(e) => { setUserName(e.target.value) }} />
+                                    onChange={(e) => { setUserName(e); setDataSource([]) }}
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }>
+                                    {users.map(user => <Option key={user.userName}>{user.userName}</Option>)}
+                                </Select>
                             </Col>
                             <Divider type="vertical" />
                             <Col>

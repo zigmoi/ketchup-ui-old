@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import React, { useState, useContext } from 'react';
+import { Form, Icon, Input, Button, Select } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import UserContext from '../UserContext';
 
 function CreateUser() {
+    const Option = Select.Option;
     const FormItem = Form.Item;
     const formItemLayout = {
         labelCol: {
@@ -26,20 +28,23 @@ function CreateUser() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
+    const [roles, setRoles] = useState([]);
 
+    const userContext = useContext(UserContext);
+    const tenantId = "@".concat(userContext.currentUser ? userContext.currentUser.tenantId : "");
     let history = useHistory();
 
     function createUser() {
         setIconLoading(true);
         var data = {
-            'userName': userName,
+            'userName': userName.concat(tenantId),
             'password': password,
             'enabled': true,
             'displayName': displayName,
             'firstName': firstName,
             'lastName': lastName,
             'email': email,
-            'roles': [],
+            'roles': roles,
         };
         axios.post('http://localhost:8097/v1/user/', data)
             .then((response) => {
@@ -52,6 +57,11 @@ function CreateUser() {
                 setIconLoading(false);
             });
     }
+    function deleteSelectedRole(selectedRole) {
+        const filteredRoles = roles.filter(role => role !== selectedRole);
+        setRoles(filteredRoles);
+        console.log(filteredRoles);
+    };
 
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
@@ -68,6 +78,7 @@ function CreateUser() {
                         <FormItem {...formItemLayout} label="User Name:">
                             <Input autoFocus
                                 placeholder="User Name"
+                                addonAfter={tenantId}
                                 value={userName}
                                 onChange={(e) => { setUserName(e.target.value) }} />
                         </FormItem>
@@ -96,7 +107,17 @@ function CreateUser() {
                                 value={email}
                                 onChange={(e) => { setEmail(e.target.value) }} />
                         </FormItem>
-
+                        <FormItem {...formItemLayout} label="Roles:">
+                            <Select mode="multiple"
+                                onSelect={(e) => { setRoles([...roles, e]) }}
+                                onDeselect={deleteSelectedRole}>
+                                <Option value="ROLE_USER">USER</Option>
+                                <Option value="ROLE_TENANT_ADMIN">TENANT ADMIN</Option>
+                                <Option value="ROLE_USER_ADMIN">USER ADMIN</Option>
+                                <Option value="ROLE_CONFIG_ADMIN">CONFIGURATION ADMIN</Option>
+                                <Option value="ROLE_SUPER_ADMIN">SUPER ADMIN</Option>
+                            </Select>
+                        </FormItem>
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">
                                 <Col>

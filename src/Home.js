@@ -354,7 +354,7 @@ function Home() {
           theme={"dark"}
         >
           <Menu.Item key="Heading" style={{ fontWeight: 'bold', float: 'left' }}>
-            <span style={{ fontSize: 14 }}> Ketchup Management Console</span>
+            <span style={{ fontSize: 14 }}> <Icon type="thunderbolt" theme="twoTone" twoToneColor="#eb2f96" />Ketchup</span>
           </Menu.Item>
           {userProfileButton}
         </Menu>

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, Select } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
 import { useHistory, useParams } from 'react-router-dom';
 
+const Option = Select.Option;
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -60,16 +61,22 @@ function AddK8sCluster() {
             <Row type="flex" justify="center" align="middle">
                 <Col span={24}  >
                     <Form style={{ backgroundColor: 'white' }}>
-                    <FormItem {...formItemLayout} label="Display Name:">
+                        <FormItem {...formItemLayout} label="Display Name:">
                             <Input autoFocus
                                 placeholder="Display Name"
                                 value={displayName}
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
-                            <Input placeholder="Provider"
+                            <Select showSearch
                                 value={provider}
-                                onChange={(e) => { setProvider(e.target.value) }} />
+                                onChange={(e) => { setProvider(e) }}
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }>
+                                <Option key="aws">AWS</Option>
+                            </Select>
                         </FormItem>
                         <FormItem {...formItemLayout} label="File Name:">
                             <Input placeholder="File Name"
@@ -78,7 +85,7 @@ function AddK8sCluster() {
                         </FormItem>
                         <FormItem {...formItemLayout} label="File Data">
                             <Input.TextArea placeholder="File Data"
-                                autosize={{minRows: 10, maxRows: 15}}
+                                autosize={{ minRows: 10, maxRows: 15 }}
                                 value={fileData}
                                 onChange={(e) => { setFileData(e.target.value) }} />
                         </FormItem>

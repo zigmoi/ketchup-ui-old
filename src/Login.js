@@ -172,7 +172,7 @@ function Login() {
           accessToken: accessToken,
           displayName: response.data.displayName,
           roles: response.data.roles,
-          tenantId: response.data.tenantId,
+          tenantId: response.data.userName.split("@")[1],
           email: response.data.email,
         };
 
@@ -196,7 +196,7 @@ function Login() {
           style={{ backgroundColor: '#efefef' }}
         >
           <Menu.Item key="Heading" style={{ fontWeight: 'bold' }}>
-            <span style={{ fontSize: 14 }}> Ketchup Management Console</span>
+            <span style={{ fontSize: 14 }}> Ketchup</span>
           </Menu.Item>
         </Menu>
       </Header>

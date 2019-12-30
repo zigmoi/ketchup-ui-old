@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, Select } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
 import { useHistory, useParams } from 'react-router-dom';
 
+const Option = Select.Option;
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -72,9 +73,15 @@ function AddContainerRegistry() {
                                 onChange={(e) => { setDisplayName(e.target.value) }} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
-                            <Input placeholder="Provider"
+                            <Select showSearch
                                 value={provider}
-                                onChange={(e) => { setProvider(e.target.value) }} />
+                                onChange={(e) => { setProvider(e) }}
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                }>
+                                <Option key="aws-ecr">AWS-ECR</Option>
+                            </Select>
                         </FormItem>
                         <FormItem {...formItemLayout} label="Registry ID:">
                             <Input placeholder="Registry ID"

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Icon, Input, Button, Tag, Tooltip } from 'antd';
+import { Form, Icon, Input, Button, Tag, Tooltip, Select } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import { useHistory, useParams, useLocation, Link } from 'react-router-dom';
 
+const Option = Select.Option;
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -158,10 +159,21 @@ function EditGitProvider() {
                             {lastUpdatedOnView}
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
-                            <Input readOnly={isViewMode}
-                                placeholder="Provider"
-                                value={provider}
-                                onChange={(e) => { setProvider(e.target.value) }} />
+                            {isViewMode ?
+                                <Input readOnly={isViewMode}
+                                    placeholder="Provider"
+                                    value={provider}
+                                    onChange={(e) => { setProvider(e.target.value) }} />
+                                :
+                                <Select showSearch
+                                    value={provider}
+                                    onChange={(e) => { setProvider(e) }}
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }>
+                                    <Option key="gitlab">GitLab</Option>
+                                </Select>}
                         </FormItem>
                         <FormItem {...formItemLayout} label="User Name:">
                             <Input readOnly={isViewMode}

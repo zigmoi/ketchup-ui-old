@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Icon, Input, Button, Tag } from 'antd';
-import { Row, Col, message, Spin, Tooltip } from 'antd';
+import { Row, Col, message, Spin, Tooltip, Select } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import { useHistory, useParams, useLocation, Link } from 'react-router-dom';
 
+const Option = Select.Option;
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -155,10 +156,21 @@ function EditCloudProvider() {
                             {lastUpdatedOnView}
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
-                            <Input readOnly={isViewMode}
-                                placeholder="Provider"
-                                value={provider}
-                                onChange={(e) => { setProvider(e.target.value) }} />
+                            {isViewMode ?
+                                <Input readOnly={isViewMode}
+                                    placeholder="Provider"
+                                    value={provider}
+                                    onChange={(e) => { setProvider(e.target.value) }} />
+                                :
+                                <Select showSearch
+                                    value={provider}
+                                    onChange={(e) => { setProvider(e) }}
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }>
+                                    <Option key="aws">AWS</Option>
+                                </Select>}
                         </FormItem>
                         <FormItem {...formItemLayout} label="Access ID:">
                             <Input readOnly={isViewMode}

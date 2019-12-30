@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { Form, Icon, Input, Button, Tabs } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Form, Icon, Input, Button, Tabs, Select } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
 import { useHistory, useParams } from 'react-router-dom';
 
+const Option = Select.Option;
 const TabPane = Tabs.TabPane;
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -34,9 +35,24 @@ function CreateDeployment() {
     const [kubernetesClusterSettingId, setKubernetesClusterSettingId] = useState("");
     const [kubernetesNamespace, setKubernetesNamespace] = useState("");
     const [serviceName, setServiceName] = useState("");
+    const [k8sClusters, setK8sClusters] = useState([]);
+    const [gitProviders, setGitProviders] = useState([]);
+    const [cloudProviders, setCloudProviders] = useState([]);
+    const [containerRegistries, setContainerRegistries] = useState([]);
+    const [buildTools, setBuildTools] = useState([]);
 
     let history = useHistory();
     let { projectResourceId } = useParams();
+
+    useEffect(() => {
+        loadAllK8sClusters();
+        loadAllGitProviders();
+        loadAllCloudProviders();
+        loadAllContainerRegistries();
+        loadAllBuildTools();
+    }, [projectResourceId]);
+
+
 
     function createDeployment() {
         setIconLoading(true);
@@ -73,6 +89,65 @@ function CreateDeployment() {
             });
     }
 
+    function loadAllK8sClusters() {
+        setIconLoading(true);
+        axios.get(`http://localhost:8097/v1/settings/list-all-kubernetes-cluster/${projectResourceId}`)
+            .then((response) => {
+                setIconLoading(false);
+                setK8sClusters(response.data);
+            })
+            .catch((error) => {
+                setIconLoading(false);
+            });
+    }
+
+    function loadAllGitProviders() {
+        setIconLoading(true);
+        axios.get(`http://localhost:8097/v1/settings/list-all-git-provider/${projectResourceId}`)
+            .then((response) => {
+                setIconLoading(false);
+                setGitProviders(response.data);
+            })
+            .catch((error) => {
+                setIconLoading(false);
+            });
+    }
+
+    function loadAllCloudProviders() {
+        setIconLoading(true);
+        axios.get(`http://localhost:8097/v1/settings/list-all-cloud-provider/${projectResourceId}`)
+            .then((response) => {
+                setIconLoading(false);
+                setCloudProviders(response.data);
+            })
+            .catch((error) => {
+                setIconLoading(false);
+            });
+    }
+
+    function loadAllContainerRegistries() {
+        setIconLoading(true);
+        axios.get(`http://localhost:8097/v1/settings/list-all-container-registry/${projectResourceId}`)
+            .then((response) => {
+                setIconLoading(false);
+                setContainerRegistries(response.data);
+            })
+            .catch((error) => {
+                setIconLoading(false);
+            });
+    }
+
+    function loadAllBuildTools() {
+        setIconLoading(true);
+        axios.get(`http://localhost:8097/v1/settings/list-all-build-tool/${projectResourceId}`)
+            .then((response) => {
+                setIconLoading(false);
+                setBuildTools(response.data);
+            })
+            .catch((error) => {
+                setIconLoading(false);
+            });
+    }
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
@@ -100,10 +175,17 @@ function CreateDeployment() {
                                         onChange={(e) => { setAppServerPort(e.target.value) }} />
                                 </FormItem>
                                 <FormItem {...formItemLayout} label="Kubernetes Cluster:">
-                                    <Input
-                                        placeholder="Kubernetes Cluster"
+                                    <Select showSearch
                                         value={kubernetesClusterSettingId}
-                                        onChange={(e) => { setKubernetesClusterSettingId(e.target.value) }} />
+                                        onChange={(e) => { setKubernetesClusterSettingId(e) }}
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) =>
+                                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }>
+                                        {k8sClusters.map(cluster =>
+                                            <Option key={cluster.settingId}>{`${cluster.displayName} (${cluster.settingId})`}</Option>)
+                                        }
+                                    </Select>
                                 </FormItem>
                                 <FormItem {...formItemLayout} label="Kubernetes Namespace:">
                                     <Input
@@ -119,10 +201,17 @@ function CreateDeployment() {
                             </TabPane>
                             <TabPane tab="Git Provider" key="git-provider">
                                 <FormItem {...formItemLayout} label="Git Provider:">
-                                    <Input
-                                        placeholder="Git Provider"
+                                    <Select showSearch
                                         value={gitProviderSettingId}
-                                        onChange={(e) => { setGitProviderSettingId(e.target.value) }} />
+                                        onChange={(e) => { setGitProviderSettingId(e) }}
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) =>
+                                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }>
+                                        {gitProviders.map(provider =>
+                                            <Option key={provider.settingId}>{`${provider.displayName} (${provider.settingId})`}</Option>)
+                                        }
+                                    </Select>
                                 </FormItem>
                                 <FormItem {...formItemLayout} label="Git Repository Name:">
                                     <Input
@@ -133,18 +222,32 @@ function CreateDeployment() {
                             </TabPane>
                             <TabPane tab="Cloud Provider" key="cloud-provider">
                                 <FormItem {...formItemLayout} label="Cloud Provider:">
-                                    <Input
-                                        placeholder="Cloud Provider"
+                                    <Select showSearch
                                         value={cloudProviderSettingId}
-                                        onChange={(e) => { setCloudProviderSettingId(e.target.value) }} />
+                                        onChange={(e) => { setCloudProviderSettingId(e) }}
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) =>
+                                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }>
+                                        {cloudProviders.map(provider =>
+                                            <Option key={provider.settingId}>{`${provider.displayName} (${provider.settingId})`}</Option>)
+                                        }
+                                    </Select>
                                 </FormItem>
                             </TabPane>
                             <TabPane tab="Container Registry" key="container-registry">
                                 <FormItem {...formItemLayout} label="Container Registry:">
-                                    <Input
-                                        placeholder="Container Registry"
+                                    <Select showSearch
                                         value={containerRegistrySettingId}
-                                        onChange={(e) => { setContainerRegistrySettingId(e.target.value) }} />
+                                        onChange={(e) => { setContainerRegistrySettingId(e) }}
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) =>
+                                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }>
+                                        {containerRegistries.map(registry =>
+                                            <Option key={registry.settingId}>{`${registry.displayName} (${registry.settingId})`}</Option>)
+                                        }
+                                    </Select>
                                 </FormItem>
                                 <FormItem {...formItemLayout} label="Docker Image Repository Name:">
                                     <Input
@@ -155,10 +258,17 @@ function CreateDeployment() {
                             </TabPane>
                             <TabPane tab="Additional" key="additional">
                                 <FormItem {...formItemLayout} label="Build Tool:">
-                                    <Input
-                                        placeholder="Build Tool"
+                                    <Select showSearch
                                         value={buildToolSettingId}
-                                        onChange={(e) => { setBuildToolSettingId(e.target.value) }} />
+                                        onChange={(e) => { setBuildToolSettingId(e) }}
+                                        optionFilterProp="children"
+                                        filterOption={(input, option) =>
+                                            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                        }>
+                                        {buildTools.map(buildTool =>
+                                            <Option key={buildTool.settingId}>{`${buildTool.displayName} (${buildTool.settingId})`}</Option>)
+                                        }
+                                    </Select>
                                 </FormItem>
                                 <FormItem {...formItemLayout} label="Base Build Path (Docker Build):">
                                     <Input
