@@ -34,6 +34,7 @@ import ManageSettings from './Settings/ManageSettings';
 import ManageDeployments from './Deployments/ManageDeployments';
 import CreateDeployment from './Deployments/CreateDeployment';
 import ListProjects from './Projects/ListProjects';
+import DeploymentTypes from './Deployments/DeploymentTypes';
 
 function Home() {
   const userContext = useContext(UserContext);
@@ -97,7 +98,7 @@ function Home() {
     console.log(`selected deployment: ${value}`);
     deploymentContext.setCurrentDeployment({ deploymentId: value });
     setDeploymentId(value);
-    history.push(`/app/project/${projectId}/deployment/create`);
+    history.push(`/app/project/${projectId}/deployment/select-type`);
     // message.info(`Activated deployment ${value}`);
   }
 
@@ -148,7 +149,7 @@ function Home() {
       <Popover placement="bottomLeft"
         content={profileContent}
         trigger={"click"}>
-        <Avatar style={{ backgroundColor: '#f56a00', verticalAlign: 'middle' }} size="large">
+        <Avatar style={{ backgroundColor: '#8c8c8c', verticalAlign: 'middle' }} size="large">
           {userContext.currentUser ? userContext.currentUser.displayName.charAt(0).toUpperCase() : ""}
         </Avatar>
       </Popover>
@@ -213,7 +214,7 @@ function Home() {
             <Tooltip title="New Deployment">
               <Icon type="plus-circle"
                 onClick={(e) => {
-                  history.push(`/app/project/${projectId}/deployment/create`);
+                  history.push(`/app/project/${projectId}/deployment/select-type`);
                   e.stopPropagation();
                 }} />
             </Tooltip>
@@ -315,7 +316,7 @@ function Home() {
                       <span style={{ float: 'right' }}>
                         <Icon type="plus-circle"
                           onClick={(e) => {
-                            history.push(`/app/project/${projectId}/deployment/create`);
+                            history.push(`/app/project/${projectId}/deployment/select-type`);
                             e.stopPropagation();
                           }} />
                       </span>
@@ -415,6 +416,7 @@ function Home() {
                   <Route path="/app/project/:projectResourceId/permissions/:userId?" render={() => <ProtectedRoute component={ManageProjectPermissions} />} />
                   <Route path="/app/project/:projectResourceId/settings/:settingId" render={() => <ProtectedRoute component={ManageSettings} />} />
                   <Route path="/app/project/:projectResourceId/deployments" render={() => <ProtectedRoute component={ManageDeployments} />} />
+                  <Route path="/app/project/:projectResourceId/deployment/select-type" render={() => <ProtectedRoute component={DeploymentTypes} />} />
                   <Route path="/app/project/:projectResourceId/deployment/create" render={() => <ProtectedRoute component={CreateDeployment} />} />
                   <Route render={() => <ProtectedRoute component={Nomatch} />} />
                 </Switch>

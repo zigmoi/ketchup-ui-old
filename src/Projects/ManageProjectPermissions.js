@@ -59,6 +59,10 @@ function ManageProjectPermissions() {
     }
 
     function loadPermissions() {
+        if (userName === ""){
+            message.error("Please select a User!");
+            return;
+        }
         setIconLoading(true);
         axios.get(`http://localhost:8097/v1/project/${projectResourceIdentifier}/user/${userName}/permissions`)
             .then((response) => {

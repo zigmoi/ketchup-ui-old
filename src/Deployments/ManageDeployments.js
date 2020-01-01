@@ -91,7 +91,7 @@ function ManageDeployments() {
 
     function viewDetails() {
         deploymentContext.setCurrentDeployment({ "deploymentId": "d1" });
-        history.push(`/app/project/${projectResourceId}/deployment/create`);
+        history.push(`/app/project/${projectResourceId}/deployment/select-type`);
     }
 
     return (
@@ -107,7 +107,7 @@ function ManageDeployments() {
                 <Col span={11} offset={-1}>
                     <Row type="flex" justify="end" align="middle">
                         <Button type="primary"  >
-                            <Link to={`/app/project/${projectResourceId}/deployment/create`}>Create Deployment</Link>
+                            <Link to={`/app/project/${projectResourceId}/deployment/select-type`}>Create Deployment</Link>
                         </Button>
                         <Button type="primary" onClick={viewDetails} >
                             Test

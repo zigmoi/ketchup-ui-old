@@ -1,82 +1,96 @@
-import React, { useContext, useState } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import React, { useState } from 'react';
+import { Form, Input, Button } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
-import UserContext from '../UserContext';
-import {useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+
+const FormItem = Form.Item;
+const formItemLayout = {
+    labelCol: {
+        xs: { span: 24 },
+        sm: { span: 6 },
+    },
+    wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 14 },
+    },
+};
 
 function CreateProject(props) {
-    console.log(props);
-    const [iconLoading, setIconLoading] = useState(false);
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    let history = useHistory();
-    const user = useContext(UserContext);
+    const { getFieldDecorator, validateFieldsAndScroll } = props.form;
 
-    const FormItem = Form.Item;
-    const formItemLayout = {
-        labelCol: {
-            xs: { span: 24 },
-            sm: { span: 6 },
-        },
-        wrapperCol: {
-            xs: { span: 24 },
-            sm: { span: 14 },
-        },
-    };
+    const [iconLoading, setIconLoading] = useState(false);
+    let history = useHistory();
 
     document.title = "Create Project";
 
-    function CreateProject() {
-        setIconLoading(true);
-        var data = {
-            'projectResourceId': name,
-            'description': description,
-            'members': [],
-        };
-        axios.post('http://localhost:8097/v1/project/', data)
-            .then((response) => {
-                console.log(response);
-                setIconLoading(false);
-                message.success('Project created successfully.', 5);
-                history.push("/app/projects");
-            })
-            .catch((error) => {
-                setIconLoading(false);
-            });
+    function submitRequest(e) {
+        e.preventDefault();
+        validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                setIconLoading(true);
+                var data = {
+                    'projectResourceId': values.name,
+                    'description': values.description,
+                    'members': [],
+                };
+                axios.post('http://localhost:8097/v1/project/', data)
+                    .then((response) => {
+                        console.log(response);
+                        setIconLoading(false);
+                        message.success('Project created successfully.', 5);
+                        history.push("/app/projects");
+                    })
+                    .catch((error) => {
+                        setIconLoading(false);
+                    });
+            }
+        });
     }
 
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Create New Project</label>
+                    <label style={{ fontWeight: 'bold' }} >Create New Project</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
             </Row>
             <Row type="flex" justify="center" align="middle">
                 <Col span={24}  >
-                    <Form style={{ backgroundColor: 'white' }}>
-                        <FormItem {...formItemLayout} label="Name:">
-                            <Input autoFocus
-                                placeholder="Name"
-                                value={name}
-                                onChange={(e) => { setName(e.target.value) }} />
+                    <Form onSubmit={submitRequest} style={{ backgroundColor: 'white' }}>
+                        <FormItem {...formItemLayout} label="Name:" hasFeedback>
+                            {getFieldDecorator('name', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Project Name!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="User Name" autoFocus />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Description:">
-                            <Input placeholder="Description"
-                                value={description}
-                                onChange={(e) => { setDescription(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="Description:" hasFeedback>
+                            {getFieldDecorator('description', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        max: 100,
+                                        message: 'Only 100 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Description" />)}
                         </FormItem>
-
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">
                                 <Col>
-                                    <Button type="primary"
-                                        loading={iconLoading}
-                                        htmlType="submit"
-                                        onClick={CreateProject} >Submit</Button>
+                                    <Button type="primary" loading={iconLoading} htmlType="submit">Submit</Button>
                                 </Col>
                             </Row>
                         </FormItem>
@@ -87,4 +101,5 @@ function CreateProject(props) {
     );
 }
 
-export default CreateProject;
+const WrappedComponent = Form.create({ name: 'create-project' })(CreateProject);
+export default WrappedComponent;

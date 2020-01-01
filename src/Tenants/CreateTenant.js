@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
@@ -16,34 +16,37 @@ const formItemLayout = {
     },
 };
 
-function CreateTenant() {
+function CreateTenant(props) {
+    const { getFieldDecorator, validateFieldsAndScroll } = props.form;
+
     let history = useHistory();
     const [iconLoading, setIconLoading] = useState(false);
-    const [id, setId] = useState("");
-    const [displayName, setDisplayName] = useState("");
-    const [defaultUserEmail, setDefaultUserEmail] = useState("");
-    const [defaultUserPassword, setDefaultUserPassword] = useState("");
 
     document.title = "Create Tenant";
 
-    function createTenant() {
-        setIconLoading(true);
-        var data = {
-            'id': id,
-            'displayName': displayName,
-            'defaultUserPassword': defaultUserPassword,
-            'defaultUserEmail': defaultUserEmail,
-        };
-        axios.post('http://localhost:8097/v1/tenant', data)
-            .then((response) => {
-                console.log(response);
-                setIconLoading(false);
-                message.success('Tenant created successfully.', 5);
-                history.push('/app/manage-tenants');
-            })
-            .catch((error) => {
-                setIconLoading(false);
-            });
+    function submitRequest(e) {
+        e.preventDefault();
+        validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                setIconLoading(true);
+                var data = {
+                    'id': values.id,
+                    'displayName': values.displayName,
+                    'defaultUserPassword': values.defaultUserPassword,
+                    'defaultUserEmail': values.defaultUserEmail,
+                };
+                axios.post('http://localhost:8097/v1/tenant', data)
+                    .then((response) => {
+                        console.log(response);
+                        setIconLoading(false);
+                        message.success('Tenant created successfully.', 5);
+                        history.push('/app/manage-tenants');
+                    })
+                    .catch((error) => {
+                        setIconLoading(false);
+                    });
+            }
+        });
     }
 
     return (
@@ -57,36 +60,76 @@ function CreateTenant() {
             </Row>
             <Row type="flex" justify="center" align="middle">
                 <Col span={20}  >
-                    <Form style={{ backgroundColor: 'white' }}>
-                        <FormItem {...formItemLayout} label="ID:">
-                            <Input placeholder="ID"
-                                value={id}
-                                onChange={(e) => { setId(e.target.value) }} />
+                    <Form onSubmit={submitRequest} style={{ backgroundColor: 'white' }}>
+                        <FormItem {...formItemLayout} label="ID:" hasFeedback>
+                            {getFieldDecorator('id', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Tenant ID!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="ID" autoFocus />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Display Name:">
-                            <Input placeholder="Display Name"
-                                value={displayName}
-                                onChange={(e) => { setDisplayName(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="Display Name:" hasFeedback>
+                            {getFieldDecorator('displayName', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Display Name!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Display Name" />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Default User Email:">
-                            <Input placeholder="Default User Email"
-                                value={defaultUserEmail}
-                                onChange={(e) => { setDefaultUserEmail(e.target.value) }} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Default User Password:">
-                            <Input.Password type="password" 
-                                placeholder="Default User Password"
-                                value={defaultUserPassword}
-                                onChange={(e) => { setDefaultUserPassword(e.target.value) }} />
+                        <Form.Item label="Default User Email" {...formItemLayout} hasFeedback>
+                            {getFieldDecorator('defaultUserEmail', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        type: 'email',
+                                        required: true,
+                                        message: 'Please provide valid Email!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Default User Email" />)}
+                        </Form.Item>
+                        <FormItem {...formItemLayout} label="Default User Password:" hasFeedback>
+                            {getFieldDecorator('defaultUserPassword', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Password!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input.Password placeholder="Default User Password:" />)}
                         </FormItem>
 
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">
                                 <Col>
-                                    <Button type="primary"
-                                        loading={iconLoading}
-                                        htmlType="submit"
-                                        onClick={createTenant} >Submit</Button>
+                                    <Button type="primary" loading={iconLoading} htmlType="submit" >Submit</Button>
                                 </Col>
                             </Row>
                         </FormItem>
@@ -97,5 +140,5 @@ function CreateTenant() {
     );
 }
 
-
-export default CreateTenant;
+const WrappedComponent = Form.create({ name: 'create-tenant' })(CreateTenant);
+export default WrappedComponent;
