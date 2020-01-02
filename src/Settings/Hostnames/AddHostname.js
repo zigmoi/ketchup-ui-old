@@ -35,7 +35,7 @@ function AddHostname() {
                 [externalServiceDns]: externalServiceIp
             }
         };
-        axios.post('http://localhost:8097/v1/settings/hostname-ip-mapping', data)
+        axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/hostname-ip-mapping`, data)
             .then((response) => {
                 console.log(response);
                 setIconLoading(false);

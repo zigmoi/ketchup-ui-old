@@ -70,7 +70,7 @@ function CreateDeployment(props) {
                     "kubernetesNamespace": values.kubernetesNamespace,
                     "serviceName": values.serviceName
                 };
-                axios.post(`http://localhost:8097/v1/project/${projectResourceId}/deployments/basic-spring-boot`, data)
+                axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/project/${projectResourceId}/deployments/basic-spring-boot`, data)
                     .then((response) => {
                         console.log(response);
                         setIconLoading(false);
@@ -86,7 +86,7 @@ function CreateDeployment(props) {
 
     function loadAllK8sClusters() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/settings/list-all-kubernetes-cluster/${projectResourceId}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/list-all-kubernetes-cluster/${projectResourceId}`)
             .then((response) => {
                 setIconLoading(false);
                 setK8sClusters(response.data);
@@ -98,7 +98,7 @@ function CreateDeployment(props) {
 
     function loadAllGitProviders() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/settings/list-all-git-provider/${projectResourceId}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/list-all-git-provider/${projectResourceId}`)
             .then((response) => {
                 setIconLoading(false);
                 setGitProviders(response.data);
@@ -110,7 +110,7 @@ function CreateDeployment(props) {
 
     function loadAllCloudProviders() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/settings/list-all-cloud-provider/${projectResourceId}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/list-all-cloud-provider/${projectResourceId}`)
             .then((response) => {
                 setIconLoading(false);
                 setCloudProviders(response.data);
@@ -122,7 +122,7 @@ function CreateDeployment(props) {
 
     function loadAllContainerRegistries() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/settings/list-all-container-registry/${projectResourceId}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/list-all-container-registry/${projectResourceId}`)
             .then((response) => {
                 setIconLoading(false);
                 setContainerRegistries(response.data);
@@ -134,7 +134,7 @@ function CreateDeployment(props) {
 
     function loadAllBuildTools() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/settings/list-all-build-tool/${projectResourceId}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/list-all-build-tool/${projectResourceId}`)
             .then((response) => {
                 setIconLoading(false);
                 setBuildTools(response.data);

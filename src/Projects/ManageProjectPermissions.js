@@ -64,7 +64,7 @@ function ManageProjectPermissions() {
             return;
         }
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/project/${projectResourceIdentifier}/user/${userName}/permissions`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/project/${projectResourceIdentifier}/user/${userName}/permissions`)
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);
@@ -95,7 +95,7 @@ function ManageProjectPermissions() {
             projectResourceId: projectResourceIdentifier,
             permissions: selectedPermissions
         };
-        axios.put(`http://localhost:8097/v1/project/assign/permissions`, data)
+        axios.put(`${process.env.REACT_APP_API_BASE_URL}/v1/project/assign/permissions`, data)
             .then((response) => {
                 setIconLoading(false);
                 loadPermissions();
@@ -126,7 +126,7 @@ function ManageProjectPermissions() {
             projectResourceId: projectResourceIdentifier,
             permissions: selectedPermissions
         };
-        axios.put(`http://localhost:8097/v1/project/revoke/permissions`, data)
+        axios.put(`${process.env.REACT_APP_API_BASE_URL}/v1/project/revoke/permissions`, data)
             .then((response) => {
                 setIconLoading(false);
                 loadPermissions();
@@ -149,7 +149,7 @@ function ManageProjectPermissions() {
             projectResourceId: "*",
             permissions: selectedPermissions
         };
-        axios.put(`http://localhost:8097/v1/project/assign/permissions`, data)
+        axios.put(`${process.env.REACT_APP_API_BASE_URL}/v1/project/assign/permissions`, data)
             .then((response) => {
                 setIconLoading(false);
                 loadPermissions();
@@ -172,7 +172,7 @@ function ManageProjectPermissions() {
             projectResourceId: "*",
             permissions: selectedPermissions
         };
-        axios.put(`http://localhost:8097/v1/project/revoke/permissions`, data)
+        axios.put(`${process.env.REACT_APP_API_BASE_URL}/v1/project/revoke/permissions`, data)
             .then((response) => {
                 setIconLoading(false);
                 loadPermissions();
@@ -190,7 +190,7 @@ function ManageProjectPermissions() {
 
     function loadAllUsers() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/users`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/users`)
             .then((response) => {
                 setIconLoading(false);
                 setUsers(response.data);
@@ -202,7 +202,7 @@ function ManageProjectPermissions() {
 
     function loadAllProjects() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/projects`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/projects`)
             .then((response) => {
                 setIconLoading(false);
                 setProjects(response.data);

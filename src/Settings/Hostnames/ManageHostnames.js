@@ -63,7 +63,7 @@ function ManageHostnames() {
 
     function loadAll() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/settings/list-all-hostname-ip-mapping/${projectResourceId}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/list-all-hostname-ip-mapping/${projectResourceId}`)
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);
@@ -77,7 +77,7 @@ function ManageHostnames() {
     function deleteSetting(selectedRecord) {
         setIconLoading(true);
         let settingId = selectedRecord.settingId;
-        axios.delete(`http://localhost:8097/v1/settings/hostname-ip-mapping/${projectResourceId}/${settingId}`)
+        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/hostname-ip-mapping/${projectResourceId}/${settingId}`)
             .then((response) => {
                 setIconLoading(false);
                 reloadTabularData();

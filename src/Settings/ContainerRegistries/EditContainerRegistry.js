@@ -39,7 +39,7 @@ function EditContainerRegistry(props) {
 
     function loadDetails() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/settings/container-registry/${projectResourceId}/${settingId}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/container-registry/${projectResourceId}/${settingId}`)
             .then((response) => {
                 setIconLoading(false);
                 setDisplayName(response.data.displayName);
@@ -66,7 +66,7 @@ function EditContainerRegistry(props) {
                     'registryUrl': values.registryUrl,
                     'cloudCredentialId': values.cloudCredentialId,
                 };
-                axios.put(`http://localhost:8097/v1/settings/container-registry/${projectResourceId}/${settingId}`, data)
+                axios.put(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/container-registry/${projectResourceId}/${settingId}`, data)
                     .then((response) => {
                         setIconLoading(false);
                         message.success('Container registry updated successfully.', 5);

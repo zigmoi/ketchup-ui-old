@@ -35,7 +35,7 @@ function CreateTenant(props) {
                     'defaultUserPassword': values.defaultUserPassword,
                     'defaultUserEmail': values.defaultUserEmail,
                 };
-                axios.post('http://localhost:8097/v1/tenant', data)
+                axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/tenant`, data)
                     .then((response) => {
                         console.log(response);
                         setIconLoading(false);

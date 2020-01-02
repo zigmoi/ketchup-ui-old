@@ -67,7 +67,7 @@ function ManageProjects() {
 
     function loadAll() {
         setIconLoading(true);
-        axios.get('http://localhost:8097/v1/projects')
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/projects`)
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);
@@ -82,7 +82,7 @@ function ManageProjects() {
         setIconLoading(true);
         console.log(selectedRecord);
         let projectName = selectedRecord.id.resourceId;
-        axios.delete('http://localhost:8097/v1/project/' + projectName)
+        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/v1/project/${projectName}`)
             .then((response) => {
                 setIconLoading(false);
                 reloadTabularData();

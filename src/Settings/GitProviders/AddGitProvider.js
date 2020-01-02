@@ -37,7 +37,7 @@ function AddGitProvider(props) {
                     'password': values.password,
                     'repoListUrl': values.repoListUrl,
                 };
-                axios.post('http://localhost:8097/v1/settings/git-provider', data)
+                axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/git-provider`, data)
                     .then((response) => {
                         console.log(response);
                         setIconLoading(false);

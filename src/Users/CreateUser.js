@@ -42,7 +42,7 @@ function CreateUser(props) {
                     'email': values.email,
                     'roles': values.roles,
                 };
-                axios.post('http://localhost:8097/v1/user/', data)
+                axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/user/`, data)
                     .then((response) => {
                         console.log(response);
                         setIconLoading(false);

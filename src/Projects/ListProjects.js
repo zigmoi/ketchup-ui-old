@@ -52,7 +52,7 @@ function ListProjects() {
 
     function loadAll() {
         setIconLoading(true);
-        axios.get('http://localhost:8097/v1/projects')
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/projects`)
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);

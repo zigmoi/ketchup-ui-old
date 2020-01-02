@@ -38,7 +38,7 @@ function AddCloudProvider(props) {
                     'accessId': values.accessId,
                     'secretKey': values.secretKey,
                 };
-                axios.post('http://localhost:8097/v1/settings/cloud-provider', data)
+                axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/cloud-provider`, data)
                     .then((response) => {
                         console.log(response);
                         setIconLoading(false);

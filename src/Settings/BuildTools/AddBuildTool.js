@@ -39,7 +39,7 @@ function AddBuildTool(props) {
                     'displayName': values.displayName,
                     'provider': values.provider,
                 };
-                axios.post('http://localhost:8097/v1/settings/build-tool', data)
+                axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/build-tool`, data)
                     .then((response) => {
                         console.log(response);
                         setIconLoading(false);

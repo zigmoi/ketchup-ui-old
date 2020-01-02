@@ -73,7 +73,7 @@ function Login() {
     axios.request({
       url: "/oauth/token",
       method: "post",
-      baseURL: "http://localhost:8097",
+      baseURL: `${process.env.REACT_APP_API_BASE_URL}`,
       auth: authHeader,
       data: qs.stringify(params),
       headers: { "content-type": "application/x-www-form-urlencoded" }
@@ -163,7 +163,7 @@ function Login() {
         "Authorization": "Bearer " + accessToken
       }
     }
-    axios.get('http://localhost:8097/v1/user/my/profile', config)
+    axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/user/my/profile`, config)
       .then((response) => {
         console.log("getUserInfo", response);
         setIconLoading(false);

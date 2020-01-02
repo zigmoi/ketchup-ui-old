@@ -39,7 +39,7 @@ function EditBuildTool(props) {
 
     function loadDetails() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/settings/build-tool/${projectResourceId}/${settingId}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/build-tool/${projectResourceId}/${settingId}`)
             .then((response) => {
                 setIconLoading(false);
                 setDisplayName(response.data.displayName);
@@ -65,7 +65,7 @@ function EditBuildTool(props) {
                     'fileName': fileName,
                     'fileData': btoa(values.fileData),
                 };
-                axios.put(`http://localhost:8097/v1/settings/build-tool/${projectResourceId}/${settingId}`, data)
+                axios.put(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/build-tool/${projectResourceId}/${settingId}`, data)
                     .then((response) => {
                         setIconLoading(false);
                         message.success('Build tool updated successfully.', 5);

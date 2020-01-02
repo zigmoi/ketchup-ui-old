@@ -63,7 +63,7 @@ function ManageDeployments() {
 
     function loadAll() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/project/${projectResourceId}/deployments/basic-spring-boot/list`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/project/${projectResourceId}/deployments/basic-spring-boot/list`)
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);
@@ -78,7 +78,7 @@ function ManageDeployments() {
         setIconLoading(true);
         console.log(selectedRecord);
         let deploymentResourceId = selectedRecord.id;
-        axios.delete(`http://localhost:8097/v1/project/${projectResourceId}/deployments/${deploymentResourceId}`)
+        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/v1/project/${projectResourceId}/deployments/${deploymentResourceId}`)
             .then((response) => {
                 setIconLoading(false);
                 reloadTabularData();

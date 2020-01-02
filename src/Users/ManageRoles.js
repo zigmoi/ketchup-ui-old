@@ -52,7 +52,7 @@ function ManageRoles() {
 
     function loadAll() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/user/${userName}/roles`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/user/${userName}/roles`)
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);
@@ -69,7 +69,7 @@ function ManageRoles() {
     function removeRole(selectedRecord) {
         setIconLoading(true);
         let roleName = selectedRecord;
-        axios.put(`http://localhost:8097/v1/user/${userName}/role/${roleName}/remove`)
+        axios.put(`${process.env.REACT_APP_API_BASE_URL}/v1/user/${userName}/role/${roleName}/remove`)
             .then((response) => {
                 setIconLoading(false);
                 setRole("");
@@ -88,7 +88,7 @@ function ManageRoles() {
         }
 
         setIconLoading(true);
-        axios.put(`http://localhost:8097/v1/user/${userName}/role/${role}/add`)
+        axios.put(`${process.env.REACT_APP_API_BASE_URL}/v1/user/${userName}/role/${role}/add`)
             .then((response) => {
                 setIconLoading(false);
                 reloadTabularData();

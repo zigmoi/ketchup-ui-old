@@ -34,7 +34,7 @@ function CreateProject(props) {
                     'description': values.description,
                     'members': [],
                 };
-                axios.post('http://localhost:8097/v1/project/', data)
+                axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/project/`, data)
                     .then((response) => {
                         console.log(response);
                         setIconLoading(false);

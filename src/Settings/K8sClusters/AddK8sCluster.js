@@ -37,7 +37,7 @@ function AddK8sCluster(props) {
                     'displayName': values.displayName,
                     'provider': values.provider,
                 };
-                axios.post('http://localhost:8097/v1/settings/kubernetes-cluster', data)
+                axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/kubernetes-cluster`, data)
                     .then((response) => {
                         console.log(response);
                         setIconLoading(false);

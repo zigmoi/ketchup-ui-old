@@ -39,7 +39,7 @@ function AddContainerRegistry(props) {
                     'registryUrl': values.registryUrl,
                     'cloudCredentialId': values.cloudCredentialId,
                 };
-                axios.post('http://localhost:8097/v1/settings/container-registry', data)
+                axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/container-registry`, data)
                     .then((response) => {
                         console.log(response);
                         setIconLoading(false);

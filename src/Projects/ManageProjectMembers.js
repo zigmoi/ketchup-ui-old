@@ -57,7 +57,7 @@ function ManageProjectMembers() {
 
     function loadAll() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/project/${projectResourceId}/members`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/project/${projectResourceId}/members`)
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);
@@ -74,7 +74,7 @@ function ManageProjectMembers() {
     function removeProjectMember(selectedRecord) {
         setIconLoading(true);
         let memberName = selectedRecord;
-        axios.post(`http://localhost:8097/v1/project/${projectResourceId}/member/${memberName}/remove`)
+        axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/project/${projectResourceId}/member/${memberName}/remove`)
             .then((response) => {
                 setIconLoading(false);
                 setMemberName("");
@@ -92,7 +92,7 @@ function ManageProjectMembers() {
             return;
         }
         setIconLoading(true);
-        axios.post(`http://localhost:8097/v1/project/${projectResourceId}/member/${memberName}/add`)
+        axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/project/${projectResourceId}/member/${memberName}/add`)
             .then((response) => {
                 setIconLoading(false);
                 reloadTabularData();
@@ -105,7 +105,7 @@ function ManageProjectMembers() {
 
     function loadAllUsers() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/users`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/users`)
             .then((response) => {
                 setIconLoading(false);
                 setUsers(response.data);

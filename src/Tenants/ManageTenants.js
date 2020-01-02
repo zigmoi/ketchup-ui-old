@@ -68,7 +68,7 @@ function ManageTenants() {
 
     function loadAll() {
         setIconLoading(true);
-        axios.get('http://localhost:8097/v1/tenants')
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/tenants`)
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);
@@ -82,7 +82,7 @@ function ManageTenants() {
         setIconLoading(true);
         let tenantId = selectedRecord.id;
         let tenantStatus = !selectedRecord.enabled;
-        let url = 'http://localhost:8097/v1/tenant/' + tenantId + '/enable/' + tenantStatus
+        let url = `${process.env.REACT_APP_API_BASE_URL}/v1/tenant/${tenantId}/enable/${tenantStatus}`;
         axios.put(url)
             .then((response) => {
                 setIconLoading(false);
@@ -97,7 +97,7 @@ function ManageTenants() {
     function deleteTenant(selectedRecord) {
         setIconLoading(true);
         let tenantId = selectedRecord.id;
-        axios.delete('http://localhost:8097/v1/tenant/' + tenantId)
+        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/v1/tenant/${tenantId}`)
             .then((response) => {
                 setIconLoading(false);
                 loadAll();

@@ -39,7 +39,7 @@ function ViewCloudProvider() {
 
     function loadDetails() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/settings/cloud-provider/${projectResourceId}/${settingId}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/cloud-provider/${projectResourceId}/${settingId}`)
             .then((response) => {
                 setIconLoading(false);
                 setDisplayName(response.data.displayName);

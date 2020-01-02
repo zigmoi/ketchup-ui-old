@@ -71,7 +71,7 @@ function ManageCloudProviders() {
 
     function loadAll() {
         setIconLoading(true);
-        axios.get(`http://localhost:8097/v1/settings/list-all-cloud-provider/${projectResourceId}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/list-all-cloud-provider/${projectResourceId}`)
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);
@@ -85,7 +85,7 @@ function ManageCloudProviders() {
     function deleteSetting(selectedRecord) {
         setIconLoading(true);
         let settingId = selectedRecord.settingId;
-        axios.delete(`http://localhost:8097/v1/settings/cloud-provider/${projectResourceId}/${settingId}`)
+        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/cloud-provider/${projectResourceId}/${settingId}`)
             .then((response) => {
                 setIconLoading(false);
                 reloadTabularData();
