@@ -13,7 +13,7 @@ function ManageProjectPermissions() {
     const [dataSource, setDataSource] = useState([]);
     const [userName, setUserName] = useState(userId || "");
     const [projectResourceIdentifier, setProjectResourceIdentifier] = useState(projectResourceId || "");
-    const [selectedPermissions, setselectedPermissions] = useState([]);
+    const [selectedPermissions, setSelectedPermissions] = useState([]);
     const [users, setUsers] = useState([]);
     const [projects, setProjects] = useState([]);
 
@@ -185,7 +185,7 @@ function ManageProjectPermissions() {
 
     function setMultiSelectedRows(selectedRowKeys, selectedRows) {
         console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-        setselectedPermissions(selectedRowKeys);
+        setSelectedPermissions(selectedRowKeys);
     }
 
     function loadAllUsers() {
