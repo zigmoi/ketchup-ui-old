@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Icon, Input, Button, Tag } from 'antd';
-import { Row, Col, message, Spin, Tooltip, Select } from 'antd';
+import { Button, Col, Form, Input, message, Row, Select, Spin } from 'antd';
 import axios from 'axios';
-import moment from 'moment';
-import { useHistory, useParams, useLocation, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 
 const Option = Select.Option;
 const FormItem = Form.Item;
@@ -18,39 +16,23 @@ const formItemLayout = {
     },
 };
 
+function EditCloudProvider(props) {
+    document.title = "Edit Cloud Provider";
+    const { getFieldDecorator, validateFieldsAndScroll } = props.form;
 
-
-function EditCloudProvider() {
     const [iconLoading, setIconLoading] = useState(false);
-    const [pageTitle, setPageTitle] = useState("");
 
     const [displayName, setDisplayName] = useState("");
     const [provider, setProvider] = useState("");
     const [accessId, setAccessId] = useState("");
     const [secretKey, setSecretKey] = useState("");
-    const [lastUpdatedBy, setLastUpdatedBy] = useState("");
-    const [lastUpdatedOn, setLastUpdatedOn] = useState("");
 
     let history = useHistory();
     let { projectResourceId, settingId } = useParams();
 
-    function useQuery() {
-        return new URLSearchParams(useLocation().search);
-    }
-
-    const query = useQuery();
-    const mode = query.get("mode");
-    const isViewMode = mode === 'VIEW';
     useEffect(() => {
-        if (isViewMode) {
-            document.title = "View Cloud Provider";
-            setPageTitle("View Cloud Provider ");
-        } else {
-            document.title = "Edit Cloud Provider";
-            setPageTitle("Edit Cloud Provider");
-        }
         loadDetails();
-    }, [isViewMode]);
+    }, [projectResourceId, settingId]);
 
 
     function loadDetails() {
@@ -62,8 +44,6 @@ function EditCloudProvider() {
                 setProvider(response.data.provider);
                 setAccessId(response.data.accessId);
                 setSecretKey(response.data.secretKey);
-                setLastUpdatedBy(response.data.lastUpdatedBy);
-                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -71,121 +51,117 @@ function EditCloudProvider() {
     }
 
 
-    function updateSetting() {
-        setIconLoading(true);
-        var data = {
-            'projectId': projectResourceId,
-            'displayName': displayName,
-            'provider': provider,
-            'accessId': accessId,
-            'secretKey': secretKey,
-        };
-        axios.put(`http://localhost:8097/v1/settings/cloud-provider/${projectResourceId}/${settingId}`, data)
-            .then((response) => {
-                setIconLoading(false);
-                message.success('Cloud provider updated successfully.', 5);
-                history.push(`/app/project/${projectResourceId}/settings/cloud-providers`);
-            })
-            .catch((error) => {
-                setIconLoading(false);
-            });
-    }
-
-    let editLink;
-    let submitButtonView;
-    let lastUpdatedByView;
-    let lastUpdatedOnView;
-    if (isViewMode) {
-        submitButtonView = null;
-        lastUpdatedByView = (
-            <Tag color="blue">{lastUpdatedBy}</Tag>
-        );
-        lastUpdatedOnView = (
-            <Tag color="blue">{lastUpdatedOn}</Tag>
-        );
-        editLink = (
-            <Link to={`/app/project/${projectResourceId}/settings/${settingId}/cloud-provider/edit?mode=EDIT`}>
-                <Tooltip title="Edit">
-                    <Icon type="edit" />
-                </Tooltip>
-            </Link>
-        );
-    } else {
-        lastUpdatedByView = null;
-        lastUpdatedOnView = null;
-        editLink = null;
-        submitButtonView = (
-            <FormItem>
-                <Row type="flex" justify="center" align="middle">
-                    <Col>
-                        <Button type="primary"
-                            loading={iconLoading}
-                            htmlType="submit"
-                            onClick={updateSetting} >Submit</Button>
-                    </Col>
-                </Row>
-            </FormItem>
-        );
+    function updateSetting(e) {
+        e.preventDefault();
+        validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                setIconLoading(true);
+                var data = {
+                    'projectId': projectResourceId,
+                    'displayName': values.displayName,
+                    'provider': values.provider,
+                    'accessId': values.accessId,
+                    'secretKey': values.secretKey,
+                };
+                axios.put(`http://localhost:8097/v1/settings/cloud-provider/${projectResourceId}/${settingId}`, data)
+                    .then((response) => {
+                        setIconLoading(false);
+                        message.success('Cloud provider updated successfully.', 5);
+                        history.push(`/app/project/${projectResourceId}/settings/cloud-providers`);
+                    })
+                    .catch((error) => {
+                        setIconLoading(false);
+                    });
+            }
+        });
     }
 
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >{pageTitle}{editLink}</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Edit Cloud Provider</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
             </Row>
             <Row type="flex" justify="center" align="middle">
                 <Col span={24}  >
-                    <Form style={{ backgroundColor: 'white' }}>
+                    <Form onSubmit={updateSetting} style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="ID:">
                             <Input readOnly value={settingId} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Project ID:">
                             <Input readOnly value={projectResourceId} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Display Name:">
-                            <Input autoFocus
-                                readOnly={isViewMode}
-                                placeholder="Display Name"
-                                value={displayName}
-                                onChange={(e) => { setDisplayName(e.target.value) }} />
-                            {lastUpdatedByView}
-                            {lastUpdatedOnView}
+                        <FormItem {...formItemLayout} label="Display Name:" hasFeedback>
+                            {getFieldDecorator('displayName', {
+                                initialValue: displayName,
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Display Name!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Display Name" autoFocus />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:">
-                            {isViewMode ?
-                                <Input readOnly={isViewMode}
-                                    placeholder="Provider"
-                                    value={provider}
-                                    onChange={(e) => { setProvider(e.target.value) }} />
-                                :
-                                <Select showSearch
-                                    value={provider}
-                                    onChange={(e) => { setProvider(e) }}
-                                    optionFilterProp="children"
-                                    filterOption={(input, option) =>
-                                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                    }>
-                                    <Option key="aws">AWS</Option>
-                                </Select>}
+                        <FormItem {...formItemLayout} label="Provider:" hasFeedback>
+                            {getFieldDecorator('provider', {
+                                initialValue: provider,
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: 'Please select valid Provider!',
+                                    }
+                                ],
+                            })(<Select>
+                                <Option key="aws">AWS</Option>
+                            </Select>)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Access ID:">
-                            <Input readOnly={isViewMode}
-                                placeholder="Access ID"
-                                value={accessId}
-                                onChange={(e) => { setAccessId(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="Access ID:" hasFeedback>
+                            {getFieldDecorator('accessId', {
+                                initialValue: accessId,
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Access ID!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Access ID" />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Secret Key:">
-                            <Input.Password type="password"
-                                placeholder="Secret Key"
-                                readOnly={isViewMode}
-                                value={secretKey}
-                                onChange={(e) => { setSecretKey(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="Secret Key:" hasFeedback>
+                            {getFieldDecorator('secretKey', {
+                                initialValue: secretKey,
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Secret Key!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input.Password placeholder="Secret Key" />)}
                         </FormItem>
-                        {submitButtonView}
+                        <FormItem>
+                            <Row type="flex" justify="center" align="middle">
+                                <Col>
+                                    <Button type="primary" loading={iconLoading} htmlType="submit" >Submit</Button>
+                                </Col>
+                            </Row>
+                        </FormItem>
                     </Form>
                 </Col>
             </Row>
@@ -193,4 +169,5 @@ function EditCloudProvider() {
     );
 }
 
-export default EditCloudProvider;
+const WrappedComponent = Form.create({ name: 'edit-cloud-provider' })(EditCloudProvider);
+export default WrappedComponent;

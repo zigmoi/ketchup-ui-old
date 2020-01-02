@@ -35,13 +35,13 @@ function ManageHostnames() {
             render: (text, record) => (
                 <span>
                 <Button type="primary" size="small">
-                    <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/hostname/edit?mode=VIEW`}>
+                    <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/hostname/view`}>
                         View
                     </Link>
                 </Button>
                 <Divider type="vertical" />
                 <Button type="primary" size="small">
-                    <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/hostname/edit?mode=EDIT`}>
+                    <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/hostname/edit`}>
                         Edit
                     </Link>
                 </Button>

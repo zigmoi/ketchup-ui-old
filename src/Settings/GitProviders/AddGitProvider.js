@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { Form, Icon, Input, Button, Select } from 'antd';
-import { Row, Col, message, Spin } from 'antd';
+import { Button, Col, Form, Input, message, Row, Select, Spin } from 'antd';
 import axios from 'axios';
+import React, { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 const Option = Select.Option;
@@ -16,40 +15,40 @@ const formItemLayout = {
         sm: { span: 14 },
     },
 };
-function CreateGitProvider() {
+function AddGitProvider(props) {
     document.title = "Add Git Provider";
+    const { getFieldDecorator, validateFieldsAndScroll } = props.form;
 
     const [iconLoading, setIconLoading] = useState(false);
-    const [displayName, setDisplayName] = useState("");
-    const [provider, setProvider] = useState("");
-    const [userName, setUserName] = useState("");
-    const [password, setPassword] = useState("");
-    const [repoListUrl, setRepoListUrl] = useState("");
 
     let history = useHistory();
     let { projectResourceId } = useParams();
 
-    function CreateGitProvider() {
-        setIconLoading(true);
-        var data = {
-            'projectId': projectResourceId,
-            'settingId': "s1",
-            'displayName': displayName,
-            'provider': provider,
-            'username': userName,
-            'password': password,
-            'repoListUrl': repoListUrl,
-        };
-        axios.post('http://localhost:8097/v1/settings/git-provider', data)
-            .then((response) => {
-                console.log(response);
-                setIconLoading(false);
-                message.success('Git Provider added successfully.', 5);
-                history.push(`/app/project/${projectResourceId}/settings/git-providers`);
-            })
-            .catch((error) => {
-                setIconLoading(false);
-            });
+    function addGitProvider(e) {
+        e.preventDefault();
+        validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                setIconLoading(true);
+                var data = {
+                    'projectId': projectResourceId,
+                    'displayName': values.displayName,
+                    'provider': values.provider,
+                    'username': values.userName,
+                    'password': values.password,
+                    'repoListUrl': values.repoListUrl,
+                };
+                axios.post('http://localhost:8097/v1/settings/git-provider', data)
+                    .then((response) => {
+                        console.log(response);
+                        setIconLoading(false);
+                        message.success('Git Provider added successfully.', 5);
+                        history.push(`/app/project/${projectResourceId}/settings/git-providers`);
+                    })
+                    .catch((error) => {
+                        setIconLoading(false);
+                    });
+            }
+        });
     }
 
     return (
@@ -63,46 +62,88 @@ function CreateGitProvider() {
             </Row>
             <Row type="flex" justify="center" align="middle">
                 <Col span={24}  >
-                    <Form style={{ backgroundColor: 'white' }}>
-                        <FormItem {...formItemLayout} label="Display Name:">
-                            <Input autoFocus
-                                placeholder="Display Name"
-                                value={displayName}
-                                onChange={(e) => { setDisplayName(e.target.value) }} />
+                    <Form onSubmit={addGitProvider} style={{ backgroundColor: 'white' }}>
+                    <FormItem {...formItemLayout} label="Display Name:" hasFeedback>
+                            {getFieldDecorator('displayName', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Display Name!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Display Name" autoFocus />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:">
-                            <Select showSearch
-                                value={provider}
-                                onChange={(e) => { setProvider(e) }}
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }>
+                        <FormItem {...formItemLayout} label="Provider:" hasFeedback>
+                            {getFieldDecorator('provider', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: 'Please select valid Provider!',
+                                    }
+                                ],
+                            })(<Select>
                                 <Option key="gitlab">GitLab</Option>
-                            </Select>
+                            </Select>)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="User Name:">
-                            <Input placeholder="User Name"
-                                value={userName}
-                                onChange={(e) => { setUserName(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="User Name:" hasFeedback>
+                            {getFieldDecorator('userName', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid User Name!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="User Name" />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Password:">
-                            <Input.Password type="password" placeholder="Password"
-                                value={password}
-                                onChange={(e) => { setPassword(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="Password:" hasFeedback>
+                            {getFieldDecorator('password', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Password!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input.Password placeholder="Password" />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Repository List URL:">
-                            <Input placeholder="Repository List URL"
-                                value={repoListUrl}
-                                onChange={(e) => { setRepoListUrl(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="Repository List URL:" hasFeedback>
+                            {getFieldDecorator('repoListUrl', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Repository List URL!',
+                                    },
+                                    {
+                                        max: 200,
+                                        message: 'Only 200 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Repository List URL" />)}
                         </FormItem>
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">
                                 <Col>
-                                    <Button type="primary"
-                                        loading={iconLoading}
-                                        htmlType="submit"
-                                        onClick={CreateGitProvider} >Submit</Button>
+                                    <Button type="primary" loading={iconLoading} htmlType="submit" >Submit</Button>
                                 </Col>
                             </Row>
                         </FormItem>
@@ -113,4 +154,5 @@ function CreateGitProvider() {
     );
 }
 
-export default CreateGitProvider;
+const WrappedComponent = Form.create({ name: 'add-git-provider' })(AddGitProvider);
+export default WrappedComponent;

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Icon, Input, Button, Select } from 'antd';
+import { Form, Input, Button, Select } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
 import { useHistory, useParams } from 'react-router-dom';
@@ -17,39 +17,39 @@ const formItemLayout = {
     },
 };
 
-
-
-function AddCloudProvider() {
+function AddCloudProvider(props) {
     document.title = "Add Cloud Provider";
+    const { getFieldDecorator, validateFieldsAndScroll } = props.form;
 
     const [iconLoading, setIconLoading] = useState(false);
-    const [displayName, setDisplayName] = useState("");
-    const [provider, setProvider] = useState("");
-    const [accessId, setAccessId] = useState("");
-    const [secretKey, setSecretKey] = useState("");
 
     let history = useHistory();
     let { projectResourceId } = useParams();
 
-    function AddCloudProvider() {
-        setIconLoading(true);
-        var data = {
-            'projectId': projectResourceId,
-            'displayName': displayName,
-            'provider': provider,
-            'accessId': accessId,
-            'secretKey': secretKey,
-        };
-        axios.post('http://localhost:8097/v1/settings/cloud-provider', data)
-            .then((response) => {
-                console.log(response);
-                setIconLoading(false);
-                message.success('Cloud provider added successfully.', 5);
-                history.push(`/app/project/${projectResourceId}/settings/cloud-providers`);
-            })
-            .catch((error) => {
-                setIconLoading(false);
-            });
+    function addCloudProvider(e) {
+        e.preventDefault();
+        validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                setIconLoading(true);
+                var data = {
+                    'projectId': projectResourceId,
+                    'displayName': values.displayName,
+                    'provider': values.provider,
+                    'accessId': values.accessId,
+                    'secretKey': values.secretKey,
+                };
+                axios.post('http://localhost:8097/v1/settings/cloud-provider', data)
+                    .then((response) => {
+                        console.log(response);
+                        setIconLoading(false);
+                        message.success('Cloud provider added successfully.', 5);
+                        history.push(`/app/project/${projectResourceId}/settings/cloud-providers`);
+                    })
+                    .catch((error) => {
+                        setIconLoading(false);
+                    });
+            }
+        });
     }
 
     return (
@@ -63,41 +63,72 @@ function AddCloudProvider() {
             </Row>
             <Row type="flex" justify="center" align="middle">
                 <Col span={24}  >
-                    <Form style={{ backgroundColor: 'white' }}>
-                        <FormItem {...formItemLayout} label="Display Name:">
-                            <Input autoFocus
-                                placeholder="Display Name"
-                                value={displayName}
-                                onChange={(e) => { setDisplayName(e.target.value) }} />
+                    <Form onSubmit={addCloudProvider} style={{ backgroundColor: 'white' }}>
+                        <FormItem {...formItemLayout} label="Display Name:" hasFeedback>
+                            {getFieldDecorator('displayName', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Display Name!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Display Name" autoFocus />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:">
-                            <Select showSearch
-                                value={provider}
-                                onChange={(e) => { setProvider(e) }}
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }>
+                        <FormItem {...formItemLayout} label="Provider:" hasFeedback>
+                            {getFieldDecorator('provider', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: 'Please select valid Provider!',
+                                    }
+                                ],
+                            })(<Select>
                                 <Option key="aws">AWS</Option>
-                            </Select>
+                            </Select>)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Access ID:">
-                            <Input placeholder="Access ID"
-                                value={accessId}
-                                onChange={(e) => { setAccessId(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="Access ID:" hasFeedback>
+                            {getFieldDecorator('accessId', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Access ID!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Access ID" />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Secret Key:">
-                            <Input.Password type="password" placeholder="Secret Key"
-                                value={secretKey}
-                                onChange={(e) => { setSecretKey(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="Secret Key:" hasFeedback>
+                            {getFieldDecorator('secretKey', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Secret Key!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input.Password placeholder="Secret Key" />)}
                         </FormItem>
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">
                                 <Col>
-                                    <Button type="primary"
-                                        loading={iconLoading}
-                                        htmlType="submit"
-                                        onClick={AddCloudProvider} >Submit</Button>
+                                    <Button type="primary" loading={iconLoading} htmlType="submit" >Submit</Button>
                                 </Col>
                             </Row>
                         </FormItem>
@@ -108,4 +139,5 @@ function AddCloudProvider() {
     );
 }
 
-export default AddCloudProvider;
+const WrappedComponent = Form.create({ name: 'add-cloud-provider' })(AddCloudProvider);
+export default WrappedComponent;

@@ -5,10 +5,7 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import UserContext from '../UserContext';
 
-function CreateUser(props) {
-    const { getFieldDecorator, validateFieldsAndScroll } = props.form;
-
-    const Option = Select.Option;
+const Option = Select.Option;
     const FormItem = Form.Item;
     const formItemLayout = {
         labelCol: {
@@ -21,9 +18,11 @@ function CreateUser(props) {
         },
     };
 
+function CreateUser(props) {
     document.title = "Create User";
+    const { getFieldDecorator, validateFieldsAndScroll } = props.form;
+    
     const [iconLoading, setIconLoading] = useState(false);
-
     const userContext = useContext(UserContext);
     const tenantId = "@".concat(userContext.currentUser ? userContext.currentUser.tenantId : "");
     let history = useHistory();

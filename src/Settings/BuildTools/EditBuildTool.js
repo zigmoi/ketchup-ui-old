@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Icon, Input, Button, Tag, Divider, Tooltip, Select } from 'antd';
+import { Form, Input, Button, Select } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
-import moment from 'moment';
-import { useHistory, useParams, useLocation, Link } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
+
 
 const Option = Select.Option;
 const FormItem = Form.Item;
@@ -18,39 +18,23 @@ const formItemLayout = {
     },
 };
 
+function EditBuildTool(props) {
+    document.title = "Edit Build Tool";
+    const { getFieldDecorator, validateFieldsAndScroll } = props.form;
 
-
-function EditBuildTool() {
     const [iconLoading, setIconLoading] = useState(false);
-    const [pageTitle, setPageTitle] = useState("");
 
     const [displayName, setDisplayName] = useState("");
     const [provider, setProvider] = useState("");
     const [fileName, setFileName] = useState("build-settings");
     const [fileData, setFileData] = useState("");
-    const [lastUpdatedBy, setLastUpdatedBy] = useState("");
-    const [lastUpdatedOn, setLastUpdatedOn] = useState("");
 
     let history = useHistory();
     let { projectResourceId, settingId } = useParams();
 
-    function useQuery() {
-        return new URLSearchParams(useLocation().search);
-    }
-
-    const query = useQuery();
-    const mode = query.get("mode");
-    const isViewMode = mode === 'VIEW';
     useEffect(() => {
-        if (isViewMode) {
-            document.title = "View Build Tool";
-            setPageTitle("View Build Tool ");
-        } else {
-            document.title = "Edit Build Tool";
-            setPageTitle("Edit Build Tool");
-        }
         loadDetails();
-    }, [isViewMode]);
+    }, [projectResourceId, settingId]);
 
 
     function loadDetails() {
@@ -62,8 +46,6 @@ function EditBuildTool() {
                 setProvider(response.data.provider);
                 setFileName(response.data.fileName);
                 setFileData(atob(response.data.fileData));
-                setLastUpdatedBy(response.data.lastUpdatedBy);
-                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -71,127 +53,103 @@ function EditBuildTool() {
     }
 
 
-    function updateSetting() {
-        setIconLoading(true);
-        var data = {
-            'projectId': projectResourceId,
-            'displayName': displayName,
-            'provider': provider,
-            'fileName': fileName,
-            'fileData': btoa(fileData),
-        };
-        axios.put(`http://localhost:8097/v1/settings/build-tool/${projectResourceId}/${settingId}`, data)
-            .then((response) => {
-                setIconLoading(false);
-                message.success('Build tool updated successfully.', 5);
-                history.push(`/app/project/${projectResourceId}/settings/build-tools`);
-            })
-            .catch((error) => {
-                setIconLoading(false);
-            });
-    }
-
-    let editLink;
-    let buildSettingsOptionsView;
-    let submitButtonView;
-    let lastUpdatedByView;
-    let lastUpdatedOnView;
-    if (isViewMode) {
-        submitButtonView = null;
-        lastUpdatedByView = (
-            <Tag color="blue">{lastUpdatedBy}</Tag>
-        );
-        lastUpdatedOnView = (
-            <Tag color="blue">{lastUpdatedOn}</Tag>
-        );
-        buildSettingsOptionsView = (
-            <FormItem {...formItemLayout} label="Build Settings">
-                <Button type="primary" size="small">View</Button>
-                <Divider type="vertical" />
-                <Button type="primary" size="small">Download</Button>
-            </FormItem>
-        );
-        editLink = (
-            <Link to={`/app/project/${projectResourceId}/settings/${settingId}/build-tool/edit?mode=EDIT`}>
-                <Tooltip title="Edit">
-                    <Icon type="edit" />
-                </Tooltip>
-            </Link>
-        );
-    } else {
-        lastUpdatedByView = null;
-        lastUpdatedOnView = null;
-        editLink = null;
-        submitButtonView = (
-            <FormItem>
-                <Row type="flex" justify="center" align="middle">
-                    <Col>
-                        <Button type="primary"
-                            loading={iconLoading}
-                            htmlType="submit"
-                            onClick={updateSetting} >Submit</Button>
-                    </Col>
-                </Row>
-            </FormItem>
-        );
-        buildSettingsOptionsView = (
-            <FormItem {...formItemLayout} label="Build Settings">
-                <Input.TextArea readOnly={isViewMode}
-                    placeholder="Build Settings"
-                    autosize={{ minRows: 10, maxRows: 15 }}
-                    value={fileData}
-                    onChange={(e) => { setFileData(e.target.value) }} />
-            </FormItem>
-        );
+    function updateSetting(e) {
+        e.preventDefault();
+        validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                setIconLoading(true);
+                var data = {
+                    'projectId': projectResourceId,
+                    'displayName': values.displayName,
+                    'provider': values.provider,
+                    'fileName': fileName,
+                    'fileData': btoa(values.fileData),
+                };
+                axios.put(`http://localhost:8097/v1/settings/build-tool/${projectResourceId}/${settingId}`, data)
+                    .then((response) => {
+                        setIconLoading(false);
+                        message.success('Build tool updated successfully.', 5);
+                        history.push(`/app/project/${projectResourceId}/settings/build-tools`);
+                    })
+                    .catch((error) => {
+                        setIconLoading(false);
+                    });
+            }
+        });
     }
 
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >{pageTitle}{editLink}</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Edit Build Tool</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
             </Row>
             <Row type="flex" justify="center" align="middle">
                 <Col span={24}  >
-                    <Form style={{ backgroundColor: 'white' }}>
+                    <Form onSubmit={updateSetting} style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="ID:">
                             <Input readOnly value={settingId} />
                         </FormItem>
+
                         <FormItem {...formItemLayout} label="Project ID:">
                             <Input readOnly value={projectResourceId} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Display Name:">
-                            <Input autoFocus
-                                readOnly={isViewMode}
-                                placeholder="Display Name"
-                                value={displayName}
-                                onChange={(e) => { setDisplayName(e.target.value) }} />
-                            {lastUpdatedByView}
-                            {lastUpdatedOnView}
+                        <FormItem {...formItemLayout} label="Display Name:" hasFeedback>
+                            {getFieldDecorator('displayName', {
+                                initialValue: displayName,
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Display Name!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Display Name" autoFocus />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:">
-                            {isViewMode ?
-                                <Input readOnly={isViewMode}
-                                    placeholder="Provider"
-                                    value={provider}
-                                    onChange={(e) => { setProvider(e.target.value) }} />
-                                :
-                                <Select showSearch
-                                    value={provider}
-                                    onChange={(e) => { setProvider(e) }}
-                                    optionFilterProp="children"
-                                    filterOption={(input, option) =>
-                                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                    }>
-                                    <Option key="maven">Maven</Option>
-                                    <Option key="gradle">Gradle</Option>
-                                </Select>}
+                        <FormItem {...formItemLayout} label="Provider:" hasFeedback>
+                            {getFieldDecorator('provider', {
+                                initialValue: provider,
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: 'Please select valid Provider!',
+                                    }
+                                ],
+                            })(<Select>
+                                <Option key="maven">Maven</Option>
+                                <Option key="gradle">Gradle</Option>
+                            </Select>)}
                         </FormItem>
-                        {buildSettingsOptionsView}
-                        {submitButtonView}
+                        <FormItem {...formItemLayout} label="Build Settings:" hasFeedback>
+                            {getFieldDecorator('fileData', {
+                                initialValue: fileData,
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Build Settings!',
+                                    },
+                                    {
+                                        max: 1000,
+                                        message: 'Only 1000 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input.TextArea autosize={{ minRows: 10, maxRows: 15 }} />)}
+                        </FormItem>
+                        <FormItem>
+                            <Row type="flex" justify="center" align="middle">
+                                <Col>
+                                    <Button type="primary" loading={iconLoading} htmlType="submit" >Submit</Button>
+                                </Col>
+                            </Row>
+                        </FormItem>
                     </Form>
                 </Col>
             </Row>
@@ -199,4 +157,5 @@ function EditBuildTool() {
     );
 }
 
-export default EditBuildTool;
+const WrappedComponent = Form.create({ name: 'edit-build-tool' })(EditBuildTool);
+export default WrappedComponent;

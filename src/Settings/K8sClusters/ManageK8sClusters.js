@@ -39,13 +39,13 @@ function ManageK8sClusters() {
             render: (text, record) => (
                 <span>
                     <Button type="primary" size="small">
-                        <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/kubernetes-cluster/edit?mode=VIEW`}>
+                        <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/kubernetes-cluster/view`}>
                             View
                         </Link>
                     </Button>
                     <Divider type="vertical" />
                     <Button type="primary" size="small">
-                        <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/kubernetes-cluster/edit?mode=EDIT`}>
+                        <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/kubernetes-cluster/edit`}>
                             Edit
                         </Link>
                     </Button>

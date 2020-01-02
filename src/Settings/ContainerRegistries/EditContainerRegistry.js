@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Icon, Input, Button, Tag, Tooltip, Select } from 'antd';
-import { Row, Col, message, Spin } from 'antd';
+import { Button, Col, Form, Input, message, Row, Select, Spin } from 'antd';
 import axios from 'axios';
-import moment from 'moment';
-import { useHistory, useParams, useLocation, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 
 const Option = Select.Option;
 const FormItem = Form.Item;
@@ -19,39 +17,24 @@ const formItemLayout = {
 };
 
 
+function EditContainerRegistry(props) {
+    document.title = "Edit Container Registry";
+    const { getFieldDecorator, validateFieldsAndScroll } = props.form;
 
-function EditContainerRegistry() {
     const [iconLoading, setIconLoading] = useState(false);
-    const [pageTitle, setPageTitle] = useState("");
 
     const [displayName, setDisplayName] = useState("");
     const [provider, setProvider] = useState("");
     const [registryId, setRegistryId] = useState("");
     const [registryUrl, setRegistryUrl] = useState("");
     const [cloudCredentialId, setCloudCredentialId] = useState("");
-    const [lastUpdatedBy, setLastUpdatedBy] = useState("");
-    const [lastUpdatedOn, setLastUpdatedOn] = useState("");
 
     let history = useHistory();
     let { projectResourceId, settingId } = useParams();
 
-    function useQuery() {
-        return new URLSearchParams(useLocation().search);
-    }
-
-    const query = useQuery();
-    const mode = query.get("mode");
-    const isViewMode = mode === 'VIEW';
     useEffect(() => {
-        if (isViewMode) {
-            document.title = "View Container Registry";
-            setPageTitle("View Container Registry ");
-        } else {
-            document.title = "Edit Container Registry";
-            setPageTitle("Edit Container Registry");
-        }
         loadDetails();
-    }, [isViewMode]);
+    }, [projectResourceId, settingId]);
 
 
     function loadDetails() {
@@ -64,136 +47,140 @@ function EditContainerRegistry() {
                 setRegistryId(response.data.registryId);
                 setRegistryUrl(response.data.registryUrl);
                 setCloudCredentialId(response.data.cloudCredentialId);
-                setLastUpdatedBy(response.data.lastUpdatedBy);
-                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
             })
             .catch((error) => {
                 setIconLoading(false);
             });
     }
 
-
-    function updateSetting() {
-        setIconLoading(true);
-        var data = {
-            'projectId': projectResourceId,
-            'displayName': displayName,
-            'provider': provider,
-            'registryId': registryId,
-            'registryUrl': registryUrl,
-            'cloudCredentialId': cloudCredentialId,
-        };
-        axios.put(`http://localhost:8097/v1/settings/container-registry/${projectResourceId}/${settingId}`, data)
-            .then((response) => {
-                setIconLoading(false);
-                message.success('Container registry updated successfully.', 5);
-                history.push(`/app/project/${projectResourceId}/settings/container-registries`);
-            })
-            .catch((error) => {
-                setIconLoading(false);
-            });
-    }
-
-    let editLink;
-    let submitButtonView;
-    let lastUpdatedByView;
-    let lastUpdatedOnView;
-    if (isViewMode) {
-        submitButtonView = null;
-        lastUpdatedByView = (
-            <Tag color="blue">{lastUpdatedBy}</Tag>
-        );
-        lastUpdatedOnView = (
-            <Tag color="blue">{lastUpdatedOn}</Tag>
-        );
-        editLink = (
-            <Link to={`/app/project/${projectResourceId}/settings/${settingId}/container-registry/edit?mode=EDIT`}>
-                <Tooltip title="Edit">
-                    <Icon type="edit" />
-                </Tooltip>
-            </Link>
-        );
-    } else {
-        lastUpdatedByView = null;
-        lastUpdatedOnView = null;
-        editLink = null;
-        submitButtonView = (
-            <FormItem>
-                <Row type="flex" justify="center" align="middle">
-                    <Col>
-                        <Button type="primary"
-                            loading={iconLoading}
-                            htmlType="submit"
-                            onClick={updateSetting} >Submit</Button>
-                    </Col>
-                </Row>
-            </FormItem>
-        );
+    function updateSetting(e) {
+        e.preventDefault();
+        validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                setIconLoading(true);
+                var data = {
+                    'projectId': projectResourceId,
+                    'displayName': values.displayName,
+                    'provider': values.provider,
+                    'registryId': values.registryId,
+                    'registryUrl': values.registryUrl,
+                    'cloudCredentialId': values.cloudCredentialId,
+                };
+                axios.put(`http://localhost:8097/v1/settings/container-registry/${projectResourceId}/${settingId}`, data)
+                    .then((response) => {
+                        setIconLoading(false);
+                        message.success('Container registry updated successfully.', 5);
+                        history.push(`/app/project/${projectResourceId}/settings/container-registries`);
+                    })
+                    .catch((error) => {
+                        setIconLoading(false);
+                    });
+            }
+        });
     }
 
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >{pageTitle}{editLink}</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Edit Container Registry</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
             </Row>
             <Row type="flex" justify="center" align="middle">
                 <Col span={24}  >
-                    <Form style={{ backgroundColor: 'white' }}>
+                    <Form onSubmit={updateSetting} style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="ID:">
                             <Input readOnly value={settingId} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Project ID:">
                             <Input readOnly value={projectResourceId} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Display Name:">
-                            <Input autoFocus
-                                readOnly={isViewMode}
-                                placeholder="Display Name"
-                                value={displayName}
-                                onChange={(e) => { setDisplayName(e.target.value) }} />
-                            {lastUpdatedByView}
-                            {lastUpdatedOnView}
+                        <FormItem {...formItemLayout} label="Display Name:" hasFeedback>
+                            {getFieldDecorator('displayName', {
+                                initialValue: displayName,
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Display Name!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Display Name" autoFocus />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:">
-                            {isViewMode ?
-                                <Input readOnly={isViewMode}
-                                    placeholder="Provider"
-                                    value={provider}
-                                    onChange={(e) => { setProvider(e.target.value) }} />
-                                :
-                                <Select showSearch
-                                    value={provider}
-                                    onChange={(e) => { setProvider(e) }}
-                                    optionFilterProp="children"
-                                    filterOption={(input, option) =>
-                                        option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                    }>
-                                    <Option key="aws-ecr">AWS-ECR</Option>
-                                </Select>}
+                        <FormItem {...formItemLayout} label="Provider:" hasFeedback>
+                            {getFieldDecorator('provider', {
+                                initialValue: provider,
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: 'Please select valid Provider!',
+                                    }
+                                ],
+                            })(<Select>
+                                <Option key="aws-ecr">AWS-ECR</Option>
+                            </Select>)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Registry ID:">
-                            <Input readOnly={isViewMode}
-                                placeholder="Registry ID"
-                                value={registryId}
-                                onChange={(e) => { setRegistryId(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="Registry ID:" hasFeedback>
+                            {getFieldDecorator('registryId', {
+                                initialValue: registryId,
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Registry ID!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Registry ID" />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Registry URL:">
-                            <Input readOnly={isViewMode}
-                                placeholder="Registry URL"
-                                value={registryUrl}
-                                onChange={(e) => { setRegistryUrl(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="Registry URL:" hasFeedback>
+                            {getFieldDecorator('registryUrl', {
+                                initialValue: registryUrl,
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Registry URL!',
+                                    },
+                                    {
+                                        max: 200,
+                                        message: 'Only 200 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Registry URL" />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Cloud Credential ID:">
-                            <Input readOnly={isViewMode}
-                                placeholder="Cloud Credential ID"
-                                value={cloudCredentialId}
-                                onChange={(e) => { setCloudCredentialId(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="Cloud Credential ID:" hasFeedback>
+                            {getFieldDecorator('cloudCredentialId', {
+                                initialValue: cloudCredentialId,
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Cloud Credential ID!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Cloud Credential ID" />)}
                         </FormItem>
-                        {submitButtonView}
+                        <FormItem>
+                            <Row type="flex" justify="center" align="middle">
+                                <Col>
+                                    <Button type="primary" loading={iconLoading} htmlType="submit" >Submit</Button>
+                                </Col>
+                            </Row>
+                        </FormItem>
                     </Form>
                 </Col>
             </Row>
@@ -201,4 +188,5 @@ function EditContainerRegistry() {
     );
 }
 
-export default EditContainerRegistry;
+const WrappedComponent = Form.create({ name: 'edit-conatiner-registry' })(EditContainerRegistry);
+export default WrappedComponent;

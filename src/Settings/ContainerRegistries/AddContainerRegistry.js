@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { Form, Icon, Input, Button, Select } from 'antd';
-import { Row, Col, message, Spin } from 'antd';
+import { Button, Col, Form, Input, message, Row, Select, Spin } from 'antd';
 import axios from 'axios';
+import React, { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 const Option = Select.Option;
@@ -18,40 +17,40 @@ const formItemLayout = {
 };
 
 
-function AddContainerRegistry() {
+function AddContainerRegistry(props) {
     document.title = "Add Cloud Provider";
+    const { getFieldDecorator, validateFieldsAndScroll } = props.form;
 
     const [iconLoading, setIconLoading] = useState(false);
-    const [displayName, setDisplayName] = useState("");
-    const [provider, setProvider] = useState("");
-    const [registryId, setRegistryId] = useState("");
-    const [registryUrl, setRegistryUrl] = useState("");
-    const [cloudCredentialId, setCloudCredentialId] = useState("");
 
     let history = useHistory();
     let { projectResourceId } = useParams();
 
-    function AddContainerRegistry() {
-        setIconLoading(true);
-        var data = {
-            'projectId': projectResourceId,
-            'settingId': "s1",
-            'displayName': displayName,
-            'provider': provider,
-            'registryId': registryId,
-            'registryUrl': registryUrl,
-            'cloudCredentialId': cloudCredentialId,
-        };
-        axios.post('http://localhost:8097/v1/settings/container-registry', data)
-            .then((response) => {
-                console.log(response);
-                setIconLoading(false);
-                message.success('Container registry added successfully.', 5);
-                history.push(`/app/project/${projectResourceId}/settings/container-registries`);
-            })
-            .catch((error) => {
-                setIconLoading(false);
-            });
+    function addContainerRegistry(e) {
+        e.preventDefault();
+        validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                setIconLoading(true);
+                var data = {
+                    'projectId': projectResourceId,
+                    'displayName': values.displayName,
+                    'provider': values.provider,
+                    'registryId': values.registryId,
+                    'registryUrl': values.registryUrl,
+                    'cloudCredentialId': values.cloudCredentialId,
+                };
+                axios.post('http://localhost:8097/v1/settings/container-registry', data)
+                    .then((response) => {
+                        console.log(response);
+                        setIconLoading(false);
+                        message.success('Container registry added successfully.', 5);
+                        history.push(`/app/project/${projectResourceId}/settings/container-registries`);
+                    })
+                    .catch((error) => {
+                        setIconLoading(false);
+                    });
+            }
+        });
     }
 
     return (
@@ -65,46 +64,88 @@ function AddContainerRegistry() {
             </Row>
             <Row type="flex" justify="center" align="middle">
                 <Col span={24}  >
-                    <Form style={{ backgroundColor: 'white' }}>
-                        <FormItem {...formItemLayout} label="Display Name:">
-                            <Input autoFocus
-                                placeholder="Display Name"
-                                value={displayName}
-                                onChange={(e) => { setDisplayName(e.target.value) }} />
+                    <Form onSubmit={addContainerRegistry} style={{ backgroundColor: 'white' }}>
+                        <FormItem {...formItemLayout} label="Display Name:" hasFeedback>
+                            {getFieldDecorator('displayName', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Display Name!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Display Name" autoFocus />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:">
-                            <Select showSearch
-                                value={provider}
-                                onChange={(e) => { setProvider(e) }}
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }>
+                        <FormItem {...formItemLayout} label="Provider:" hasFeedback>
+                            {getFieldDecorator('provider', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: 'Please select valid Provider!',
+                                    }
+                                ],
+                            })(<Select>
                                 <Option key="aws-ecr">AWS-ECR</Option>
-                            </Select>
+                            </Select>)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Registry ID:">
-                            <Input placeholder="Registry ID"
-                                value={registryId}
-                                onChange={(e) => { setRegistryId(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="Registry ID:" hasFeedback>
+                            {getFieldDecorator('registryId', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Registry ID!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Registry ID" />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Registry URL:">
-                            <Input placeholder="Registry URL"
-                                value={registryUrl}
-                                onChange={(e) => { setRegistryUrl(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="Registry URL:" hasFeedback>
+                            {getFieldDecorator('registryUrl', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Registry URL!',
+                                    },
+                                    {
+                                        max: 200,
+                                        message: 'Only 200 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Registry URL" />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Cloud Credential ID:">
-                            <Input placeholder="Cloud Credential ID"
-                                value={cloudCredentialId}
-                                onChange={(e) => { setCloudCredentialId(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="Cloud Credential ID:" hasFeedback>
+                            {getFieldDecorator('cloudCredentialId', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Cloud Credential ID!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Cloud Credential ID" />)}
                         </FormItem>
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">
                                 <Col>
-                                    <Button type="primary"
-                                        loading={iconLoading}
-                                        htmlType="submit"
-                                        onClick={AddContainerRegistry} >Submit</Button>
+                                    <Button type="primary" loading={iconLoading} htmlType="submit" >Submit</Button>
                                 </Col>
                             </Row>
                         </FormItem>
@@ -115,4 +156,5 @@ function AddContainerRegistry() {
     );
 }
 
-export default AddContainerRegistry;
+const WrappedComponent = Form.create({ name: 'add-conatiner-registry' })(AddContainerRegistry);
+export default WrappedComponent;

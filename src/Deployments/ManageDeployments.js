@@ -109,9 +109,9 @@ function ManageDeployments() {
                         <Button type="primary"  >
                             <Link to={`/app/project/${projectResourceId}/deployment/select-type`}>Create Deployment</Link>
                         </Button>
-                        <Button type="primary" onClick={viewDetails} >
+                        {/* <Button type="primary" onClick={viewDetails} >
                             Test
-                        </Button>
+                        </Button> */}
                     </Row>
                 </Col>
             </Row>

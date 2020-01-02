@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Icon, Input, Button, Select } from 'antd';
+import { Form, Input, Button, Select } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
 import { useHistory, useParams } from 'react-router-dom';
@@ -18,37 +18,39 @@ const formItemLayout = {
 };
 
 
-function AddBuildTool() {
+function AddBuildTool(props) {
     document.title = "Add Build Tool";
+    const { getFieldDecorator, validateFieldsAndScroll } = props.form;
 
     const [iconLoading, setIconLoading] = useState(false);
-    const [displayName, setDisplayName] = useState("");
-    const [provider, setProvider] = useState("");
-    const [fileName, setFileName] = useState("");
-    const [fileData, setFileData] = useState("");
 
     let history = useHistory();
     let { projectResourceId } = useParams();
 
-    function AddBuildTool() {
-        setIconLoading(true);
-        var data = {
-            'projectId': projectResourceId,
-            'fileName': fileName,
-            'fileData': btoa(fileData),
-            'displayName': displayName,
-            'provider': provider,
-        };
-        axios.post('http://localhost:8097/v1/settings/build-tool', data)
-            .then((response) => {
-                console.log(response);
-                setIconLoading(false);
-                message.success('Build tool added successfully.', 5);
-                history.push(`/app/project/${projectResourceId}/settings/build-tools`);
-            })
-            .catch((error) => {
-                setIconLoading(false);
-            });
+    function addBuildTool(e) {
+        e.preventDefault();
+        validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                setIconLoading(true);
+                var data = {
+                    'projectId': projectResourceId,
+                    'fileName': values.fileName,
+                    'fileData': btoa(values.fileData),
+                    'displayName': values.displayName,
+                    'provider': values.provider,
+                };
+                axios.post('http://localhost:8097/v1/settings/build-tool', data)
+                    .then((response) => {
+                        console.log(response);
+                        setIconLoading(false);
+                        message.success('Build tool added successfully.', 5);
+                        history.push(`/app/project/${projectResourceId}/settings/build-tools`);
+                    })
+                    .catch((error) => {
+                        setIconLoading(false);
+                    });
+            }
+        });
     }
 
     return (
@@ -62,43 +64,73 @@ function AddBuildTool() {
             </Row>
             <Row type="flex" justify="center" align="middle">
                 <Col span={24}  >
-                    <Form style={{ backgroundColor: 'white' }}>
-                        <FormItem {...formItemLayout} label="Display Name:">
-                            <Input autoFocus
-                                placeholder="Display Name"
-                                value={displayName}
-                                onChange={(e) => { setDisplayName(e.target.value) }} />
+                    <Form onSubmit={addBuildTool} style={{ backgroundColor: 'white' }}>
+                        <FormItem {...formItemLayout} label="Display Name:" hasFeedback>
+                            {getFieldDecorator('displayName', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Display Name!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="Display Name" autoFocus />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:">
-                            <Select showSearch
-                                value={provider}
-                                onChange={(e) => { setProvider(e) }}
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                    option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                }>
+                        <FormItem {...formItemLayout} label="Provider:" hasFeedback>
+                            {getFieldDecorator('provider', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: 'Please select valid Provider!',
+                                    }
+                                ],
+                            })(<Select>
                                 <Option key="maven">Maven</Option>
                                 <Option key="gradle">Gradle</Option>
-                            </Select>
+                            </Select>)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="File Name:">
-                            <Input placeholder="File Name"
-                                value={fileName}
-                                onChange={(e) => { setFileName(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="File Name:" hasFeedback>
+                            {getFieldDecorator('fileName', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid File Name!',
+                                    },
+                                    {
+                                        max: 100,
+                                        message: 'Only 100 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input placeholder="File Name" />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="File Data">
-                            <Input.TextArea placeholder="File Data"
-                                autosize={{ minRows: 10, maxRows: 15 }}
-                                value={fileData}
-                                onChange={(e) => { setFileData(e.target.value) }} />
+                        <FormItem {...formItemLayout} label="File Data:" hasFeedback>
+                            {getFieldDecorator('fileData', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid File Data!',
+                                    },
+                                    {
+                                        max: 100,
+                                        message: 'Only 100 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input.TextArea placeholder="File Data" autosize={{ minRows: 10, maxRows: 15 }} />)}
                         </FormItem>
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">
                                 <Col>
-                                    <Button type="primary"
-                                        loading={iconLoading}
-                                        htmlType="submit"
-                                        onClick={AddBuildTool} >Submit</Button>
+                                    <Button type="primary" loading={iconLoading} htmlType="submit">Submit</Button>
                                 </Col>
                             </Row>
                         </FormItem>
@@ -109,4 +141,5 @@ function AddBuildTool() {
     );
 }
 
-export default AddBuildTool;
+const WrappedComponent = Form.create({ name: 'add-build-tool' })(AddBuildTool);
+export default WrappedComponent;
