@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Select } from 'antd';
-import { Row, Col, message, Spin } from 'antd';
+import { Button, Col, Form, Input, message, Row, Select, Spin } from 'antd';
 import axios from 'axios';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import AdditionalInfo from '../../AdditionalInfo';
 
 
 const Option = Select.Option;
@@ -28,6 +29,8 @@ function EditBuildTool(props) {
     const [provider, setProvider] = useState("");
     const [fileName, setFileName] = useState("build-settings");
     const [fileData, setFileData] = useState("");
+    const [lastUpdatedBy, setLastUpdatedBy] = useState("");
+    const [lastUpdatedOn, setLastUpdatedOn] = useState("");
 
     let history = useHistory();
     let { projectResourceId, settingId } = useParams();
@@ -46,6 +49,8 @@ function EditBuildTool(props) {
                 setProvider(response.data.provider);
                 setFileName(response.data.fileName);
                 setFileData(atob(response.data.fileData));
+                setLastUpdatedBy(response.data.lastUpdatedBy);
+                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -78,6 +83,10 @@ function EditBuildTool(props) {
         });
     }
 
+    let extraInfo = (
+        <AdditionalInfo lastUpdatedBy={lastUpdatedBy} lastUpdatedOn={lastUpdatedOn} />
+    );
+
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
@@ -91,7 +100,7 @@ function EditBuildTool(props) {
                 <Col span={24}  >
                     <Form onSubmit={updateSetting} style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="ID:">
-                            <Input readOnly value={settingId} />
+                            <Input readOnly value={settingId} suffix={extraInfo} />
                         </FormItem>
 
                         <FormItem {...formItemLayout} label="Project ID:">

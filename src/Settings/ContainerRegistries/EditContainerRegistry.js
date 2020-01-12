@@ -1,7 +1,9 @@
 import { Button, Col, Form, Input, message, Row, Select, Spin } from 'antd';
 import axios from 'axios';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import AdditionalInfo from '../../AdditionalInfo';
 
 const Option = Select.Option;
 const FormItem = Form.Item;
@@ -28,6 +30,8 @@ function EditContainerRegistry(props) {
     const [registryId, setRegistryId] = useState("");
     const [registryUrl, setRegistryUrl] = useState("");
     const [cloudCredentialId, setCloudCredentialId] = useState("");
+    const [lastUpdatedBy, setLastUpdatedBy] = useState("");
+    const [lastUpdatedOn, setLastUpdatedOn] = useState("");
 
     let history = useHistory();
     let { projectResourceId, settingId } = useParams();
@@ -47,6 +51,8 @@ function EditContainerRegistry(props) {
                 setRegistryId(response.data.registryId);
                 setRegistryUrl(response.data.registryUrl);
                 setCloudCredentialId(response.data.cloudCredentialId);
+                setLastUpdatedBy(response.data.lastUpdatedBy);
+                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -79,6 +85,10 @@ function EditContainerRegistry(props) {
         });
     }
 
+    let extraInfo = (
+        <AdditionalInfo lastUpdatedBy={lastUpdatedBy} lastUpdatedOn={lastUpdatedOn} />
+    );
+
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
@@ -92,7 +102,7 @@ function EditContainerRegistry(props) {
                 <Col span={24}  >
                     <Form onSubmit={updateSetting} style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="ID:">
-                            <Input readOnly value={settingId} />
+                            <Input readOnly value={settingId} suffix={extraInfo} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Project ID:">
                             <Input readOnly value={projectResourceId} />

@@ -32,6 +32,8 @@ import ViewK8sCluster from '../Settings/K8sClusters/ViewK8sCluster';
 
 import ManageHostnames from './Hostnames/ManageHostnames';
 import AddHostname from '../Settings/Hostnames/AddHostname';
+import EditHostname from '../Settings/Hostnames/EditHostname';
+import ViewHostname from '../Settings/Hostnames/ViewHostname';
 
 
 
@@ -127,6 +129,8 @@ function ManageSettings() {
 
                         <ProtectedRoute path="/app/project/:projectResourceId/settings/hostnames" component={ManageHostnames} />
                         <ProtectedRoute path="/app/project/:projectResourceId/settings/hostname/add" component={AddHostname} />
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/:settingId/hostname/edit" component={EditHostname} />
+                        <ProtectedRoute path="/app/project/:projectResourceId/settings/:settingId/hostname/view" component={ViewHostname} />
 
                         <ProtectedRoute component={Nomatch} />
                     </Switch>

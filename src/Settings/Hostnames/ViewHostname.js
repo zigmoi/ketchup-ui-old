@@ -1,4 +1,4 @@
-import { Col, Form, Icon, Input, Row, Spin, Tooltip } from 'antd';
+import { Col, Form, Icon, Input, Row, Spin, Table, Tooltip } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -18,34 +18,45 @@ const formItemLayout = {
 };
 
 
-function ViewCloudProvider() {
-    document.title = "View Cloud Provider";
+function ViewHostname() {
+    document.title = "View Git Provider";
 
     const [iconLoading, setIconLoading] = useState(false);
-
     const [displayName, setDisplayName] = useState("");
-    const [provider, setProvider] = useState("");
-    const [accessId, setAccessId] = useState("");
-    const [secretKey, setSecretKey] = useState("");
+    const [columns, setColumns] = useState([]);
+    const [dataSource, setDataSource] = useState([]);
     const [lastUpdatedBy, setLastUpdatedBy] = useState("");
     const [lastUpdatedOn, setLastUpdatedOn] = useState("");
 
     let { projectResourceId, settingId } = useParams();
 
     useEffect(() => {
+        setColumns();
         loadDetails();
     }, [projectResourceId, settingId]);
+
+    function initColumns() {
+        const columns = [{
+            title: 'Hostname',
+            dataIndex: 'hostname',
+            key: 'hostname',
+        }, {
+            title: 'IP',
+            dataIndex: 'ip',
+            key: 'ip',
+        }];
+
+        setColumns(columns);
+    }
 
 
     function loadDetails() {
         setIconLoading(true);
-        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/cloud-provider/${projectResourceId}/${settingId}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/hostname-ip-mapping/${projectResourceId}/${settingId}`)
             .then((response) => {
                 setIconLoading(false);
                 setDisplayName(response.data.displayName);
-                setProvider(response.data.provider);
-                setAccessId(response.data.accessId);
-                setSecretKey(response.data.secretKey);
+                // setDataSource(response.data.hostnameIpMapping);
                 setLastUpdatedBy(response.data.lastUpdatedBy);
                 setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
             })
@@ -54,9 +65,8 @@ function ViewCloudProvider() {
             });
     }
 
-    let editLink;
-    editLink = (
-        <Link to={`/app/project/${projectResourceId}/settings/${settingId}/cloud-provider/edit`}>
+    let editLink = (
+        <Link to={`/app/project/${projectResourceId}/settings/${settingId}/hostname/edit`}>
             <Tooltip title="Edit">
                 <Icon type="edit" />
             </Tooltip>
@@ -71,7 +81,7 @@ function ViewCloudProvider() {
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >View Cloud Provider{editLink}</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >View Hostname{editLink}</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
@@ -88,15 +98,10 @@ function ViewCloudProvider() {
                         <FormItem {...formItemLayout} label="Display Name:">
                             <Input readOnly value={displayName} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:">
-                            <Input readOnly value={provider} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Access ID:">
-                            <Input readOnly value={accessId} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Secret Key:">
-                            <Input.Password readOnly value={secretKey} />
-                        </FormItem>
+                        <Table dataSource={dataSource}
+                            pagination={{ defaultPageSize: 4 }}
+                            columns={columns}
+                            size="middle" rowKey={record => record.id} />
                     </Form>
                 </Col>
             </Row>
@@ -104,4 +109,4 @@ function ViewCloudProvider() {
     );
 }
 
-export default ViewCloudProvider;
+export default ViewHostname;

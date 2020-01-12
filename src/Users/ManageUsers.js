@@ -36,14 +36,7 @@ function ManageUsers() {
             dataIndex: 'enabled',
             key: 'enabled',
             render: (text, record) => (
-                record.enabled ? <Tag color="blue">Active</Tag> : <Tag color="red">Disabled</Tag>
-            )
-        }, {
-            title: 'Creation Date',
-            dataIndex: 'creationDate',
-            key: 'creationDate',
-            render: (text, record) => (
-                moment(record.creationDate).format("LLL")
+                record.enabled ? <Tag color="#52c41a">Active</Tag> : <Tag color="red">Disabled</Tag>
             )
         }, {
             title: 'Actions',
@@ -51,8 +44,12 @@ function ManageUsers() {
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <Button type="primary" size="small"><Link to={`/app/user/${record.userName}/roles`}>Roles</Link></Button>
+                    <Button type="primary" size="small"><Link to={`/app/user/${record.userName}/view`}>View</Link></Button>
                     <Divider type="vertical" />
+                    <Button type="primary" size="small"><Link to={`/app/user/${record.userName}/edit`}>Edit</Link></Button>
+                    <Divider type="vertical" />
+                    {/* <Button type="primary" size="small"><Link to={`/app/user/${record.userName}/roles`}>Roles</Link></Button>
+                    <Divider type="vertical" /> */}
                     <Popconfirm title="Confirm operation?"
                         okText="Go Ahead" cancelText="Cancel" onConfirm={() => toggleStatus(record)}>
                         <Button type="danger" size="small">{record.enabled ? 'Disable' : 'Enable'}</Button>

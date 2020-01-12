@@ -35,7 +35,7 @@ function ManageTenants() {
             dataIndex: 'enabled',
             key: 'enabled',
             render: (text, record) => (
-                record.enabled ? <Tag color="blue">Active</Tag> : <Tag color="red">Disabled</Tag>
+                record.enabled ? <Tag color="#52c41a">Active</Tag> : <Tag color="red">Disabled</Tag>
             )
         }, {
             title: 'Creation Date',

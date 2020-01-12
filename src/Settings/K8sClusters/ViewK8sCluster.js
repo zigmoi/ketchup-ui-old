@@ -1,8 +1,9 @@
-import { Button, Col, Divider, Form, Icon, Input, Row, Spin, Tag, Tooltip } from 'antd';
+import { Button, Col, Divider, Form, Icon, Input, Row, Spin, Tooltip } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import AdditionalInfo from '../../AdditionalInfo';
 
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -61,6 +62,10 @@ function ViewK8sCluster() {
         </Link>
     );
 
+    let extraInfo = (
+        <AdditionalInfo lastUpdatedBy={lastUpdatedBy} lastUpdatedOn={lastUpdatedOn} />
+    );
+
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
@@ -74,21 +79,19 @@ function ViewK8sCluster() {
                 <Col span={24}  >
                     <Form style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="ID:">
-                            <Input readOnly value={settingId} />
+                            <Input readOnly value={settingId} suffix={extraInfo} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Project ID:">
                             <Input readOnly value={projectResourceId} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Display Name:">
                             <Input readOnly value={displayName} />
-                            <Tag color="blue">{lastUpdatedBy}</Tag>
-                            <Tag color="blue">{lastUpdatedOn}</Tag>
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
                             <Input readOnly value={provider} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Kube Config">
-                            <Icon type="file-text" style={{fontSize: 20}} />
+                            <Icon type="file-text" style={{ fontSize: 20 }} />
                             <Divider type="vertical" />
                             <Button type="primary" size="small">View</Button>
                             <Divider type="vertical" />

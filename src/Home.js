@@ -20,11 +20,14 @@ import ManageTenants from './Tenants/ManageTenants';
 import CreateTenant from './Tenants/CreateTenant';
 
 import CreateUser from './Users/CreateUser';
+import EditUser from './Users/EditUser';
+import ViewUser from './Users/ViewUser';
 import ManageUsers from './Users/ManageUsers';
 import ManageRoles from './Users/ManageRoles';
 
 import CreateProject from './Projects/CreateProject';
 import ViewProject from './Projects/ViewProject';
+import EditProject from './Projects/EditProject';
 import ManageProjects from './Projects/ManageProjects';
 import ManageProjectMembers from './Projects/ManageProjectMembers';
 import ManageProjectPermissions from './Projects/ManageProjectPermissions';
@@ -35,6 +38,7 @@ import ManageDeployments from './Deployments/ManageDeployments';
 import CreateDeployment from './Deployments/CreateDeployment';
 import ListProjects from './Projects/ListProjects';
 import DeploymentTypes from './Deployments/DeploymentTypes';
+
 
 function Home() {
   const userContext = useContext(UserContext);
@@ -408,10 +412,13 @@ function Home() {
                   <Route path="/app/manage-tenants" render={() => <ProtectedRoute component={ManageTenants} roles={['ROLE_SUPER_ADMIN']} />} />
                   <Route path="/app/create-user" render={() => <ProtectedRoute component={CreateUser} roles={['ROLE_SUPER_ADMIN', 'ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />} />
                   <Route path="/app/manage-users" render={() => <ProtectedRoute component={ManageUsers} roles={['ROLE_SUPER_ADMIN', 'ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />} />
+                  <Route path="/app/user/:userName/view" render={() => <ProtectedRoute component={ViewUser} />} />
+                  <Route path="/app/user/:userName/edit" render={() => <ProtectedRoute component={EditUser} />} />
                   <Route path="/app/user/:userName/roles" render={() => <ProtectedRoute component={ManageRoles} roles={['ROLE_SUPER_ADMIN', 'ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />} />
                   <Route path="/app/project/create" render={() => <ProtectedRoute component={CreateProject} />} />
                   <Route path="/app/projects" render={() => <ProtectedRoute component={ManageProjects} />} />
                   <Route path="/app/project/:projectResourceId/view" render={() => <ProtectedRoute component={ViewProject} />} />
+                  <Route path="/app/project/:projectResourceId/edit" render={() => <ProtectedRoute component={EditProject} />} />
                   <Route path="/app/project/:projectResourceId/members" render={() => <ProtectedRoute component={ManageProjectMembers} />} />
                   <Route path="/app/project/:projectResourceId/permissions/:userId?" render={() => <ProtectedRoute component={ManageProjectPermissions} />} />
                   <Route path="/app/project/:projectResourceId/settings/:settingId" render={() => <ProtectedRoute component={ManageSettings} />} />

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Icon, Input, Tag, Tooltip } from 'antd';
-import { Row, Col, Spin } from 'antd';
+import { Col, Form, Icon, Input, Row, Spin, Tooltip } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import { useParams, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import AdditionalInfo from '../../AdditionalInfo';
 
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -64,6 +64,10 @@ function ViewContainerRegistry() {
         </Link>
     );
 
+    let extraInfo = (
+        <AdditionalInfo lastUpdatedBy={lastUpdatedBy} lastUpdatedOn={lastUpdatedOn} />
+    );
+
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
@@ -77,15 +81,13 @@ function ViewContainerRegistry() {
                 <Col span={24}  >
                     <Form style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="ID:">
-                            <Input readOnly value={settingId} />
+                            <Input readOnly value={settingId} suffix={extraInfo} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Project ID:">
                             <Input readOnly value={projectResourceId} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Display Name:">
                             <Input readOnly value={displayName} />
-                            <Tag color="blue">{lastUpdatedBy}</Tag>
-                            <Tag color="blue">{lastUpdatedOn}</Tag>
                         </FormItem>
                         <FormItem {...formItemLayout} label="Provider:">
                             <Input readOnly value={provider} />

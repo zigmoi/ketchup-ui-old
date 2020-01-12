@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Select, Divider, Table } from 'antd';
-import { Row, Col, message, Spin } from 'antd';
+import { Button, Col, Divider, Form, Input, message, Row, Spin, Table } from 'antd';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
-const Option = Select.Option;
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -84,18 +82,11 @@ function AddHostname() {
 
     function addHostname() {
         setIconLoading(true);
-        
-        let mappings={};
-        dataSource.forEach(element => {
-            let propertyName=element.hostname;
-            mappings[propertyName]=element.ip;
-        });
-        console.log(mappings);
 
         var data = {
             'projectId': projectResourceId,
             'displayName': displayName,
-            'hostnameIpMapping': mappings
+            'hostnameIpMapping': dataSource
         };
         axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/hostname-ip-mapping`, data)
             .then((response) => {

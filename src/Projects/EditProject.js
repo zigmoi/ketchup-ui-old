@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Form, Input, Button } from 'antd';
-import { Row, Col, message, Spin } from 'antd';
+import { Button, Col, Form, Input, message, Row, Spin } from 'antd';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import moment from 'moment';
+import AdditionalInfo from '../AdditionalInfo';
 
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -16,30 +17,48 @@ const formItemLayout = {
     },
 };
 
-function CreateProject(props) {
+function EditProject(props) {
+    document.title = "Edit Project";
     const { getFieldDecorator, validateFieldsAndScroll } = props.form;
 
     const [iconLoading, setIconLoading] = useState(false);
+    const [resourceId, setResourceId] = useState("");
+    const [description, setDescription] = useState("");
+    const [creationDate, setCreationDate] = useState(null);
+
     let history = useHistory();
+    const { projectResourceId } = useParams();
 
-    document.title = "Create Project";
+    useEffect(() => {
+        loadDetails();
+    }, [projectResourceId]);
 
-    function submitRequest(e) {
+
+    function loadDetails() {
+        setIconLoading(true);
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/project/${projectResourceId}`)
+            .then((response) => {
+                setIconLoading(false);
+                setResourceId(response.data.id.resourceId);
+                setDescription(response.data.description);
+                setCreationDate(moment(response.data.creationDate).format("LLL"));
+            })
+            .catch((error) => {
+                setIconLoading(false);
+            });
+    }
+
+
+    function update(e) {
         e.preventDefault();
         validateFieldsAndScroll((err, values) => {
             if (!err) {
                 setIconLoading(true);
-                var data = {
-                    'projectResourceId': values.name,
-                    'description': values.description,
-                    'members': [],
-                };
-                axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/project/`, data)
+                axios.put(`${process.env.REACT_APP_API_BASE_URL}/v1/project/${resourceId}/${values.description}`)
                     .then((response) => {
-                        console.log(response);
                         setIconLoading(false);
-                        message.success('Project created successfully.', 5);
-                        history.push("/app/projects");
+                        message.success('Project updated successfully.', 5);
+                        history.push(`/app/projects`);
                     })
                     .catch((error) => {
                         setIconLoading(false);
@@ -48,37 +67,28 @@ function CreateProject(props) {
         });
     }
 
+    let extraInfo = (
+        <AdditionalInfo createdOn={creationDate} />
+    );
+
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold' }} >Create New Project</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Edit Project</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
             </Row>
             <Row type="flex" justify="center" align="middle">
                 <Col span={24}  >
-                    <Form onSubmit={submitRequest} style={{ backgroundColor: 'white' }}>
-                        <FormItem {...formItemLayout} label="Name:" hasFeedback>
-                            {getFieldDecorator('name', {
-                                initialValue: "",
-                                rules: [
-                                    {
-                                        required: true,
-                                        whitespace: true,
-                                        message: 'Please provide valid Project Name!',
-                                    },
-                                    {
-                                        max: 50,
-                                        message: 'Only 50 characters are allowed!',
-                                    },
-                                ],
-                            })(<Input placeholder="Project Name" autoFocus />)}
+                    <Form onSubmit={update} style={{ backgroundColor: 'white' }}>
+                        <FormItem {...formItemLayout} label="Project ID:">
+                            <Input readOnly value={resourceId} suffix={extraInfo} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Description:" hasFeedback>
                             {getFieldDecorator('description', {
-                                initialValue: "",
+                                initialValue: description,
                                 rules: [
                                     {
                                         max: 100,
@@ -90,7 +100,7 @@ function CreateProject(props) {
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">
                                 <Col>
-                                    <Button type="primary" loading={iconLoading} htmlType="submit">Submit</Button>
+                                    <Button type="primary" loading={iconLoading} htmlType="submit" >Submit</Button>
                                 </Col>
                             </Row>
                         </FormItem>
@@ -101,5 +111,5 @@ function CreateProject(props) {
     );
 }
 
-const WrappedComponent = Form.create({ name: 'create-project' })(CreateProject);
+const WrappedComponent = Form.create({ name: 'edit-project' })(EditProject);
 export default WrappedComponent;

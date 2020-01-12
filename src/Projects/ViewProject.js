@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, Tooltip, Tag } from 'antd';
 import { Row, Col, message, Spin } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import AdditionalInfo from '../AdditionalInfo';
 
 function ViewProject() {
     const FormItem = Form.Item;
@@ -45,11 +46,24 @@ function ViewProject() {
             });
     }
 
+    let editLink;
+    editLink = (
+        <Link to={`/app/project/${projectResourceId}/edit`}>
+            <Tooltip title="Edit">
+                <Icon type="edit" />
+            </Tooltip>
+        </Link>
+    );
+
+    let extraInfo = (
+        <AdditionalInfo createdOn={creationDate} />
+    );
+
     return (
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Project Details</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >View Project: General Details{editLink}</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
@@ -58,13 +72,14 @@ function ViewProject() {
                 <Col span={24}  >
                     <Form style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="Name:">
-                            <Input value={name} readOnly />
+                            <Input value={name} readOnly suffix={extraInfo} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Description:">
-                            <Input value={description} readOnly />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Created On:">
-                            <Input value={creationDate} readOnly />
+                        <Input.TextArea 
+                            placeholder="Description"
+                            readOnly 
+                            value={description} 
+                            autosize={{ minRows: 2, maxRows: 5 }} />
                         </FormItem>
                     </Form>
                 </Col>
