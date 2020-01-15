@@ -24,7 +24,10 @@ function EditProject(props) {
     const [iconLoading, setIconLoading] = useState(false);
     const [resourceId, setResourceId] = useState("");
     const [description, setDescription] = useState("");
-    const [creationDate, setCreationDate] = useState(null);
+    const [createdOn, setCreatedOn] = useState(null);
+    const [createdBy, setCreatedBy] = useState(null);
+    const [lastUpdatedOn, setLastUpdatedOn] = useState(null);
+    const [lastUpdatedBy, setLastUpdatedBy] = useState(null);
 
     let history = useHistory();
     const { projectResourceId } = useParams();
@@ -41,7 +44,10 @@ function EditProject(props) {
                 setIconLoading(false);
                 setResourceId(response.data.id.resourceId);
                 setDescription(response.data.description);
-                setCreationDate(moment(response.data.creationDate).format("LLL"));
+                setCreatedOn(moment(response.data.createdOn).format("LLL"));
+                setCreatedBy(response.data.createdBy);
+                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
+                setLastUpdatedBy(response.data.lastUpdatedBy);
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -68,7 +74,11 @@ function EditProject(props) {
     }
 
     let extraInfo = (
-        <AdditionalInfo createdOn={creationDate} />
+        <AdditionalInfo 
+            createdOn={createdOn} 
+            createdBy={createdBy} 
+            lastUpdatedOn={lastUpdatedOn} 
+            lastUpdatedBy={lastUpdatedBy} />
     );
 
     return (

@@ -124,18 +124,18 @@ function Home() {
   let userProfileButton;
   const profileContent = (
     <div>
-      <span>User: </span>
+      {/* <span>User: </span>
       <span style={{ fontWeight: 'bold' }}>{userContext.currentUser ? userContext.currentUser.id : ""}</span>
-      <br />
-      <span>Alias: </span>
+      <br /> */}
+      <span>User: </span>
       <span style={{ fontWeight: 'bold' }}>{userContext.currentUser ? userContext.currentUser.displayName : ""}</span>
       <br />
-      <span>Role: </span>
+      {/* <span>Role: </span>
       <span style={{ fontWeight: 'bold' }}>{userContext.currentUser ? userContext.currentUser.roles[0].replace("ROLE_", "") : ""}</span>
-      <br />
-      <span>Email: </span>
+      <br /> */}
+      {/* <span>Email: </span>
       <span style={{ fontWeight: 'bold' }}>{userContext.currentUser ? userContext.currentUser.email : ""}</span>
-      <br />
+      <br /> */}
       <Link to="/login"
         onClick={() => {
           deploymentContext.clearCurrentDeployment();
@@ -361,7 +361,24 @@ function Home() {
           <Menu.Item key="Heading" style={{ fontWeight: 'bold', float: 'left' }}>
             <span style={{ fontSize: 14 }}> <Icon type="thunderbolt" theme="twoTone" twoToneColor="#eb2f96" />Ketchup</span>
           </Menu.Item>
-          {userProfileButton}
+          <Menu.Item key="logout" style={{ fontWeight: 'bold', float: "right" }}>
+            <Tooltip title="Logout">
+              <Link to="/login"
+                onClick={() => {
+                  deploymentContext.clearCurrentDeployment();
+                  projectContext.clearCurrentProject();
+                  userContext.clearCurrentUser();
+                }}>
+                <Icon type="logout" />
+              </Link>
+            </Tooltip>
+          </Menu.Item>
+          <Menu.Item key="username" style={{ fontWeight: 'bold', float: "right" }}>
+            <span>
+              <Icon type="user" />
+              {userContext.currentUser ? userContext.currentUser.displayName : ""}
+            </span>
+          </Menu.Item >
         </Menu>
       </Header>
       <Layout style={{ height: 'calc(100vh - 48px)' }}>

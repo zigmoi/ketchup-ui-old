@@ -22,7 +22,10 @@ function ViewProject() {
     const [iconLoading, setIconLoading] = useState(false);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
-    const [creationDate, setCreationDate] = useState(null);
+    const [createdOn, setCreatedOn] = useState(null);
+    const [createdBy, setCreatedBy] = useState(null);
+    const [lastUpdatedOn, setLastUpdatedOn] = useState(null);
+    const [lastUpdatedBy, setLastUpdatedBy] = useState(null);
 
     const { projectResourceId } = useParams();
 
@@ -39,7 +42,11 @@ function ViewProject() {
                 setIconLoading(false);
                 setName(response.data.id.resourceId);
                 setDescription(response.data.description);
-                setCreationDate(moment(response.data.creationDate).format("LLL"));
+                setCreatedOn(moment(response.data.createdOn).format("LLL"));
+                setCreatedBy(response.data.createdBy);
+                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
+                setLastUpdatedBy(response.data.lastUpdatedBy);
+
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -56,7 +63,11 @@ function ViewProject() {
     );
 
     let extraInfo = (
-        <AdditionalInfo createdOn={creationDate} />
+        <AdditionalInfo 
+            createdOn={createdOn} 
+            createdBy={createdBy} 
+            lastUpdatedOn={lastUpdatedOn} 
+            lastUpdatedBy={lastUpdatedBy} />
     );
 
     return (

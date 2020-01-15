@@ -1,11 +1,10 @@
-import { Col, Form, Icon, Input, Row, Spin, Tag, Tooltip, Select } from 'antd';
+import { Col, Form, Icon, Input, Row, Spin, Tag, Tooltip } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import AdditionalInfo from '../AdditionalInfo';
 
-const Option = Select.Option;
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -30,7 +29,10 @@ function ViewUser() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [roles, setRoles] = useState([]);
-    const [creationDate, setCreationDate] = useState("");
+    const [createdOn, setCreatedOn] = useState(null);
+    const [createdBy, setCreatedBy] = useState(null);
+    const [lastUpdatedOn, setLastUpdatedOn] = useState(null);
+    const [lastUpdatedBy, setLastUpdatedBy] = useState(null);
 
     let { userName } = useParams();
 
@@ -50,7 +52,10 @@ function ViewUser() {
                 setFirstName(response.data.firstName);
                 setLastName(response.data.lastName);
                 setRoles(response.data.roles);
-                setCreationDate(moment(response.data.creationDate).format("LLL"));
+                setCreatedOn(moment(response.data.createdOn).format("LLL"));
+                setCreatedBy(response.data.createdBy);
+                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
+                setLastUpdatedBy(response.data.lastUpdatedBy);
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -67,7 +72,11 @@ function ViewUser() {
     );
 
     let extraInfo = (
-        <AdditionalInfo createdOn={creationDate} />
+        <AdditionalInfo
+            createdOn={createdOn}
+            createdBy={createdBy}
+            lastUpdatedOn={lastUpdatedOn}
+            lastUpdatedBy={lastUpdatedBy} />
     );
 
     return (

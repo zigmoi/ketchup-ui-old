@@ -34,11 +34,11 @@ function ManageProjects() {
             dataIndex: 'id.resourceId',
             key: 'id',
         }, {
-            title: 'Creation Date',
-            dataIndex: 'creationDate',
-            key: 'creationDate',
+            title: 'Created On',
+            dataIndex: 'createdOn',
+            key: 'createdOn',
             render: (text, record) => (
-                moment(record.creationDate).format("MMM D, YYYY")
+                moment(record.createdOn).format("MMM D, YYYY")
             )
         }, {
             title: 'Actions',

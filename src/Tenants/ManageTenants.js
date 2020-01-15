@@ -38,11 +38,11 @@ function ManageTenants() {
                 record.enabled ? <Tag color="#52c41a">Active</Tag> : <Tag color="red">Disabled</Tag>
             )
         }, {
-            title: 'Creation Date',
-            dataIndex: 'creationDate',
-            key: 'creationDate',
+            title: 'Created On',
+            dataIndex: 'createdOn',
+            key: 'createdOn',
             render: (text, record) => (
-                moment(record.creationDate).format("LLL")
+                moment(record.createdOn).format("LLL")
             )
         }, {
             title: 'Actions',

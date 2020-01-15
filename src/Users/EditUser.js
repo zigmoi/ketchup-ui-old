@@ -30,7 +30,11 @@ function EditUser(props) {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [roles, setRoles] = useState([]);
-    const [creationDate, setCreationDate] = useState("");
+    const [createdOn, setCreatedOn] = useState(null);
+    const [createdBy, setCreatedBy] = useState(null);
+    const [lastUpdatedOn, setLastUpdatedOn] = useState(null);
+    const [lastUpdatedBy, setLastUpdatedBy] = useState(null);
+
 
     let history = useHistory();
     let { userName } = useParams();
@@ -51,7 +55,10 @@ function EditUser(props) {
                 setFirstName(response.data.firstName);
                 setLastName(response.data.lastName);
                 setRoles(response.data.roles);
-                setCreationDate(moment(response.data.creationDate).format("LLL"));
+                setCreatedOn(moment(response.data.createdOn).format("LLL"));
+                setCreatedBy(response.data.createdBy);
+                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
+                setLastUpdatedBy(response.data.lastUpdatedBy);
 
             })
             .catch((error) => {
@@ -89,7 +96,11 @@ function EditUser(props) {
     }
 
     let extraInfo = (
-        <AdditionalInfo createdOn={creationDate} />
+        <AdditionalInfo
+            createdOn={createdOn}
+            createdBy={createdBy}
+            lastUpdatedOn={lastUpdatedOn}
+            lastUpdatedBy={lastUpdatedBy} />
     );
 
     return (
