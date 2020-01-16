@@ -1,39 +1,41 @@
 import { Empty, Icon, Popover, Tag } from 'antd';
+import moment from 'moment';
+import PropTypes from 'prop-types';
 import React from 'react';
 
-function AdditionalInfo(props) {
+function AdditionalInfo({createdOn, createdBy, lastUpdatedOn, lastUpdatedBy }) {
     let detailsView;
-    if (props.createdOn || props.createdBy || props.lastUpdatedOn || props.lastUpdatedBy) {
+    if (createdOn || createdBy || lastUpdatedOn || lastUpdatedBy) {
         detailsView = (
             <React.Fragment>
-                {props.lastUpdatedOn ?
+                {lastUpdatedOn ?
                     <React.Fragment>
                         <label style={{ fontWeight: 'bold' }}>Last Updated On: </label>
-                        <Tag color="#2f54eb">{props.lastUpdatedOn}</Tag>
+                        <Tag color="#2f54eb">{moment(lastUpdatedOn).format("LLL")}</Tag>
                         <br /><br />
                     </React.Fragment>
                     : null
                 }
-                {props.lastUpdatedBy ?
+                {lastUpdatedBy ?
                     <React.Fragment>
                         <label style={{ fontWeight: 'bold' }}>Last Updated By: </label>
-                        <Tag color="#eb2f96">{props.lastUpdatedBy}</Tag>
+                        <Tag color="#eb2f96">{lastUpdatedBy}</Tag>
                         <br /><br />
                     </React.Fragment>
                     : null
                 }
-                {props.createdOn ?
+                {createdOn ?
                     <React.Fragment>
                         <label style={{ fontWeight: 'bold' }}>Created On: </label>
-                        <Tag color="#2f54eb">{props.createdOn}</Tag>
+                        <Tag color="#2f54eb">{moment(createdOn).format("LLL")}</Tag>
                         <br /><br />
                     </React.Fragment>
                     : null
                 }
-                {props.createdBy ?
+                {createdBy ?
                     <React.Fragment>
                         <label style={{ fontWeight: 'bold' }}>Created By: </label>
-                        <Tag color="#eb2f96">{props.createdBy}</Tag>
+                        <Tag color="#eb2f96">{createdBy}</Tag>
                     </React.Fragment>
                     : null
                 }
@@ -49,6 +51,13 @@ function AdditionalInfo(props) {
             <Icon type="info-circle" />
         </Popover>
     );
+}
+
+AdditionalInfo.propTypes ={
+    createdOn: PropTypes.string,
+    createdBy: PropTypes.string,
+    lastUpdatedOn: PropTypes.string,
+    lastUpdatedBy: PropTypes.string
 }
 
 export default AdditionalInfo;

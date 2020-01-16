@@ -1,6 +1,5 @@
-import { Col, Form, Icon, Input, Row, Spin, Tag, Tooltip } from 'antd';
+import { Col, Form, Icon, Input, Row, Spin, Tooltip } from 'antd';
 import axios from 'axios';
-import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import AdditionalInfo from '../../AdditionalInfo';
@@ -49,7 +48,7 @@ function ViewGitProvider() {
                 setPassword(response.data.password);
                 setRepoListUrl(response.data.repoListUrl);
                 setLastUpdatedBy(response.data.lastUpdatedBy);
-                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
+                setLastUpdatedOn(response.data.lastUpdatedOn);
             })
             .catch((error) => {
                 setIconLoading(false);

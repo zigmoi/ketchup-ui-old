@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Icon, Input, Button, Tooltip, Tag } from 'antd';
-import { Row, Col, message, Spin } from 'antd';
+import { Col, Form, Icon, Input, Row, Spin, Tooltip } from 'antd';
 import axios from 'axios';
-import moment from 'moment';
-import { useParams, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import AdditionalInfo from '../AdditionalInfo';
 
 function ViewProject() {
@@ -42,9 +40,9 @@ function ViewProject() {
                 setIconLoading(false);
                 setName(response.data.id.resourceId);
                 setDescription(response.data.description);
-                setCreatedOn(moment(response.data.createdOn).format("LLL"));
+                setCreatedOn(response.data.createdOn);
                 setCreatedBy(response.data.createdBy);
-                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
+                setLastUpdatedOn(response.data.lastUpdatedOn);
                 setLastUpdatedBy(response.data.lastUpdatedBy);
 
             })

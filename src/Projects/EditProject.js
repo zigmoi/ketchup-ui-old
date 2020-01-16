@@ -2,7 +2,6 @@ import { Button, Col, Form, Input, message, Row, Spin } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import moment from 'moment';
 import AdditionalInfo from '../AdditionalInfo';
 
 const FormItem = Form.Item;
@@ -44,9 +43,9 @@ function EditProject(props) {
                 setIconLoading(false);
                 setResourceId(response.data.id.resourceId);
                 setDescription(response.data.description);
-                setCreatedOn(moment(response.data.createdOn).format("LLL"));
+                setCreatedOn(response.data.createdOn);
                 setCreatedBy(response.data.createdBy);
-                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
+                setLastUpdatedOn(response.data.lastUpdatedOn);
                 setLastUpdatedBy(response.data.lastUpdatedBy);
             })
             .catch((error) => {
@@ -74,10 +73,10 @@ function EditProject(props) {
     }
 
     let extraInfo = (
-        <AdditionalInfo 
-            createdOn={createdOn} 
-            createdBy={createdBy} 
-            lastUpdatedOn={lastUpdatedOn} 
+        <AdditionalInfo
+            createdOn={createdOn}
+            createdBy={createdBy}
+            lastUpdatedOn={lastUpdatedOn}
             lastUpdatedBy={lastUpdatedBy} />
     );
 

@@ -1,6 +1,5 @@
 import { Button, Col, Form, Input, message, Row, Select, Spin } from 'antd';
 import axios from 'axios';
-import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import AdditionalInfo from '../../AdditionalInfo';
@@ -50,7 +49,7 @@ function EditBuildTool(props) {
                 setFileName(response.data.fileName);
                 setFileData(atob(response.data.fileData));
                 setLastUpdatedBy(response.data.lastUpdatedBy);
-                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
+                setLastUpdatedOn(response.data.lastUpdatedOn);
             })
             .catch((error) => {
                 setIconLoading(false);

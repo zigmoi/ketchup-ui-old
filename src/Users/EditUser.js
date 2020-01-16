@@ -1,6 +1,5 @@
-import { Button, Col, Form, Input, message, Row, Spin, Switch, Select } from 'antd';
+import { Button, Col, Form, Input, message, Row, Select, Spin, Switch } from 'antd';
 import axios from 'axios';
-import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import AdditionalInfo from '../AdditionalInfo';
@@ -55,9 +54,9 @@ function EditUser(props) {
                 setFirstName(response.data.firstName);
                 setLastName(response.data.lastName);
                 setRoles(response.data.roles);
-                setCreatedOn(moment(response.data.createdOn).format("LLL"));
+                setCreatedOn(response.data.createdOn);
                 setCreatedBy(response.data.createdBy);
-                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
+                setLastUpdatedOn(response.data.lastUpdatedOn);
                 setLastUpdatedBy(response.data.lastUpdatedBy);
 
             })

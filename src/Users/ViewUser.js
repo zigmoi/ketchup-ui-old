@@ -1,6 +1,5 @@
 import { Col, Form, Icon, Input, Row, Spin, Tag, Tooltip } from 'antd';
 import axios from 'axios';
-import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import AdditionalInfo from '../AdditionalInfo';
@@ -52,9 +51,9 @@ function ViewUser() {
                 setFirstName(response.data.firstName);
                 setLastName(response.data.lastName);
                 setRoles(response.data.roles);
-                setCreatedOn(moment(response.data.createdOn).format("LLL"));
+                setCreatedOn(response.data.createdOn);
                 setCreatedBy(response.data.createdBy);
-                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
+                setLastUpdatedOn(response.data.lastUpdatedOn);
                 setLastUpdatedBy(response.data.lastUpdatedBy);
             })
             .catch((error) => {
@@ -111,7 +110,7 @@ function ViewUser() {
                                 <Col>
                                     {roles.length > 0 ?
                                         roles.map((role) => {
-                                            return <Tag color="#fa541c">{role}</Tag>
+                                            return <Tag key={role} color="#fa541c">{role}</Tag>
                                         })
                                         :
                                         <Tag color="#08979c">No roles assigned.</Tag>

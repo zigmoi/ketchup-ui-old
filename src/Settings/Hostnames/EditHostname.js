@@ -1,6 +1,5 @@
 import { Button, Col, Divider, Form, Input, message, Row, Spin, Table } from 'antd';
 import axios from 'axios';
-import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import AdditionalInfo from '../../AdditionalInfo';
@@ -70,7 +69,7 @@ function EditHostname(props) {
                 setDisplayName(response.data.displayName);
                 // setDataSource(response.data.hostnameIpMapping);
                 setLastUpdatedBy(response.data.lastUpdatedBy);
-                setLastUpdatedOn(moment(response.data.lastUpdatedOn).format("LLL"));
+                setLastUpdatedOn(response.data.lastUpdatedOn);
             })
             .catch((error) => {
                 setIconLoading(false);
