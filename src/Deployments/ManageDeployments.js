@@ -23,15 +23,9 @@ function ManageDeployments() {
 
     function initColumns() {
         const columns = [{
-            title: '#',
-            key: '#',
-            render: (text, record, index) => (
-                <span>{index + 1}</span>
-            )
-        }, {
             title: 'ID',
-            dataIndex: 'id',
-            key: 'id',
+            dataIndex: 'id.deploymentResourceId',
+            key: 'id.deploymentResourceId',
         }, {
             title: 'Service Name',
             dataIndex: 'serviceName',
@@ -42,10 +36,6 @@ function ManageDeployments() {
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <Button type="primary" size="small"><Link to={`/app/project/${projectResourceId}/deployment/${record.id}/members`}>Members</Link></Button>
-                    <Divider type="vertical" />
-                    <Button type="primary" size="small"><Link to={`/app/project/${projectResourceId}/deployment/${record.id}/permissions`}>Permissions</Link></Button>
-                    <Divider type="vertical" />
                     <Popconfirm title="Confirm operation?"
                         okText="Go Ahead" cancelText="Cancel" onConfirm={() => deleteDeployment(record)}>
                         <Button type="danger" size="small">Delete</Button>
@@ -77,7 +67,7 @@ function ManageDeployments() {
     function deleteDeployment(selectedRecord) {
         setIconLoading(true);
         console.log(selectedRecord);
-        let deploymentResourceId = selectedRecord.id;
+        let deploymentResourceId = selectedRecord.id.deploymentResourceId;
         axios.delete(`${process.env.REACT_APP_API_BASE_URL}/v1/project/${projectResourceId}/deployments/${deploymentResourceId}`)
             .then((response) => {
                 setIconLoading(false);
@@ -120,7 +110,7 @@ function ManageDeployments() {
                     <Table dataSource={dataSource}
                         pagination={{ defaultPageSize: 8 }}
                         columns={columns}
-                        size="middle" rowKey={record => record.id} />
+                        size="middle" rowKey={record => record.id.deploymentResourceId} />
                 </Col>
             </Row>
         </div>

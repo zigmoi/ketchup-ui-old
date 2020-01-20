@@ -427,11 +427,11 @@ function Home() {
                   <Route path="/app/dashboard" render={() => <ProtectedRoute component={Dashboard} />} />
                   <Route path="/app/create-tenant" render={() => <ProtectedRoute component={CreateTenant} roles={['ROLE_SUPER_ADMIN']} />} />
                   <Route path="/app/manage-tenants" render={() => <ProtectedRoute component={ManageTenants} roles={['ROLE_SUPER_ADMIN']} />} />
-                  <Route path="/app/create-user" render={() => <ProtectedRoute component={CreateUser} roles={['ROLE_SUPER_ADMIN', 'ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />} />
-                  <Route path="/app/manage-users" render={() => <ProtectedRoute component={ManageUsers} roles={['ROLE_SUPER_ADMIN', 'ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />} />
+                  <Route path="/app/create-user" render={() => <ProtectedRoute component={CreateUser} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />} />
+                  <Route path="/app/manage-users" render={() => <ProtectedRoute component={ManageUsers} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />} />
                   <Route path="/app/user/:userName/view" render={() => <ProtectedRoute component={ViewUser} />} />
                   <Route path="/app/user/:userName/edit" render={() => <ProtectedRoute component={EditUser} />} />
-                  <Route path="/app/user/:userName/roles" render={() => <ProtectedRoute component={ManageRoles} roles={['ROLE_SUPER_ADMIN', 'ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />} />
+                  <Route path="/app/user/:userName/roles" render={() => <ProtectedRoute component={ManageRoles} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN']} />} />
                   <Route path="/app/project/create" render={() => <ProtectedRoute component={CreateProject} />} />
                   <Route path="/app/projects" render={() => <ProtectedRoute component={ManageProjects} />} />
                   <Route path="/app/project/:projectResourceId/view" render={() => <ProtectedRoute component={ViewProject} />} />

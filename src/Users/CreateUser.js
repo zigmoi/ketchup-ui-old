@@ -130,9 +130,9 @@ function CreateUser(props) {
                                 ]
                             })(<Select mode="multiple">
                                 <Option value="ROLE_USER">USER</Option>
+                                <Option value="ROLE_USER_READER">USER READER</Option>
                                 <Option value="ROLE_USER_ADMIN">USER ADMIN</Option>
                                 <Option value="ROLE_TENANT_ADMIN">TENANT ADMIN</Option>
-                                <Option value="ROLE_SUPER_ADMIN">SUPER ADMIN</Option>
                             </Select>)}
                         </FormItem>
                         <FormItem {...formItemLayout} label="First Name:" hasFeedback>
