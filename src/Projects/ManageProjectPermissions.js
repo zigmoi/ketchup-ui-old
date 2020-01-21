@@ -41,12 +41,8 @@ function ManageProjectPermissions() {
             )
         }, {
             title: 'Permission',
-            dataIndex: 'permission.permissionId',
+            dataIndex: 'permission',
             key: 'id',
-        }, {
-            title: 'Description',
-            dataIndex: 'permission.permissionDescription',
-            key: 'description',
         }, {
             title: 'Status',
             dataIndex: 'status',
@@ -279,7 +275,7 @@ function ManageProjectPermissions() {
                         pagination={{ defaultPageSize: 10 }}
                         columns={columns}
                         rowSelection={{ onChange: setMultiSelectedRows }}
-                        size="small" rowKey={record => record.permission.permissionId} />
+                        size="small" rowKey={record => record.permission} />
                 </Col>
             </Row>
         </div>
