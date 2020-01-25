@@ -1,25 +1,15 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Row, Col, Form, Icon, Input, Button, Spin, Modal, message, Layout, Menu } from 'antd';
-import qs from 'qs';
-import jwt_decode from 'jwt-decode';
+import { Button, Col, Form, Input, Layout, message, Modal, Row, Spin } from 'antd';
 import axios from 'axios';
+import qs from 'qs';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import loginGeneralImage from './Images/login-general-img.svg';
+import loginImage from './Images/login-img.svg';
 import useLoginStatus from './useLoginStatus';
 import UserContext from './UserContext';
 
 const FormItem = Form.Item;
-const { Header, Content } = Layout;
-
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 6 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
-  },
-};
+const { Content } = Layout;
 
 function Login() {
   console.log("login");
@@ -37,7 +27,7 @@ function Login() {
 
   useEffect(() => {
     console.log("in effect login");
-    document.title = "Login";
+    document.title = "Log In";
     //execution comes here when login is in progress and current user is set.
     //loginStatus gets updated via context api and hence execution comes here.
     //variable isUserLoggingIn is used to prevent history.replace
@@ -189,57 +179,68 @@ function Login() {
 
   return (
     <Layout style={{ height: '100vh' }}>
-      <Header style={{ height: '48px', backgroundColor: '#efefef', padding: '0px' }}>
-        <Menu
-          theme="light"
-          mode="horizontal"
-          style={{ backgroundColor: '#efefef' }}
-        >
-          <Menu.Item key="Heading" style={{ fontWeight: 'bold' }}>
-            <span style={{ fontSize: 14 }}> Ketchup</span>
-          </Menu.Item>
-        </Menu>
-      </Header>
-      <Content style={{ height: 'calc(100vh - 48px)' }}>
-        <div style={{ height: 'calc(100vh - 48px)', backgroundColor: '#6d7993', paddingTop: '150px' }}>
-          <Row type="flex" justify="center" align="middle">
-            <Col span={8}  >
+      <Content style={{ height: 'calc(100vh)' }}>
 
-              <Form style={{ height: '320px', backgroundColor: '#efefef' }}>
-                <br />
-                <label style={{ fontSize: 15 }}><b>Login</b></label>
-                <br />
-                <Spin spinning={iconLoading}></Spin>
-                <br />
-                <br />
-                <FormItem {...formItemLayout} label="Username:">
-                  <Input placeholder="Username"
-                    autoFocus
-                    value={username}
-                    onChange={(e) => { setUsername(e.target.value) }} />
-                </FormItem>
-                <FormItem {...formItemLayout} label="Password:">
-                  <Input.Password placeholder="Password"
-                    value={password}
-                    onChange={(e) => { setPassword(e.target.value) }} />
-                </FormItem>
-                <FormItem>
-                  <Button type="primary" style={{ backgroundColor: '#96858f' }}
-                    //loading={this.state.loadingIcon}
-                    icon={'login'}
-                    htmlType="submit"
-                    onClick={submitRequest}>Log In</Button>
-                </FormItem>
-                <FormItem>
-                  <a style={{ color: '#373737' }} onClick={
-                    () => {
+        <Row >
+          <Col span={12} style={{ backgroundColor: '#FAFBFD', height: 'calc(100vh)' }}>
+            <Form style={{ backgroundColor: '#FAFBFD', borderRadius: '25px', padding: '40px 100px 100px 100px' }}>
+              <label style={{ fontSize: 30, fontWeight: 'bold', color: '#31363E' }}><b>Ketchup</b></label>
+              <br />
+              <img src={loginImage} height="200" width="200" />
+              <br />
+              <label style={{ fontSize: 20, fontWeight: 'bold', color: '#31363E' }}><b>Log In</b></label>
+              <br />
+              <Spin spinning={iconLoading}></Spin>
+              <br />
+              <FormItem>
+                <Input
+                  style={{ color: '#31363E', fontWeight: 'bold', borderRadius: '25px' }}
+                  size="large"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => { setUsername(e.target.value) }} />
+              </FormItem>
+              <FormItem>
+                <Input
+                  type="password"
+                  style={{ color: '#31363E', fontWeight: 'bold', borderRadius: '25px' }}
+                  size="large"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => { setPassword(e.target.value) }} />
+              </FormItem>
+              <FormItem>
+                <Button type="primary"
+                  size="large"
+                  shape="round"
+                  block
+                  style={{ backgroundColor: '#6c63ff', color: 'white', fontWeight: 'bold' }}
+                  htmlType="submit"
+                  onClick={submitRequest}>Sign In</Button>
+              </FormItem>
+              <FormItem>
+                <a style={{ fontSize: '12px', color: '#31363E' }} onClick={
+                  () => {
 
-                    }}>Forgot Password?</a>
-                </FormItem>
-              </Form>
-            </Col>
-          </Row>
-        </div>
+                  }}>Forgot Password</a>
+              </FormItem>
+            </Form>
+          </Col>
+          <Col span={12}>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <label style={{ fontSize: '25px', fontWeight: 'bold' }}>Kubernetes Application Deployment Platform</label>
+            <br />
+            <img src={loginGeneralImage} height="400" width="600" />
+
+          </Col>
+        </Row>
+
       </Content>
     </Layout>
   );
