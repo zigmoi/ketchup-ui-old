@@ -142,7 +142,7 @@ function EditK8sCluster(props) {
                                         message: 'Please provide valid KubeConfig!',
                                     },
                                     {
-                                        max: 1000,
+                                        max: 65536,
                                         message: 'Only 1000 characters are allowed!',
                                     },
                                 ],

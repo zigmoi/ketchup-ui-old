@@ -145,7 +145,7 @@ function EditBuildTool(props) {
                                         message: 'Please provide valid Build Settings!',
                                     },
                                     {
-                                        max: 1000,
+                                        max: 65536,
                                         message: 'Only 1000 characters are allowed!',
                                     },
                                 ],

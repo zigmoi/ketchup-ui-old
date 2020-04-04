@@ -118,7 +118,7 @@ function AddK8sCluster(props) {
                                         message: 'Please provide valid KubeConfig Data!',
                                     },
                                     {
-                                        max: 1000,
+                                        max: 65536,
                                         message: 'Only 1000 characters are allowed!',
                                     },
                                 ],
