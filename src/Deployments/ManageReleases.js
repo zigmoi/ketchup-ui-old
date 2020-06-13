@@ -1,63 +1,60 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Row, Col, Button, Table, message, Spin, Divider, Popconfirm, Tag } from 'antd';
 import axios from 'axios';
 import moment from 'moment';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useHistory } from 'react-router-dom';
 
-function ManageGitProviders() {
+function ManageReleases() {
     const [iconLoading, setIconLoading] = useState(false);
     const [columns, setColumns] = useState([]);
     const [dataSource, setDataSource] = useState([]);
+    const { projectResourceId, deploymentResourceId } = useParams();
 
-    let { projectResourceId } = useParams();
+    let history = useHistory();
 
     useEffect(() => {
-        document.title = "Manage Git Providers";
+        console.log("in effect Manage Releases");
+        document.title = "Manage Releases";
         initColumns();
         loadAll();
     }, []);
 
     function initColumns() {
         const columns = [{
-            title: '#',
-            key: '#',
-            render: (text, record, index) => (
-                <span>{index + 1}</span>
+            title: 'ID',
+            dataIndex: 'id.releaseResourceId',
+            key: 'id.releaseResourceId',
+        }, {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: (text, record) => (
+                record.status==='SUCCESS' ? <Tag color="#52c41a">Success</Tag>: (record.status ==='FAILED' ? <Tag color="red">Failed</Tag> : <Tag color="blue">In Progress</Tag>)
             )
         }, {
-            title: 'Name',
-            dataIndex: 'displayName',
-            key: 'displayName',
-        }, {
-            title: 'Provider',
-            dataIndex: 'provider',
-            key: 'provider',
-        }, {
-            title: 'User Name',
-            dataIndex: 'username',
-            key: 'username',
+            title: 'Created On',
+            dataIndex: 'createdOn',
+            key: 'createdOn',
+            render: (text, record) => (
+                moment(record.createdOn).fromNow()
+            )
         }, {
             title: 'Actions',
             dataIndex: 'action',
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <Button type="primary" size="small">
-                        <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/git-provider/view`}>
+                     <Button type="primary" size="small">
+                        <Link to={`/app/project/${projectResourceId}/deployment/${deploymentResourceId}/release/${record.id.releaseResourceId}/view`}>
                             View
                         </Link>
                     </Button>
                     <Divider type="vertical" />
                     <Button type="primary" size="small">
-                        <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/git-provider/edit`}>
-                            Edit
+                        <Link to={`/app/project/${projectResourceId}/deployment/${deploymentResourceId}/release/${record.id.releaseResourceId}/pipeline`}>
+                            Build
                         </Link>
                     </Button>
-                    <Divider type="vertical" />
-                    <Popconfirm title="Confirm operation?"
-                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => deleteSetting(record)}>
-                        <Button type="danger" size="small">Remove</Button>
-                    </Popconfirm>
                 </span>
             )
         }];
@@ -71,7 +68,7 @@ function ManageGitProviders() {
 
     function loadAll() {
         setIconLoading(true);
-        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/list-all-git-provider/${projectResourceId}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/releases?deploymentId=${deploymentResourceId}`)
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);
@@ -81,17 +78,22 @@ function ManageGitProviders() {
             });
     }
 
-    function deleteSetting(selectedRecord) {
+    function viewDetails() {
+        history.push(`/app/project/${projectResourceId}/deployment/select-type`);
+    }
+
+    function createDeployment() {
         setIconLoading(true);
-        let settingId = selectedRecord.settingId;
-        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/container-registry/${projectResourceId}/${settingId}`)
+        axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/release?deploymentId=${deploymentResourceId}`)
             .then((response) => {
+                console.log(response);
                 setIconLoading(false);
+                message.success('deployment started!');
                 reloadTabularData();
-                message.success('Git provider removed successfully.');
             })
             .catch((error) => {
                 setIconLoading(false);
+                message.error('deployment failed!')
             });
     }
 
@@ -100,16 +102,14 @@ function ManageGitProviders() {
             <Row type="flex" justify="start" align="middle" style={{ paddingTop: '10px', paddingBottom: '5px' }}>
                 <Col span={11} offset={1}>
                     <Row type="flex" justify="start" align="middle">
-                        <label style={{ fontWeight: 'bold', fontSize: 18 }} >Git Providers</label>
+                        <label style={{ fontWeight: 'bold', fontSize: 18 }} > Manage Releases</label>
                         <span>&nbsp;&nbsp;</span>
                         <Spin spinning={iconLoading} />
                     </Row>
                 </Col>
                 <Col span={11} offset={-1}>
                     <Row type="flex" justify="end" align="middle">
-                        <Button type="primary"  >
-                            <Link to={`/app/project/${projectResourceId}/settings/git-provider/add`}>Add</Link>
-                        </Button>
+                        <Button type="primary" size="small" onClick={createDeployment}> Deploy</Button>
                     </Row>
                 </Col>
             </Row>
@@ -118,11 +118,11 @@ function ManageGitProviders() {
                     <Table dataSource={dataSource}
                         pagination={{ defaultPageSize: 8 }}
                         columns={columns}
-                        size="middle" rowKey={record => record.settingId} />
+                        size="middle" rowKey={record => record.id.releaseResourceId} />
                 </Col>
             </Row>
         </div>
     );
 }
 
-export default ManageGitProviders;
+export default ManageReleases;

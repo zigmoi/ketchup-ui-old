@@ -25,8 +25,7 @@ function EditBuildTool(props) {
     const [iconLoading, setIconLoading] = useState(false);
 
     const [displayName, setDisplayName] = useState("");
-    const [provider, setProvider] = useState("");
-    const [fileName, setFileName] = useState("build-settings");
+    const [type, setType] = useState("");
     const [fileData, setFileData] = useState("");
     const [lastUpdatedBy, setLastUpdatedBy] = useState("");
     const [lastUpdatedOn, setLastUpdatedOn] = useState("");
@@ -45,8 +44,7 @@ function EditBuildTool(props) {
             .then((response) => {
                 setIconLoading(false);
                 setDisplayName(response.data.displayName);
-                setProvider(response.data.provider);
-                setFileName(response.data.fileName);
+                setType(response.data.type);
                 setFileData(atob(response.data.fileData));
                 setLastUpdatedBy(response.data.lastUpdatedBy);
                 setLastUpdatedOn(response.data.lastUpdatedOn);
@@ -65,8 +63,7 @@ function EditBuildTool(props) {
                 var data = {
                     'projectId': projectResourceId,
                     'displayName': values.displayName,
-                    'provider': values.provider,
-                    'fileName': fileName,
+                    'type': values.type,
                     'fileData': btoa(values.fileData),
                 };
                 axios.put(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/build-tool/${projectResourceId}/${settingId}`, data)
@@ -90,7 +87,7 @@ function EditBuildTool(props) {
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Edit Build Tool</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Build Tool</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
@@ -100,10 +97,6 @@ function EditBuildTool(props) {
                     <Form onSubmit={updateSetting} style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="ID:">
                             <Input readOnly value={settingId} suffix={extraInfo} />
-                        </FormItem>
-
-                        <FormItem {...formItemLayout} label="Project ID:">
-                            <Input readOnly value={projectResourceId} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Display Name:" hasFeedback>
                             {getFieldDecorator('displayName', {
@@ -121,13 +114,13 @@ function EditBuildTool(props) {
                                 ],
                             })(<Input placeholder="Display Name" autoFocus />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:" hasFeedback>
-                            {getFieldDecorator('provider', {
-                                initialValue: provider,
+                        <FormItem {...formItemLayout} label="Type:" hasFeedback>
+                            {getFieldDecorator('type', {
+                                initialValue: type,
                                 rules: [
                                     {
                                         required: true,
-                                        message: 'Please select valid Provider!',
+                                        message: 'Please select valid Type!',
                                     }
                                 ],
                             })(<Select>
@@ -135,7 +128,7 @@ function EditBuildTool(props) {
                                 <Option key="gradle">Gradle</Option>
                             </Select>)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Build Settings:" hasFeedback>
+                        <FormItem  label="Build Settings:" hasFeedback>
                             {getFieldDecorator('fileData', {
                                 initialValue: fileData,
                                 rules: [

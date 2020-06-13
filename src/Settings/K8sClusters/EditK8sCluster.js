@@ -24,8 +24,6 @@ function EditK8sCluster(props) {
     const [iconLoading, setIconLoading] = useState(false);
 
     const [displayName, setDisplayName] = useState("");
-    const [provider, setProvider] = useState("");
-    const [fileName, setFileName] = useState("kubeconfig");
     const [fileData, setFileData] = useState("");
     const [lastUpdatedBy, setLastUpdatedBy] = useState("");
     const [lastUpdatedOn, setLastUpdatedOn] = useState("");
@@ -44,8 +42,8 @@ function EditK8sCluster(props) {
             .then((response) => {
                 setIconLoading(false);
                 setDisplayName(response.data.displayName);
-                setProvider(response.data.provider);
-                setFileName(response.data.fileName);
+                // setProvider(response.data.provider);
+                // setFileName(response.data.fileName);
                 setFileData(atob(response.data.fileData));
                 setLastUpdatedBy(response.data.lastUpdatedBy);
                 setLastUpdatedOn(response.data.lastUpdatedOn);
@@ -64,8 +62,6 @@ function EditK8sCluster(props) {
                 var data = {
                     'projectId': projectResourceId,
                     'displayName': values.displayName,
-                    'provider': values.provider,
-                    'fileName': fileName,
                     'fileData': btoa(values.fileData),
                 };
                 axios.put(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/kubernetes-cluster/${projectResourceId}/${settingId}`, data)
@@ -89,7 +85,7 @@ function EditK8sCluster(props) {
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Edit Kubernetes Cluster</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Kubernetes Cluster</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
@@ -99,9 +95,6 @@ function EditK8sCluster(props) {
                     <Form onSubmit={updateSetting} style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="ID:">
                             <Input readOnly value={settingId} suffix={extraInfo} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Project ID:">
-                            <Input readOnly value={projectResourceId} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Display Name:" hasFeedback>
                             {getFieldDecorator('displayName', {
@@ -119,34 +112,21 @@ function EditK8sCluster(props) {
                                 ],
                             })(<Input placeholder="Display Name" autoFocus />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:" hasFeedback>
-                            {getFieldDecorator('provider', {
-                                initialValue: provider,
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: 'Please select valid Provider!',
-                                    }
-                                ],
-                            })(<Select>
-                                <Option key="aws">AWS</Option>
-                            </Select>)}
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="KubeConfig:" hasFeedback>
+                        <FormItem label="Kubeconfig:" hasFeedback>
                             {getFieldDecorator('fileData', {
                                 initialValue: fileData,
                                 rules: [
                                     {
                                         required: true,
                                         whitespace: true,
-                                        message: 'Please provide valid KubeConfig!',
+                                        message: 'Please provide valid Kubeconfig!',
                                     },
                                     {
                                         max: 65536,
                                         message: 'Only 1000 characters are allowed!',
                                     },
                                 ],
-                            })(<Input.TextArea placeholder="KubeConfig" autosize={{ minRows: 10, maxRows: 15 }} />)}
+                            })(<Input.TextArea placeholder="Kubeconfig" autosize={{ minRows: 15, maxRows: 15 }} />)}
                         </FormItem>
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">

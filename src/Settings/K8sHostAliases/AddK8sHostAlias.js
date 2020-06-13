@@ -14,8 +14,8 @@ const formItemLayout = {
         sm: { span: 14 },
     },
 };
-function AddHostname() {
-    document.title = "Add Hostname";
+function AddK8sHostAlias() {
+    document.title = "Add Kubernetes Host Alias";
 
     const [iconLoading, setIconLoading] = useState(false);
     const [displayName, setDisplayName] = useState("");
@@ -80,7 +80,7 @@ function AddHostname() {
 
 
 
-    function addHostname() {
+    function addHostAlias() {
         setIconLoading(true);
 
         var data = {
@@ -88,12 +88,12 @@ function AddHostname() {
             'displayName': displayName,
             'hostnameIpMapping': dataSource
         };
-        axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/hostname-ip-mapping`, data)
+        axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/k8s-host-alias`, data)
             .then((response) => {
                 console.log(response);
                 setIconLoading(false);
-                message.success('Hostname added successfully.', 5);
-                history.push(`/app/project/${projectResourceId}/settings/hostnames`);
+                message.success('Host alias added successfully.', 5);
+                history.push(`/app/project/${projectResourceId}/settings/k8s-host-aliases`);
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -106,7 +106,7 @@ function AddHostname() {
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Add Hostname</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Add Kubernetes Host Alias</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
@@ -153,7 +153,7 @@ function AddHostname() {
                                     <Button type="primary"
                                         loading={iconLoading}
                                         htmlType="submit"
-                                        onClick={addHostname} >Submit</Button>
+                                        onClick={addHostAlias} >Submit</Button>
                                 </Col>
                             </Row>
                         </FormItem>
@@ -164,4 +164,4 @@ function AddHostname() {
     );
 }
 
-export default AddHostname;
+export default AddK8sHostAlias;

@@ -29,14 +29,11 @@ function ManageContainerRegistries() {
             dataIndex: 'displayName',
             key: 'displayName',
         }, {
-            title: 'Provider',
-            dataIndex: 'provider',
-            key: 'provider',
-        }, {
-            title: 'Cloud Crendential ID',
-            dataIndex: 'cloudCredentialId',
-            key: 'cloudCredentialId',
-        }, {
+            title: 'Type',
+            dataIndex: 'type',
+            key: 'type',
+        }, 
+        {
             title: 'Actions',
             dataIndex: 'action',
             key: 'action',

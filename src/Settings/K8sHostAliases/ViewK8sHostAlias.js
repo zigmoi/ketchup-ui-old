@@ -17,8 +17,8 @@ const formItemLayout = {
 };
 
 
-function ViewHostname() {
-    document.title = "View Git Provider";
+function ViewK8sHostAlias() {
+    document.title = "Kubernetes Host Alias";
 
     const [iconLoading, setIconLoading] = useState(false);
     const [displayName, setDisplayName] = useState("");
@@ -51,7 +51,7 @@ function ViewHostname() {
 
     function loadDetails() {
         setIconLoading(true);
-        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/hostname-ip-mapping/${projectResourceId}/${settingId}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/k8s-host-alias/${projectResourceId}/${settingId}`)
             .then((response) => {
                 setIconLoading(false);
                 setDisplayName(response.data.displayName);
@@ -65,7 +65,7 @@ function ViewHostname() {
     }
 
     let editLink = (
-        <Link to={`/app/project/${projectResourceId}/settings/${settingId}/hostname/edit`}>
+        <Link to={`/app/project/${projectResourceId}/settings/${settingId}/k8s-host-alias/edit`}>
             <Tooltip title="Edit">
                 <Icon type="edit" />
             </Tooltip>
@@ -80,7 +80,7 @@ function ViewHostname() {
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >View Hostname{editLink}</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Kubernetes Host Alias{editLink}</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
@@ -90,9 +90,6 @@ function ViewHostname() {
                     <Form style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="ID:">
                             <Input readOnly value={settingId} suffix={extraInfo} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Project ID:">
-                            <Input readOnly value={projectResourceId} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Display Name:">
                             <Input readOnly value={displayName} />
@@ -108,4 +105,4 @@ function ViewHostname() {
     );
 }
 
-export default ViewHostname;
+export default ViewK8sHostAlias;

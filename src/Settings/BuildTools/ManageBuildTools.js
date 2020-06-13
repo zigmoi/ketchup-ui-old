@@ -28,11 +28,13 @@ function ManageBuildTools() {
             title: 'Name',
             dataIndex: 'displayName',
             key: 'displayName',
-        }, {
-            title: 'Provider',
-            dataIndex: 'provider',
-            key: 'provider',
-        }, {
+        }, 
+        {
+            title: 'Type',
+            dataIndex: 'type',
+            key: 'type',
+        },
+        {
             title: 'Actions',
             dataIndex: 'action',
             key: 'action',
@@ -81,7 +83,7 @@ function ManageBuildTools() {
     function deleteSetting(selectedRecord) {
         setIconLoading(true);
         let settingId = selectedRecord.settingId;
-        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/cloud-provider/${projectResourceId}/${settingId}`)
+        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/build-tool/${projectResourceId}/${settingId}`)
             .then((response) => {
                 setIconLoading(false);
                 reloadTabularData();

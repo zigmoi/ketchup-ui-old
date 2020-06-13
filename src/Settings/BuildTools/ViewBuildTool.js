@@ -17,13 +17,12 @@ const formItemLayout = {
 };
 
 function ViewBuildTool() {
-    document.title = "View Build Tool";
+    document.title = "Build Tool";
 
     const [iconLoading, setIconLoading] = useState(false);
 
     const [displayName, setDisplayName] = useState("");
-    const [provider, setProvider] = useState("");
-    const [fileName, setFileName] = useState("build-settings");
+    const [type, setType] = useState("");
     const [fileData, setFileData] = useState("");
     const [lastUpdatedBy, setLastUpdatedBy] = useState("");
     const [lastUpdatedOn, setLastUpdatedOn] = useState("");
@@ -40,8 +39,7 @@ function ViewBuildTool() {
             .then((response) => {
                 setIconLoading(false);
                 setDisplayName(response.data.displayName);
-                setProvider(response.data.provider);
-                setFileName(response.data.fileName);
+                setType(response.data.type);
                 setFileData(atob(response.data.fileData));
                 setLastUpdatedBy(response.data.lastUpdatedBy);
                 setLastUpdatedOn(response.data.lastUpdatedOn);
@@ -67,7 +65,7 @@ function ViewBuildTool() {
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >View Build Tool {editLink}</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Build Tool {editLink}</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
@@ -78,22 +76,16 @@ function ViewBuildTool() {
                         <FormItem {...formItemLayout} label="ID:">
                             <Input readOnly value={settingId} suffix={extraInfo} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Project ID:">
-                            <Input readOnly value={projectResourceId} />
-                        </FormItem>
                         <FormItem {...formItemLayout} label="Display Name:">
                             <Input readOnly value={displayName} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:">
-                            <Input readOnly value={provider} />
+                        <FormItem {...formItemLayout} label="Type:">
+                            <Input readOnly value={type} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Build Settings">
-                            <Icon type="file-text" style={{ fontSize: 20 }} />
-                            <Divider type="vertical" />
-                            <Button type="primary" size="small">View</Button>
-                            <Divider type="vertical" />
-                            <Button type="primary" size="small">Download</Button>
+                        <FormItem label="Build Settings">
+                            <Input.TextArea readOnly value={fileData} autosize={{ minRows: 10, maxRows: 15 }} />
                         </FormItem>
+                        <Button type="primary" size="small">Download</Button>
                     </Form>
                 </Col>
             </Row>

@@ -25,10 +25,10 @@ function EditContainerRegistry(props) {
     const [iconLoading, setIconLoading] = useState(false);
 
     const [displayName, setDisplayName] = useState("");
-    const [provider, setProvider] = useState("");
-    const [registryId, setRegistryId] = useState("");
+    const [type, setType] = useState("");
     const [registryUrl, setRegistryUrl] = useState("");
-    const [cloudCredentialId, setCloudCredentialId] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const [lastUpdatedBy, setLastUpdatedBy] = useState("");
     const [lastUpdatedOn, setLastUpdatedOn] = useState("");
 
@@ -46,10 +46,10 @@ function EditContainerRegistry(props) {
             .then((response) => {
                 setIconLoading(false);
                 setDisplayName(response.data.displayName);
-                setProvider(response.data.provider);
-                setRegistryId(response.data.registryId);
+                setType(response.data.type);
                 setRegistryUrl(response.data.registryUrl);
-                setCloudCredentialId(response.data.cloudCredentialId);
+                setUsername(response.data.registryUsername);
+                setPassword(response.data.registryPassword);
                 setLastUpdatedBy(response.data.lastUpdatedBy);
                 setLastUpdatedOn(response.data.lastUpdatedOn);
             })
@@ -66,10 +66,10 @@ function EditContainerRegistry(props) {
                 var data = {
                     'projectId': projectResourceId,
                     'displayName': values.displayName,
-                    'provider': values.provider,
-                    'registryId': values.registryId,
+                    'type': values.type,
                     'registryUrl': values.registryUrl,
-                    'cloudCredentialId': values.cloudCredentialId,
+                    'registryUsername': values.username,
+                    'registryPassword': values.password,
                 };
                 axios.put(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/container-registry/${projectResourceId}/${settingId}`, data)
                     .then((response) => {
@@ -92,7 +92,7 @@ function EditContainerRegistry(props) {
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Edit Container Registry</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Container Registry</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
@@ -102,9 +102,6 @@ function EditContainerRegistry(props) {
                     <Form onSubmit={updateSetting} style={{ backgroundColor: 'white' }}>
                         <FormItem {...formItemLayout} label="ID:">
                             <Input readOnly value={settingId} suffix={extraInfo} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Project ID:">
-                            <Input readOnly value={projectResourceId} />
                         </FormItem>
                         <FormItem {...formItemLayout} label="Display Name:" hasFeedback>
                             {getFieldDecorator('displayName', {
@@ -122,66 +119,69 @@ function EditContainerRegistry(props) {
                                 ],
                             })(<Input placeholder="Display Name" autoFocus />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:" hasFeedback>
-                            {getFieldDecorator('provider', {
-                                initialValue: provider,
+                        <FormItem {...formItemLayout} label="Type:" hasFeedback>
+                            {getFieldDecorator('type', {
+                                initialValue: type,
                                 rules: [
                                     {
                                         required: true,
-                                        message: 'Please select valid Provider!',
+                                        message: 'Please select valid Type!',
                                     }
                                 ],
                             })(<Select>
+                                <Option key="local">LOCAL</Option>
+                                <Option key="docker-hub">DOCKER-HUB</Option>
                                 <Option key="aws-ecr">AWS-ECR</Option>
+                                <Option key="gcr">GCR</Option>
                             </Select>)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Registry ID:" hasFeedback>
-                            {getFieldDecorator('registryId', {
-                                initialValue: registryId,
-                                rules: [
-                                    {
-                                        required: true,
-                                        whitespace: true,
-                                        message: 'Please provide valid Registry ID!',
-                                    },
-                                    {
-                                        max: 50,
-                                        message: 'Only 50 characters are allowed!',
-                                    },
-                                ],
-                            })(<Input placeholder="Registry ID" />)}
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Registry URL:" hasFeedback>
+                        <FormItem {...formItemLayout} label="Url:" hasFeedback>
                             {getFieldDecorator('registryUrl', {
                                 initialValue: registryUrl,
                                 rules: [
                                     {
                                         required: true,
                                         whitespace: true,
-                                        message: 'Please provide valid Registry URL!',
+                                        message: 'Please provide valid Url!',
                                     },
                                     {
                                         max: 200,
                                         message: 'Only 200 characters are allowed!',
                                     },
                                 ],
-                            })(<Input placeholder="Registry URL" />)}
+                            })(<Input placeholder="Url" />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Cloud Credential ID:" hasFeedback>
-                            {getFieldDecorator('cloudCredentialId', {
-                                initialValue: cloudCredentialId,
+                        <FormItem {...formItemLayout} label="Username:" hasFeedback>
+                            {getFieldDecorator('username', {
+                                initialValue: username,
                                 rules: [
                                     {
                                         required: true,
                                         whitespace: true,
-                                        message: 'Please provide valid Cloud Credential ID!',
+                                        message: 'Please provide valid Username!',
                                     },
                                     {
                                         max: 50,
                                         message: 'Only 50 characters are allowed!',
                                     },
                                 ],
-                            })(<Input placeholder="Cloud Credential ID" />)}
+                            })(<Input placeholder="Username" />)}
+                        </FormItem>
+                        <FormItem {...formItemLayout} label="Token / Password:" hasFeedback>
+                            {getFieldDecorator('password', {
+                                initialValue: password,
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Token / Password!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input.Password placeholder="Token / Password" />)}
                         </FormItem>
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">

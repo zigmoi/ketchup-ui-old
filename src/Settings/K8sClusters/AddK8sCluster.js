@@ -32,10 +32,8 @@ function AddK8sCluster(props) {
                 setIconLoading(true);
                 var data = {
                     'projectId': projectResourceId,
-                    'fileName': values.fileName,
                     'fileData': btoa(values.fileData),
                     'displayName': values.displayName,
-                    'provider': values.provider,
                 };
                 axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/kubernetes-cluster`, data)
                     .then((response) => {
@@ -79,50 +77,21 @@ function AddK8sCluster(props) {
                                 ],
                             })(<Input placeholder="Display Name" autoFocus />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:" hasFeedback>
-                            {getFieldDecorator('provider', {
-                                initialValue: "",
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: 'Please select valid Provider!',
-                                    }
-                                ],
-                            })(<Select>
-                                <Option key="aws">AWS</Option>
-                            </Select>)}
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="KubeConfig Name:" hasFeedback>
-                            {getFieldDecorator('fileName', {
-                                initialValue: "KubeConfig.json",
-                                rules: [
-                                    {
-                                        required: true,
-                                        whitespace: true,
-                                        message: 'Please provide valid KubeConfig Name!',
-                                    },
-                                    {
-                                        max: 100,
-                                        message: 'Only 100 characters are allowed!',
-                                    },
-                                ],
-                            })(<Input placeholder="KubeConfig Name" />)}
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="KubeConfig Data:" hasFeedback>
+                        <FormItem label="Kubeconfig:" hasFeedback>
                             {getFieldDecorator('fileData', {
                                 initialValue: "",
                                 rules: [
                                     {
                                         required: true,
                                         whitespace: true,
-                                        message: 'Please provide valid KubeConfig Data!',
+                                        message: 'Please provide valid Kubeconfig!',
                                     },
                                     {
                                         max: 65536,
                                         message: 'Only 1000 characters are allowed!',
                                     },
                                 ],
-                            })(<Input.TextArea placeholder="KubeConfig Data" autosize={{ minRows: 10, maxRows: 15 }} />)}
+                            })(<Input.TextArea placeholder="Kubeconfig" autosize={{ minRows: 18, maxRows: 18 }} />)}
                         </FormItem>
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">

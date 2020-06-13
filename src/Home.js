@@ -39,6 +39,10 @@ import CreateDeployment from './Deployments/CreateDeployment';
 import ListProjects from './Projects/ListProjects';
 import DeploymentTypes from './Deployments/DeploymentTypes';
 
+import ManageReleases from './Deployments/ManageReleases';
+import ViewRelease from './Deployments/ViewRelease';
+import ViewReleasePipeline from './Deployments/ViewReleasePipeline';
+
 
 function Home() {
   const userContext = useContext(UserContext);
@@ -304,7 +308,7 @@ function Home() {
               </Link>
             </Menu.Item>
             <Menu.Item key="project-settings" style={{ height: '25px', lineHeight: '25px', fontSize: 12 }}>
-              <Link to={`/app/project/${projectId}/settings/cloud-providers`}>
+              <Link to={`/app/project/${projectId}/settings/kubernetes-clusters`}>
                 <Icon type="setting" />
                 <span>Settings</span>
               </Link>
@@ -383,7 +387,7 @@ function Home() {
       </Header>
       <Layout style={{ height: 'calc(100vh - 48px)' }}>
         <Sider
-          width={250}
+          width={200}
           collapsible
           collapsed={collapsed}
           onCollapse={setCollapsed}
@@ -442,6 +446,9 @@ function Home() {
                   <Route path="/app/project/:projectResourceId/deployments" render={() => <ProtectedRoute component={ManageDeployments} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN', 'ROLE_USER_READER', 'ROLE_USER']} />} />
                   <Route path="/app/project/:projectResourceId/deployment/select-type" render={() => <ProtectedRoute component={DeploymentTypes} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN', 'ROLE_USER_READER', 'ROLE_USER']} />} />
                   <Route path="/app/project/:projectResourceId/deployment/create" render={() => <ProtectedRoute component={CreateDeployment} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN', 'ROLE_USER_READER', 'ROLE_USER']} />} />
+                  <Route path="/app/project/:projectResourceId/deployment/:deploymentResourceId/releases" render={() => <ProtectedRoute component={ManageReleases} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN', 'ROLE_USER_READER', 'ROLE_USER']} />} />
+                  <Route path="/app/project/:projectResourceId/deployment/:deploymentResourceId/release/:releaseResourceId/view" render={() => <ProtectedRoute component={ViewRelease} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN', 'ROLE_USER_READER', 'ROLE_USER']} />} />
+                  <Route path="/app/project/:projectResourceId/deployment/:deploymentResourceId/release/:releaseResourceId/pipeline" render={() => <ProtectedRoute component={ViewReleasePipeline} roles={['ROLE_TENANT_ADMIN', 'ROLE_USER_ADMIN', 'ROLE_USER_READER', 'ROLE_USER']} />} />
                   <Route render={() => <ProtectedRoute component={Nomatch} />} />
                 </Switch>
               </Col>

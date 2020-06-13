@@ -36,6 +36,18 @@ function ManageDeployments() {
             key: 'action',
             render: (text, record) => (
                 <span>
+                     <Button type="primary" size="small">
+                        <Link to={`/app/project/${projectResourceId}/deployment/${record.id.deploymentResourceId}/view`}>
+                            View
+                        </Link>
+                    </Button>
+                    <Divider type="vertical" />
+                    <Button type="primary" size="small">
+                        <Link to={`/app/project/${projectResourceId}/deployment/${record.id.deploymentResourceId}/releases`}>
+                            Releases
+                        </Link>
+                    </Button>
+                    <Divider type="vertical" />
                     <Popconfirm title="Confirm operation?"
                         okText="Go Ahead" cancelText="Cancel" onConfirm={() => deleteDeployment(record)}>
                         <Button type="danger" size="small">Delete</Button>

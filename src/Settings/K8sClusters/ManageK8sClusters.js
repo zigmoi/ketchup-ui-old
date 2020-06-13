@@ -29,10 +29,6 @@ function ManageK8sClusters() {
             dataIndex: 'displayName',
             key: 'displayName',
         }, {
-            title: 'Provider',
-            dataIndex: 'provider',
-            key: 'provider',
-        }, {
             title: 'Actions',
             dataIndex: 'action',
             key: 'action',
@@ -81,7 +77,7 @@ function ManageK8sClusters() {
     function deleteSetting(selectedRecord) {
         setIconLoading(true);
         let settingId = selectedRecord.settingId;
-        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/cloud-provider/${projectResourceId}/${settingId}`)
+        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/kubernetes-cluster/${projectResourceId}/${settingId}`)
             .then((response) => {
                 setIconLoading(false);
                 reloadTabularData();

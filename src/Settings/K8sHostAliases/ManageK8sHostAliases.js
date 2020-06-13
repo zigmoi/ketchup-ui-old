@@ -4,7 +4,7 @@ import axios from 'axios';
 import moment from 'moment';
 import { Link, useParams } from 'react-router-dom';
 
-function ManageCloudProviders() {
+function ManageK8sHostAliases() {
     const [iconLoading, setIconLoading] = useState(false);
     const [columns, setColumns] = useState([]);
     const [dataSource, setDataSource] = useState([]);
@@ -12,7 +12,7 @@ function ManageCloudProviders() {
     let { projectResourceId } = useParams();
 
     useEffect(() => {
-        document.title = "Manage Cloud Providers";
+        document.title = "Manage Kubernetes Host Aliases";
         initColumns();
         loadAll();
     }, []);
@@ -25,40 +25,32 @@ function ManageCloudProviders() {
                 <span>{index + 1}</span>
             )
         }, {
-            title: 'Name',
+            title: 'Display Name',
             dataIndex: 'displayName',
             key: 'displayName',
-        }, {
-            title: 'Provider',
-            dataIndex: 'provider',
-            key: 'provider',
-        }, {
-            title: 'Access ID',
-            dataIndex: 'accessId',
-            key: 'accessId',
         }, {
             title: 'Actions',
             dataIndex: 'action',
             key: 'action',
             render: (text, record) => (
                 <span>
-                    <Button type="primary" size="small">
-                        <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/cloud-provider/view`}>
-                            View
-                        </Link>
-                    </Button>
-                    <Divider type="vertical" />
-                    <Button type="primary" size="small">
-                        <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/cloud-provider/edit`}>
-                            Edit
-                        </Link>
-                    </Button>
-                    <Divider type="vertical" />
-                    <Popconfirm title="Confirm operation?"
-                        okText="Go Ahead" cancelText="Cancel" onConfirm={() => deleteSetting(record)}>
-                        <Button type="danger" size="small">Remove</Button>
-                    </Popconfirm>
-                </span>
+                <Button type="primary" size="small">
+                    <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/k8s-host-alias/view`}>
+                        View
+                    </Link>
+                </Button>
+                <Divider type="vertical" />
+                <Button type="primary" size="small" onClick={(e) => { e.stopPropagation(); }}>
+                    <Link to={`/app/project/${projectResourceId}/settings/${record.settingId}/k8s-host-alias/edit`}>
+                        Edit
+                    </Link>
+                </Button>
+                <Divider type="vertical" />
+                <Popconfirm title="Confirm operation?" 
+                    okText="Go Ahead" cancelText="Cancel" onConfirm={() => deleteSetting(record)}>
+                    <Button type="danger" size="small">Remove</Button>
+                </Popconfirm>
+            </span>
             )
         }];
 
@@ -71,7 +63,7 @@ function ManageCloudProviders() {
 
     function loadAll() {
         setIconLoading(true);
-        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/list-all-cloud-provider/${projectResourceId}`)
+        axios.get(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/list-all-k8s-host-alias/${projectResourceId}`)
             .then((response) => {
                 setIconLoading(false);
                 setDataSource(response.data);
@@ -85,11 +77,11 @@ function ManageCloudProviders() {
     function deleteSetting(selectedRecord) {
         setIconLoading(true);
         let settingId = selectedRecord.settingId;
-        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/cloud-provider/${projectResourceId}/${settingId}`)
+        axios.delete(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/k8s-host-alias/${projectResourceId}/${settingId}`)
             .then((response) => {
                 setIconLoading(false);
                 reloadTabularData();
-                message.success('Cloud provider removed successfully.');
+                message.success('Host alias removed successfully.');
             })
             .catch((error) => {
                 setIconLoading(false);
@@ -101,7 +93,7 @@ function ManageCloudProviders() {
             <Row type="flex" justify="start" align="middle" style={{ paddingTop: '10px', paddingBottom: '5px' }}>
                 <Col span={11} offset={1}>
                     <Row type="flex" justify="start" align="middle">
-                        <label style={{ fontWeight: 'bold', fontSize: 18 }} >Cloud Providers</label>
+                        <label style={{ fontWeight: 'bold', fontSize: 18 }} >Kubernetes Host Aliases</label>
                         <span>&nbsp;&nbsp;</span>
                         <Spin spinning={iconLoading} />
                     </Row>
@@ -109,7 +101,7 @@ function ManageCloudProviders() {
                 <Col span={11} offset={-1}>
                     <Row type="flex" justify="end" align="middle">
                         <Button type="primary"  >
-                            <Link to={`/app/project/${projectResourceId}/settings/cloud-provider/add`}>Add</Link>
+                            <Link to={`/app/project/${projectResourceId}/settings/k8s-host-alias/add`}>Add</Link>
                         </Button>
                     </Row>
                 </Col>
@@ -126,4 +118,4 @@ function ManageCloudProviders() {
     );
 }
 
-export default ManageCloudProviders;
+export default ManageK8sHostAliases;

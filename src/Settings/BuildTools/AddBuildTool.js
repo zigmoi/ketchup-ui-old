@@ -34,10 +34,9 @@ function AddBuildTool(props) {
                 setIconLoading(true);
                 var data = {
                     'projectId': projectResourceId,
-                    'fileName': values.fileName,
-                    'fileData': btoa(values.fileData),
                     'displayName': values.displayName,
-                    'provider': values.provider,
+                    'type': values.type,
+                    'fileData': btoa(values.fileData),
                 };
                 axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/build-tool`, data)
                     .then((response) => {
@@ -81,13 +80,13 @@ function AddBuildTool(props) {
                                 ],
                             })(<Input placeholder="Display Name" autoFocus />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:" hasFeedback>
-                            {getFieldDecorator('provider', {
+                        <FormItem {...formItemLayout} label="Type:" hasFeedback>
+                            {getFieldDecorator('type', {
                                 initialValue: "",
                                 rules: [
                                     {
                                         required: true,
-                                        message: 'Please select valid Provider!',
+                                        message: 'Please select valid Type!',
                                     }
                                 ],
                             })(<Select>
@@ -95,37 +94,21 @@ function AddBuildTool(props) {
                                 <Option key="gradle">Gradle</Option>
                             </Select>)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="File Name:" hasFeedback>
-                            {getFieldDecorator('fileName', {
-                                initialValue: "",
-                                rules: [
-                                    {
-                                        required: true,
-                                        whitespace: true,
-                                        message: 'Please provide valid File Name!',
-                                    },
-                                    {
-                                        max: 100,
-                                        message: 'Only 100 characters are allowed!',
-                                    },
-                                ],
-                            })(<Input placeholder="File Name" />)}
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="File Data:" hasFeedback>
+                        <FormItem label="Build Settings:" hasFeedback>
                             {getFieldDecorator('fileData', {
                                 initialValue: "",
                                 rules: [
                                     {
                                         required: true,
                                         whitespace: true,
-                                        message: 'Please provide valid File Data!',
+                                        message: 'Please provide valid Build Settings!',
                                     },
                                     {
                                         max: 100,
                                         message: 'Only 100 characters are allowed!',
                                     },
                                 ],
-                            })(<Input.TextArea placeholder="File Data" autosize={{ minRows: 10, maxRows: 15 }} />)}
+                            })(<Input.TextArea placeholder="Build Settings" autosize={{ minRows: 10, maxRows: 15 }} />)}
                         </FormItem>
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">

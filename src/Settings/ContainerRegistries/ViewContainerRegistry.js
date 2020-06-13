@@ -17,15 +17,15 @@ const formItemLayout = {
 };
 
 function ViewContainerRegistry() {
-    document.title = "View Container Registry";
+    document.title = "Container Registry";
 
     const [iconLoading, setIconLoading] = useState(false);
 
     const [displayName, setDisplayName] = useState("");
-    const [provider, setProvider] = useState("");
-    const [registryId, setRegistryId] = useState("");
+    const [type, setType] = useState("");
     const [registryUrl, setRegistryUrl] = useState("");
-    const [cloudCredentialId, setCloudCredentialId] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const [lastUpdatedBy, setLastUpdatedBy] = useState("");
     const [lastUpdatedOn, setLastUpdatedOn] = useState("");
 
@@ -42,10 +42,10 @@ function ViewContainerRegistry() {
             .then((response) => {
                 setIconLoading(false);
                 setDisplayName(response.data.displayName);
-                setProvider(response.data.provider);
-                setRegistryId(response.data.registryId);
+                setType(response.data.type);
                 setRegistryUrl(response.data.registryUrl);
-                setCloudCredentialId(response.data.cloudCredentialId);
+                setUsername(response.data.registryUsername);
+                setPassword(response.data.registryPassword);
                 setLastUpdatedBy(response.data.lastUpdatedBy);
                 setLastUpdatedOn(response.data.lastUpdatedOn);
             })
@@ -71,7 +71,7 @@ function ViewContainerRegistry() {
         <div style={{ minHeight: 'calc(100vh - 64px)' }}>
             <Row type="flex" justify="center" align="middle" style={{ paddingTop: '2px', paddingBottom: '4px' }}>
                 <Col span={24}>
-                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >View Container Registry{editLink}</label>
+                    <label style={{ fontWeight: 'bold', fontSize: 18 }} >Container Registry{editLink}</label>
                     <span>&nbsp;&nbsp;</span>
                     <Spin spinning={iconLoading} />
                 </Col>
@@ -82,23 +82,20 @@ function ViewContainerRegistry() {
                         <FormItem {...formItemLayout} label="ID:">
                             <Input readOnly value={settingId} suffix={extraInfo} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Project ID:">
-                            <Input readOnly value={projectResourceId} />
-                        </FormItem>
                         <FormItem {...formItemLayout} label="Display Name:">
                             <Input readOnly value={displayName} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:">
-                            <Input readOnly value={provider} />
+                        <FormItem {...formItemLayout} label="Type:">
+                            <Input readOnly value={type} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Registry ID:">
-                            <Input readOnly value={registryId} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Registry URL:">
+                        <FormItem {...formItemLayout} label="Url:">
                             <Input readOnly value={registryUrl} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Cloud Credential ID:">
-                            <Input readOnly value={cloudCredentialId} />
+                        <FormItem {...formItemLayout} label="Username:">
+                            <Input readOnly value={username} />
+                        </FormItem>
+                        <FormItem {...formItemLayout} label="Token / Password:">
+                            <Input.Password readOnly value={password} />
                         </FormItem>
                     </Form>
                 </Col>

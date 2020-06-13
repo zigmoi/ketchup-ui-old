@@ -31,8 +31,7 @@ function CreateProject(props) {
                 setIconLoading(true);
                 var data = {
                     'projectResourceId': values.name,
-                    'description': values.description,
-                    'members': [],
+                    'description': values.description
                 };
                 axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/project/`, data)
                     .then((response) => {

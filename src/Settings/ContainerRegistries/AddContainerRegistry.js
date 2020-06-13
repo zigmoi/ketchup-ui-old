@@ -34,10 +34,10 @@ function AddContainerRegistry(props) {
                 var data = {
                     'projectId': projectResourceId,
                     'displayName': values.displayName,
-                    'provider': values.provider,
-                    'registryId': values.registryId,
+                    'type': values.type,
                     'registryUrl': values.registryUrl,
-                    'cloudCredentialId': values.cloudCredentialId,
+                    'registryUsername': values.username,
+                    'registryPassword': values.password,
                 };
                 axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/container-registry`, data)
                     .then((response) => {
@@ -81,66 +81,69 @@ function AddContainerRegistry(props) {
                                 ],
                             })(<Input placeholder="Display Name" autoFocus />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Provider:" hasFeedback>
-                            {getFieldDecorator('provider', {
+                        <FormItem {...formItemLayout} label="Type:" hasFeedback>
+                            {getFieldDecorator('type', {
                                 initialValue: "",
                                 rules: [
                                     {
                                         required: true,
-                                        message: 'Please select valid Provider!',
+                                        message: 'Please select valid Type!',
                                     }
                                 ],
                             })(<Select>
+                                <Option key="local">LOCAL</Option>
+                                <Option key="docker-hub">DOCKER-HUB</Option>
                                 <Option key="aws-ecr">AWS-ECR</Option>
+                                <Option key="gcr">GCR</Option>
                             </Select>)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Registry ID:" hasFeedback>
-                            {getFieldDecorator('registryId', {
-                                initialValue: "",
-                                rules: [
-                                    {
-                                        required: true,
-                                        whitespace: true,
-                                        message: 'Please provide valid Registry ID!',
-                                    },
-                                    {
-                                        max: 50,
-                                        message: 'Only 50 characters are allowed!',
-                                    },
-                                ],
-                            })(<Input placeholder="Registry ID" />)}
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Registry URL:" hasFeedback>
+                        <FormItem {...formItemLayout} label="Url:" hasFeedback>
                             {getFieldDecorator('registryUrl', {
                                 initialValue: "",
                                 rules: [
                                     {
                                         required: true,
                                         whitespace: true,
-                                        message: 'Please provide valid Registry URL!',
+                                        message: 'Please provide valid Url!',
                                     },
                                     {
                                         max: 200,
                                         message: 'Only 200 characters are allowed!',
                                     },
                                 ],
-                            })(<Input placeholder="Registry URL" />)}
+                            })(<Input placeholder="Url" />)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Cloud Credential ID:" hasFeedback>
-                            {getFieldDecorator('cloudCredentialId', {
+                        <FormItem {...formItemLayout} label="Username:" hasFeedback>
+                            {getFieldDecorator('username', {
                                 initialValue: "",
                                 rules: [
                                     {
                                         required: true,
                                         whitespace: true,
-                                        message: 'Please provide valid Cloud Credential ID!',
+                                        message: 'Please provide valid Username!',
                                     },
                                     {
                                         max: 50,
                                         message: 'Only 50 characters are allowed!',
                                     },
                                 ],
-                            })(<Input placeholder="Cloud Credential ID" />)}
+                            })(<Input placeholder="Username" />)}
+                        </FormItem>
+                        <FormItem {...formItemLayout} label="Token / Password:" hasFeedback>
+                            {getFieldDecorator('password', {
+                                initialValue: "",
+                                rules: [
+                                    {
+                                        required: true,
+                                        whitespace: true,
+                                        message: 'Please provide valid Token / Password!',
+                                    },
+                                    {
+                                        max: 50,
+                                        message: 'Only 50 characters are allowed!',
+                                    },
+                                ],
+                            })(<Input.Password placeholder="Token / Password" />)}
                         </FormItem>
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">
