@@ -23,13 +23,13 @@ function ManageDeployments() {
 
     function initColumns() {
         const columns = [{
+            title: 'Name',
+            dataIndex: 'displayName',
+            key: 'displayName',
+        },{
             title: 'ID',
             dataIndex: 'id.deploymentResourceId',
             key: 'id.deploymentResourceId',
-        }, {
-            title: 'Service Name',
-            dataIndex: 'serviceName',
-            key: 'serviceName',
         }, {
             title: 'Actions',
             dataIndex: 'action',

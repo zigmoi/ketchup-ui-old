@@ -95,6 +95,7 @@ function AddContainerRegistry(props) {
                                 <Option key="docker-hub">DOCKER-HUB</Option>
                                 <Option key="aws-ecr">AWS-ECR</Option>
                                 <Option key="gcr">GCR</Option>
+                                <Option key="azurecr">AZURE-CR</Option>
                             </Select>)}
                         </FormItem>
                         <FormItem {...formItemLayout} label="Url:" hasFeedback>

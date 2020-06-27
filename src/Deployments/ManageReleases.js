@@ -52,7 +52,7 @@ function ManageReleases() {
                     <Divider type="vertical" />
                     <Button type="primary" size="small">
                         <Link to={`/app/project/${projectResourceId}/deployment/${deploymentResourceId}/release/${record.id.releaseResourceId}/pipeline`}>
-                            Build
+                            Build Status
                         </Link>
                     </Button>
                 </span>

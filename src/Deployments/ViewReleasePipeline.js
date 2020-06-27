@@ -83,53 +83,12 @@ function ViewReleasePipeline() {
         if (currentStepKey === "1") {
             setFetchSourceCodeLogsUrl(logsApiUrl);
         } else if (currentStepKey === "2") {
-            setFetchImageConfigLogsUrl(logsApiUrl);
-        } else if (currentStepKey === "3") {
             setBuildPushImageLogsUrl(logsApiUrl);
-        } else if (currentStepKey === "4") {
-            setFetchK8sConfigLogsUrl(logsApiUrl);
-        } else if (currentStepKey === "5") {
-            setFetchHelmChartLogsUrl(logsApiUrl);
-        } else if (currentStepKey === "6") {
+        } else if (currentStepKey === "3") {
             setDeployInClusterLogsUrl(logsApiUrl);
         } else {
             message.error('Invalid Step.');
         }
-
-        // let logSource = new EventSource(`${process.env.REACT_APP_API_BASE_URL}/v1/release/pipeline/logs/stream/sse?releaseId=${releaseResourceId}&podName=${taskName}&containerName=${stepName}&access_token=${access_token}`);
-        // logSource.currentStepKey = currentStepKey;
-        // logSource.addEventListener('data', function (e) {
-        //     console.log(e);
-        //     let currentStepKey = e.target.currentStepKey;
-        //     console.log("test:" + currentStepKey);
-        //     if (currentStepKey === "1") {
-        //         setFetchSourceCodeLogsUrl(prevState => prevState + e.data);
-        //     } else if (currentStepKey === "2") {
-        //         setFetchImageConfigLogsUrl(prevState => prevState + e.data);
-        //     } else if (currentStepKey === "3") {
-        //         let logJson = JSON.parse(e.data);
-        //         let formattedLog = logJson.level + " " + logJson.ts + ": " + logJson.msg + "\n";
-        //         setBuildPushImageLogsUrl(prevState => prevState + formattedLog);
-        //     } else if (currentStepKey === "4") {
-        //         setFetchK8sConfigLogsUrl(prevState => prevState + e.data);
-        //     } else if (currentStepKey === "5") {
-        //         setFetchHelmChartLogsUrl(prevState => prevState + e.data);
-        //     } else if (currentStepKey === "6") {
-        //         setDeployInClusterLogsUrl(prevState => prevState + e.data);
-        //     } else {
-        //         message.error('Invalid Step.');
-        //     }
-        // }, false);
-
-        // logSource.addEventListener('close', function (e) {
-        //     console.log("closing.");
-        //     this.close();
-        //     console.log("closed.");
-        // }, false);
-
-        // logSource.addEventListener('error', function (e) {
-        //     console.log("error, closed.");
-        // }, false);
     }
 
     function streamPipelineStatus(event) {
@@ -141,19 +100,13 @@ function ViewReleasePipeline() {
         if (buildImageTask) {
             let step1Status = buildImageTask.steps.filter(step => step.order === 1)[0].reason;
             setFetchSourceCodeStatus(step1Status);
-            let step2Status = buildImageTask.steps.filter(step => step.order === 2)[0].reason;
-            setFetchImageConfigStatus(step2Status);
-            let step3Status = buildImageTask.steps.filter(step => step.order === 3)[0].reason;
+            let step3Status = buildImageTask.steps.filter(step => step.order === 2)[0].reason;
             setBuildPushImageStatus(step3Status);
         }
 
         let deployChartTask = parsedStatusJson.tasks.filter(task => task.baseName === "deploy-chart-in-cluster")[0];
         if (deployChartTask) {
-            let step4Status = deployChartTask.steps.filter(step => step.order === 1)[0].reason;
-            setFetchK8sConfigStatus(step4Status);
-            let step5Status = deployChartTask.steps.filter(step => step.order === 2)[0].reason;
-            setFetchHelmChartStatus(step5Status);
-            let step6Status = deployChartTask.steps.filter(step => step.order === 3)[0].reason;
+            let step6Status = deployChartTask.steps.filter(step => step.order === 1)[0].reason;
             setDeployInClusterStatus(step6Status);
         }
 
@@ -188,36 +141,15 @@ function ViewReleasePipeline() {
             let buildImageTask = statusJson.tasks.filter(task => task.baseName === "build-image")[0];
             let podName = buildImageTask.podName;
             let containerName = buildImageTask.steps.filter(step => step.order === 2)[0].containerName;
-            if (fetchImageConfigLogsUrl === "") {
+            if (buildPushImageLogsUrl === "") {
                 streamPipelineLogs(podName, containerName, "2");
             }
         } else if (currentStep === "3") {
-            let buildImageTask = statusJson.tasks.filter(task => task.baseName === "build-image")[0];
-            let podName = buildImageTask.podName;
-            let containerName = buildImageTask.steps.filter(step => step.order === 3)[0].containerName;
-            if (buildPushImageLogsUrl === "") {
-                streamPipelineLogs(podName, containerName, "3");
-            }
-        } else if (currentStep === "4") {
             let deployChartTask = statusJson.tasks.filter(task => task.baseName === "deploy-chart-in-cluster")[0];
             let podName = deployChartTask.podName;
             let containerName = deployChartTask.steps.filter(step => step.order === 1)[0].containerName;
-            if (fetchK8sConfigLogsUrl === "") {
-                streamPipelineLogs(podName, containerName, "4");
-            }
-        } else if (currentStep === "5") {
-            let deployChartTask = statusJson.tasks.filter(task => task.baseName === "deploy-chart-in-cluster")[0];
-            let podName = deployChartTask.podName;
-            let containerName = deployChartTask.steps.filter(step => step.order === 2)[0].containerName;
-            if (fetchHelmChartLogsUrl === "") {
-                streamPipelineLogs(podName, containerName, "5");
-            }
-        } else if (currentStep === "6") {
-            let deployChartTask = statusJson.tasks.filter(task => task.baseName === "deploy-chart-in-cluster")[0];
-            let podName = deployChartTask.podName;
-            let containerName = deployChartTask.steps.filter(step => step.order === 3)[0].containerName;
             if (deployInClusterLogsUrl === "") {
-                streamPipelineLogs(podName, containerName, "6");
+                streamPipelineLogs(podName, containerName, "3");
             }
         } else {
             message.error('Invalid Step.');
@@ -303,6 +235,7 @@ function ViewReleasePipeline() {
                                                 startFollowing={true}
                                                 render={({ follow, onScroll }) => (
                                                     <LazyLog
+                                                        containerStyle={{textAlign: "left"}}
                                                         url={fetchSourceCodeLogsUrl}
                                                         height={logViewerHeight}
                                                         // width={logViewerWidth}
@@ -316,48 +249,7 @@ function ViewReleasePipeline() {
                                     </TabPane>
                                 </Tabs>
                             </TabPane>
-                            <TabPane tab="2. Fetch Image Config" key="2">
-                                <Tabs onChange={getLogs}>
-                                    <TabPane tab="Status" key="status">
-                                        <FormItem {...formItemLayout} label="Task Name:">
-                                            <Input value="Build" readOnly />
-                                        </FormItem>
-                                        <FormItem {...formItemLayout} label="Step Name:">
-                                            <Input value="Fetch Image Config" readOnly />
-                                        </FormItem>
-                                        <FormItem {...formItemLayout} label="Start Time:">
-                                            <Input value="-" readOnly />
-                                        </FormItem>
-                                        <FormItem {...formItemLayout} label="Completion Time:">
-                                            <Input value="-" readOnly />
-                                        </FormItem>
-                                        <FormItem {...formItemLayout} label="Status:">
-                                            <Tag color="#52c41a">{fetchImageConfigStatus}</Tag>
-                                        </FormItem>
-                                        <FormItem {...formItemLayout} label="Reason:">
-                                            <Input value="" readOnly />
-                                        </FormItem>
-                                    </TabPane>
-                                    <TabPane tab="Logs" key="logs">
-                                        <Col span={23}>
-                                            <ScrollFollow
-                                                startFollowing={true}
-                                                render={({ follow, onScroll }) => (
-                                                    <LazyLog
-                                                        url={fetchImageConfigLogsUrl}
-                                                        height={logViewerHeight}
-                                                        // width={logViewerWidth}
-                                                        stream
-                                                        follow={follow}
-                                                        onScroll={onScroll}
-                                                        enableSearch />
-                                                )}
-                                            />
-                                        </Col>
-                                    </TabPane>
-                                </Tabs>
-                            </TabPane>
-                            <TabPane tab="3. Build & Push Image" key="3">
+                            <TabPane tab="2. Build & Push Image" key="2">
                                 <Tabs onChange={getLogs}>
                                     <TabPane tab="Status" key="status">
                                         <FormItem {...formItemLayout} label="Task Name:">
@@ -385,6 +277,7 @@ function ViewReleasePipeline() {
                                                 startFollowing={true}
                                                 render={({ follow, onScroll }) => (
                                                     <LazyLog
+                                                        containerStyle={{textAlign: "left"}}
                                                         url={buildPushImageLogsUrl}
                                                         height={logViewerHeight}
                                                         // width={logViewerWidth}
@@ -398,89 +291,7 @@ function ViewReleasePipeline() {
                                     </TabPane>
                                 </Tabs>
                             </TabPane>
-                            <TabPane tab="4. Fetch K8s Config" key="4">
-                                <Tabs onChange={getLogs}>
-                                    <TabPane tab="Status" key="status">
-                                        <FormItem {...formItemLayout} label="Task Name:">
-                                            <Input value="Deploy" readOnly />
-                                        </FormItem>
-                                        <FormItem {...formItemLayout} label="Step Name:">
-                                            <Input value="Fetch K8s Config" readOnly />
-                                        </FormItem>
-                                        <FormItem {...formItemLayout} label="Start Time:">
-                                            <Input value="-" readOnly />
-                                        </FormItem>
-                                        <FormItem {...formItemLayout} label="Completion Time:">
-                                            <Input value="-" readOnly />
-                                        </FormItem>
-                                        <FormItem {...formItemLayout} label="Status:">
-                                            <Tag color="#52c41a">{fetchK8sConfigStatus}</Tag>
-                                        </FormItem>
-                                        <FormItem {...formItemLayout} label="Reason:">
-                                            <Input value="" readOnly />
-                                        </FormItem>
-                                    </TabPane>
-                                    <TabPane tab="Logs" key="logs">
-                                        <Col span={23}>
-                                            <ScrollFollow
-                                                startFollowing={true}
-                                                render={({ follow, onScroll }) => (
-                                                    <LazyLog
-                                                        url={fetchK8sConfigLogsUrl}
-                                                        height={logViewerHeight}
-                                                        // width={logViewerWidth}
-                                                        stream
-                                                        follow={follow}
-                                                        onScroll={onScroll}
-                                                        enableSearch />
-                                                )}
-                                            />
-                                        </Col>
-                                    </TabPane>
-                                </Tabs>
-                            </TabPane>
-                            <TabPane tab="5. Fetch Helm Chart" key="5">
-                                <Tabs onChange={getLogs}>
-                                    <TabPane tab="Status" key="status">
-                                        <FormItem {...formItemLayout} label="Task Name:">
-                                            <Input value="Deploy" readOnly />
-                                        </FormItem>
-                                        <FormItem {...formItemLayout} label="Step Name:">
-                                            <Input value="Fetch Helm Chart" readOnly />
-                                        </FormItem>
-                                        <FormItem {...formItemLayout} label="Start Time:">
-                                            <Input value="-" readOnly />
-                                        </FormItem>
-                                        <FormItem {...formItemLayout} label="Completion Time:">
-                                            <Input value="-" readOnly />
-                                        </FormItem>
-                                        <FormItem {...formItemLayout} label="Status:">
-                                            <Tag color="#52c41a">{fetchHelmChartStatus}</Tag>
-                                        </FormItem>
-                                        <FormItem {...formItemLayout} label="Reason:">
-                                            <Input value="" readOnly />
-                                        </FormItem>
-                                    </TabPane>
-                                    <TabPane tab="Logs" key="logs">
-                                        <Col span={23}>
-                                            <ScrollFollow
-                                                startFollowing={true}
-                                                render={({ follow, onScroll }) => (
-                                                    <LazyLog
-                                                        url={fetchHelmChartLogsUrl}
-                                                        height={logViewerHeight}
-                                                        // width={logViewerWidth}
-                                                        stream
-                                                        follow={follow}
-                                                        onScroll={onScroll}
-                                                        enableSearch />
-                                                )}
-                                            />
-                                        </Col>
-                                    </TabPane>
-                                </Tabs>
-                            </TabPane>
-                            <TabPane tab="6. Deploy in Cluster" key="6">
+                            <TabPane tab="3. Deploy in Cluster" key="3">
                                 <Tabs onChange={getLogs}>
                                     <TabPane tab="Status" key="status">
                                         <FormItem {...formItemLayout} label="Task Name:">
@@ -508,6 +319,7 @@ function ViewReleasePipeline() {
                                                 startFollowing={true}
                                                 render={({ follow, onScroll }) => (
                                                     <LazyLog
+                                                        containerStyle={{textAlign: "left"}}
                                                         url={deployInClusterLogsUrl}
                                                         height={logViewerHeight}
                                                         // width={logViewerWidth}

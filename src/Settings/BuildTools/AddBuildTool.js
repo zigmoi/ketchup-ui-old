@@ -90,8 +90,8 @@ function AddBuildTool(props) {
                                     }
                                 ],
                             })(<Select>
-                                <Option key="maven">Maven</Option>
-                                <Option key="gradle">Gradle</Option>
+                                <Option key="maven-3.3">Maven 3.3</Option>
+                                <Option key="gradle-5.5">Gradle 5.5</Option>
                             </Select>)}
                         </FormItem>
                         <FormItem label="Build Settings:" hasFeedback>
