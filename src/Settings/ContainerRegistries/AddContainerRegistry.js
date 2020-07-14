@@ -22,6 +22,7 @@ function AddContainerRegistry(props) {
     const { getFieldDecorator, validateFieldsAndScroll } = props.form;
 
     const [iconLoading, setIconLoading] = useState(false);
+    const [registryType, setRegistryType] = useState("local");
 
     let history = useHistory();
     let { projectResourceId } = useParams();
@@ -36,9 +37,11 @@ function AddContainerRegistry(props) {
                     'displayName': values.displayName,
                     'type': values.type,
                     'registryUrl': values.registryUrl,
-                    'registryUsername': values.username,
-                    'registryPassword': values.password,
+                    'repository': values.repository ? values.repository : "",
+                    'registryUsername': values.username ? values.username : "",
+                    'registryPassword': values.password ? values.password : "",
                 };
+
                 axios.post(`${process.env.REACT_APP_API_BASE_URL}/v1/settings/container-registry`, data)
                     .then((response) => {
                         console.log(response);
@@ -51,6 +54,149 @@ function AddContainerRegistry(props) {
                     });
             }
         });
+    }
+
+    function handleRegistryTypeChange(value) {
+        setRegistryType(value);
+    }
+
+    let details;
+    if (registryType === "local") {
+        details = (
+            <React.Fragment>
+                <FormItem {...formItemLayout} label="Url:" hasFeedback>
+                    {getFieldDecorator('registryUrl', {
+                        initialValue: "",
+                        rules: [
+                            {
+                                required: true,
+                                whitespace: true,
+                                message: 'Please provide valid Url!',
+                            },
+                            {
+                                max: 200,
+                                message: 'Only 200 characters are allowed!',
+                            },
+                        ],
+                    })(<Input placeholder="Url" />)}
+                </FormItem>
+                <FormItem {...formItemLayout} label="Repository:" hasFeedback>
+                    {getFieldDecorator('repository', {
+                        initialValue: "",
+                        rules: [
+                            {
+                                whitespace: false,
+                                message: 'Please provide valid Repository!',
+                            },
+                            {
+                                max: 100,
+                                message: 'Only 100 characters are allowed!',
+                            },
+                        ],
+                    })(<Input placeholder="Repository" />)}
+                </FormItem>
+            </React.Fragment>);
+    } else if (registryType === "docker-hub") {
+        details = (
+            <React.Fragment>
+                <FormItem {...formItemLayout} label="Url:" hasFeedback>
+                    {getFieldDecorator('registryUrl', {
+                        initialValue: "index.docker.io",
+                    })(<Input readOnly placeholder="Url" />)}
+                </FormItem>
+                <FormItem {...formItemLayout} label="Username:" hasFeedback>
+                    {getFieldDecorator('username', {
+                        initialValue: "",
+                        rules: [
+                            {
+                                required: true,
+                                whitespace: true,
+                                message: 'Please provide valid Username!',
+                            },
+                            {
+                                max: 50,
+                                message: 'Only 50 characters are allowed!',
+                            },
+                        ],
+                    })(<Input placeholder="Username" />)}
+                </FormItem>
+                <FormItem {...formItemLayout} label="Token / Password:" hasFeedback>
+                    {getFieldDecorator('password', {
+                        initialValue: "",
+                        rules: [
+                            {
+                                required: true,
+                                whitespace: true,
+                                message: 'Please provide valid Token / Password!',
+                            },
+                            {
+                                max: 50,
+                                message: 'Only 50 characters are allowed!',
+                            },
+                        ],
+                    })(<Input.Password placeholder="Token / Password" />)}
+                </FormItem>
+            </React.Fragment>);
+    } else if (registryType === "gcr") {
+        details = (
+            <React.Fragment>
+                <FormItem {...formItemLayout} label="Url:" hasFeedback>
+                    {getFieldDecorator('registryUrl', {
+                        initialValue: "gcr.io",
+                    })(<Input readOnly placeholder="Url" />)}
+                </FormItem>
+                <FormItem {...formItemLayout} label="Project Id:" hasFeedback>
+                    {getFieldDecorator('repository', {
+                        initialValue: "",
+                        rules: [
+                            {
+                                required: true,
+                                whitespace: true,
+                                message: 'Please provide valid Project Id!',
+                            },
+                            {
+                                max: 100,
+                                message: 'Only 100 characters are allowed!',
+                            },
+                        ],
+                    })(<Input placeholder="Project Id" />)}
+                </FormItem>
+                <FormItem {...formItemLayout} label="Username:" hasFeedback>
+                    {getFieldDecorator('username', {
+                        initialValue: "",
+                        rules: [
+                            {
+                                required: true,
+                                whitespace: true,
+                                message: 'Please provide valid Username!',
+                            },
+                            {
+                                max: 50,
+                                message: 'Only 50 characters are allowed!',
+                            },
+                        ],
+                    })(<Input placeholder="Username" />)}
+                </FormItem>
+                <FormItem {...formItemLayout} label="Token / Password:" hasFeedback>
+                    {getFieldDecorator('password', {
+                        initialValue: "",
+                        rules: [
+                            {
+                                required: true,
+                                whitespace: true,
+                                message: 'Please provide valid Token / Password!',
+                            },
+                            {
+                                max: 5000,
+                                message: 'Only 5000 characters are allowed!',
+                            },
+                        ],
+                    })(<Input.Password placeholder="Token / Password" />)}
+                </FormItem>
+            </React.Fragment>);
+    } else {
+        details = null;
+        message.error("UnSupported Registry type!");
     }
 
     return (
@@ -83,69 +229,22 @@ function AddContainerRegistry(props) {
                         </FormItem>
                         <FormItem {...formItemLayout} label="Type:" hasFeedback>
                             {getFieldDecorator('type', {
-                                initialValue: "",
+                                initialValue: "local",
                                 rules: [
                                     {
                                         required: true,
                                         message: 'Please select valid Type!',
                                     }
                                 ],
-                            })(<Select>
+                            })(<Select onChange={handleRegistryTypeChange}>
                                 <Option key="local">LOCAL</Option>
                                 <Option key="docker-hub">DOCKER-HUB</Option>
-                                <Option key="aws-ecr">AWS-ECR</Option>
                                 <Option key="gcr">GCR</Option>
-                                <Option key="azurecr">AZURE-CR</Option>
+                                {/* <Option key="aws-ecr">AWS-ECR</Option>
+                                <Option key="azurecr">AZURE-CR</Option> */}
                             </Select>)}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Url:" hasFeedback>
-                            {getFieldDecorator('registryUrl', {
-                                initialValue: "",
-                                rules: [
-                                    {
-                                        required: true,
-                                        whitespace: true,
-                                        message: 'Please provide valid Url!',
-                                    },
-                                    {
-                                        max: 200,
-                                        message: 'Only 200 characters are allowed!',
-                                    },
-                                ],
-                            })(<Input placeholder="Url" />)}
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Username:" hasFeedback>
-                            {getFieldDecorator('username', {
-                                initialValue: "",
-                                rules: [
-                                    {
-                                        required: true,
-                                        whitespace: true,
-                                        message: 'Please provide valid Username!',
-                                    },
-                                    {
-                                        max: 50,
-                                        message: 'Only 50 characters are allowed!',
-                                    },
-                                ],
-                            })(<Input placeholder="Username" />)}
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Token / Password:" hasFeedback>
-                            {getFieldDecorator('password', {
-                                initialValue: "",
-                                rules: [
-                                    {
-                                        required: true,
-                                        whitespace: true,
-                                        message: 'Please provide valid Token / Password!',
-                                    },
-                                    {
-                                        max: 50,
-                                        message: 'Only 50 characters are allowed!',
-                                    },
-                                ],
-                            })(<Input.Password placeholder="Token / Password" />)}
-                        </FormItem>
+                        {details}
                         <FormItem>
                             <Row type="flex" justify="center" align="middle">
                                 <Col>

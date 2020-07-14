@@ -235,7 +235,7 @@ function ViewReleasePipeline() {
                                                 startFollowing={true}
                                                 render={({ follow, onScroll }) => (
                                                     <LazyLog
-                                                        containerStyle={{textAlign: "left"}}
+                                                         
                                                         url={fetchSourceCodeLogsUrl}
                                                         height={logViewerHeight}
                                                         // width={logViewerWidth}
@@ -277,7 +277,7 @@ function ViewReleasePipeline() {
                                                 startFollowing={true}
                                                 render={({ follow, onScroll }) => (
                                                     <LazyLog
-                                                        containerStyle={{textAlign: "left"}}
+                                                         
                                                         url={buildPushImageLogsUrl}
                                                         height={logViewerHeight}
                                                         // width={logViewerWidth}
@@ -319,7 +319,7 @@ function ViewReleasePipeline() {
                                                 startFollowing={true}
                                                 render={({ follow, onScroll }) => (
                                                     <LazyLog
-                                                        containerStyle={{textAlign: "left"}}
+                                                         
                                                         url={deployInClusterLogsUrl}
                                                         height={logViewerHeight}
                                                         // width={logViewerWidth}

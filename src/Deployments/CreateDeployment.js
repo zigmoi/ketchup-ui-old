@@ -63,6 +63,7 @@ function CreateDeployment(props) {
                     "platform": values.platform,
                     "containerRegistrySettingId": values.containerRegistrySettingId,
                     "containerRegistryPath": values.containerRegistryPath,
+                    "containerImageName": values.containerImageName,
                     "buildTool": values.buildTool,
                     "baseBuildPath": values.baseBuildPath,
                     "buildToolSettingId": values.buildToolSettingId,
@@ -344,21 +345,21 @@ function CreateDeployment(props) {
                                         }
                                     </Select>)}
                                 </FormItem>
-                                <FormItem {...formItemLayout} label="Container Registry Path:" hasFeedback>
-                                    {getFieldDecorator('containerRegistryPath', {
+                                <FormItem {...formItemLayout} label="Container Image Name:" hasFeedback>
+                                    {getFieldDecorator('containerImageName', {
                                         initialValue: "",
                                         rules: [
                                             {
                                                 required: true,
                                                 whitespace: true,
-                                                message: 'Please provide valid Container Registry Path!',
+                                                message: 'Please provide valid Container Image Name!',
                                             },
                                             {
                                                 max: 100,
                                                 message: 'Only 100 characters are allowed!',
                                             },
                                         ],
-                                    })(<Input placeholder="Container Registry Path" />)}
+                                    })(<Input placeholder="Container Image Name" />)}
                                 </FormItem>
                                 <FormItem {...formItemLayout} label="Build Tool:" hasFeedback>
                                     {getFieldDecorator('buildTool', {

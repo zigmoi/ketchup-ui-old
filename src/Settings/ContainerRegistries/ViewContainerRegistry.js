@@ -24,6 +24,7 @@ function ViewContainerRegistry() {
     const [displayName, setDisplayName] = useState("");
     const [type, setType] = useState("");
     const [registryUrl, setRegistryUrl] = useState("");
+    const [repository, setRepository] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [lastUpdatedBy, setLastUpdatedBy] = useState("");
@@ -44,6 +45,7 @@ function ViewContainerRegistry() {
                 setDisplayName(response.data.displayName);
                 setType(response.data.type);
                 setRegistryUrl(response.data.registryUrl);
+                setRepository(response.data.repository);
                 setUsername(response.data.registryUsername);
                 setPassword(response.data.registryPassword);
                 setLastUpdatedBy(response.data.lastUpdatedBy);
@@ -91,12 +93,27 @@ function ViewContainerRegistry() {
                         <FormItem {...formItemLayout} label="Url:">
                             <Input readOnly value={registryUrl} />
                         </FormItem>
-                        <FormItem {...formItemLayout} label="Username:">
-                            <Input readOnly value={username} />
-                        </FormItem>
-                        <FormItem {...formItemLayout} label="Token / Password:">
-                            <Input.Password readOnly value={password} />
-                        </FormItem>
+                        {type === "local"?
+                            <FormItem {...formItemLayout} label="Repository:">
+                                <Input readOnly value={repository} />
+                            </FormItem>
+                            : null}
+                        {type === "gcr"?
+                            <FormItem {...formItemLayout} label="Project Id:">
+                                <Input readOnly value={repository} />
+                            </FormItem>
+                            : null}
+                        {type === "local" ? null :
+                            <React.Fragment>
+                                <FormItem {...formItemLayout} label="Username:">
+                                    <Input readOnly value={username} />
+                                </FormItem>
+                                <FormItem {...formItemLayout} label="Token / Password:">
+                                    <Input.Password readOnly value={password} />
+                                </FormItem>
+                            </React.Fragment>
+                        }
+
                     </Form>
                 </Col>
             </Row>
