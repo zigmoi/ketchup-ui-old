@@ -24,6 +24,10 @@ function ManageReleases() {
             title: 'ID',
             dataIndex: 'id.releaseResourceId',
             key: 'id.releaseResourceId',
+        },{
+            title: 'Version',
+            dataIndex: 'version',
+            key: 'version',
         }, {
             title: 'Status',
             dataIndex: 'status',

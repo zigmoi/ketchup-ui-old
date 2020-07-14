@@ -437,7 +437,7 @@ function CreateDeployment(props) {
                                 </FormItem>
                                 <FormItem {...formItemLayout} label="Namespace:" hasFeedback>
                                     {getFieldDecorator('devKubernetesNamespace', {
-                                        initialValue: "default-kp",
+                                        initialValue: "default",
                                         rules: [
                                             {
                                                 required: true,
@@ -476,7 +476,7 @@ function CreateDeployment(props) {
                                         </FormItem>
                                         <FormItem {...formItemLayout} label="Namespace:" hasFeedback>
                                             {getFieldDecorator('prodKubernetesNamespace', {
-                                                initialValue: "default-kp",
+                                                initialValue: "default",
                                                 rules: [
                                                     {
                                                         required: true,
