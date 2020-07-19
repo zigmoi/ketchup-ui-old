@@ -52,7 +52,7 @@ export function UserProvider(props) {
 
     function setRequestInterceptor(accessToken) {
         // Add a request interceptor
-        axios.defaults.timeout = 30000;
+        axios.defaults.timeout = 60000;
         axios.interceptors.request.use((config) => {
             // Do something before request is sent
             console.log("In request interceptor, token: ", accessToken);
